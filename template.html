@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>__NAME__ — Work Portfolio</title>
+<title>__NAME__ Portfolio</title>
 <meta name="description" content="__ROLE__ · รวมผลงานระบบอัตโนมัติ LINE bot และเว็บแอป __COUNT__ ชิ้น">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +48,9 @@ button{font:inherit;color:inherit}
 .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--ink-2);max-width:720px;margin:0}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:32px 0 0}
 @media(min-width:720px){.stats{grid-template-columns:repeat(5,1fr)}}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;text-align:left;cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}
+.stat:hover{box-shadow:var(--shadow)}
+.stat[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .stat b{display:block;font-size:30px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
 .stat span{font-size:14px;color:var(--ink-2)}
 .stat i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
@@ -108,6 +110,8 @@ section{padding:36px 0}
 .st.live i{background:#16a34a;box-shadow:0 0 0 3px color-mix(in srgb,#16a34a 22%,transparent)}
 .st.pilot i{background:#eab308}
 .st.discovery i{background:#94a3b8}
+.stat,.card{font:inherit;color:inherit}
+#allH{scroll-margin-top:170px}
 .empty{padding:40px;text-align:center;color:var(--ink-3)}
 
 /* modal */
@@ -216,8 +220,8 @@ function card(j){
 // stats
 (function(){
   const n=c=>JOBS.filter(j=>j.category===c).length;
-  const items=[["ผลงานทั้งหมด",JOBS.length,""],["เว็บแอป",n("webapp"),"--c-webapp"],["LINE Bot",n("line-bot"),"--c-line-bot"],["Automation / รายงาน",n("automation"),"--c-automation"],["AI + Infra",n("ai")+n("infra"),"--c-ai"]];
-  document.getElementById("stats").innerHTML=items.map(([l,v,c])=>`<div class="stat"><b>${v}</b><span>${c?`<i style="background:var(${c})"></i>`:""}${l}</span></div>`).join("");
+  const items=[["ผลงานทั้งหมด",JOBS.length,"",""],["เว็บแอป",n("webapp"),"--c-webapp","webapp"],["LINE Bot",n("line-bot"),"--c-line-bot","line-bot"],["Automation / รายงาน",n("automation"),"--c-automation","automation"],["AI + Infra",n("ai")+n("infra"),"--c-ai","ai,infra"]];
+  document.getElementById("stats").innerHTML=items.map(([l,v,c,k])=>`<button type="button" class="stat" data-cat="${k}" aria-label="ดูเฉพาะ ${l}"><b>${v}</b><span>${c?`<i style="background:var(${c})"></i>`:""}${l}</span></button>`).join("");
 })();
 
 // growth chart
@@ -247,13 +251,16 @@ function chips(){
 }
 function render(){
   const q=state.q.trim().toLowerCase();
-  const list=sorted.filter(j=>(!state.cat||j.category===state.cat)&&(!state.co||j.company===state.co)&&(!state.year||String(j.year)===state.year)&&(!q||j._t.includes(q)));
+  const list=sorted.filter(j=>(!state.cat||state.cat.split(",").includes(j.category))&&(!state.co||j.company===state.co)&&(!state.year||String(j.year)===state.year)&&(!q||j._t.includes(q)));
   document.getElementById("all").innerHTML=list.length?list.map(card).join(""):`<div class="empty">ไม่พบผลงานที่ตรงกับตัวกรอง</div>`;
   document.getElementById("count").textContent=`${list.length} / ${JOBS.length} ผลงาน`;
+  document.querySelectorAll(".stat").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===state.cat));
+  document.getElementById("allH").textContent=state.cat?"ผลงานหมวด "+state.cat.split(",").map(c=>CAT[c].th).join(" + "):"ผลงานทั้งหมด";
   chips();
 }
 document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;state[b.dataset.k]=b.dataset.v;render();});
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
+document.getElementById("stats").addEventListener("click",e=>{const b=e.target.closest(".stat");if(!b)return;state.cat=b.dataset.cat;render();document.getElementById("allH").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});});
 render();
 
 // detail dialog

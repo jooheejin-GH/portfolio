@@ -1,6 +1,6 @@
-"""Build site/index.html from data/jobs.public.json + data/profile.json + site/shots/.
+"""Build docs/index.html from data/jobs.public.json + data/profile.json + docs/shots/.
 
-Screenshots: put files in site/shots/ named <slug>.png|jpg|webp (cover) and
+Screenshots: put files in docs/shots/ named <slug>.png|jpg|webp (cover) and
 <slug>-2.png, <slug>-3.png ... for extra images.
 """
 import json, re, html
@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 jobs = json.loads((ROOT / "data/jobs.public.json").read_text())
 prof = json.loads((ROOT / "data/profile.json").read_text())
-shots_dir = ROOT / "site/shots"
+shots_dir = ROOT / "docs/shots"
 
 LEAK = re.compile(r"https?://|seacon\.ai|seacon-dev|192\.168|192\.132|\(ผู้ใช้:")
 
@@ -34,5 +34,5 @@ for k, v in {
 }.items():
     out = out.replace(k, html.escape(v))
 out = out.replace("__JOBS__", json.dumps(jobs, ensure_ascii=False).replace("</", "<\\/"))
-(ROOT / "site/index.html").write_text(out)
-print(f"built site/index.html · {len(jobs)} jobs · {sum(bool(j['shots']) for j in jobs)} with screenshots")
+(ROOT / "docs/index.html").write_text(out)
+print(f"built docs/index.html · {len(jobs)} jobs · {sum(bool(j['shots']) for j in jobs)} with screenshots")
