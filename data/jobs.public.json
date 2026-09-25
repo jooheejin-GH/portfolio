@@ -1776,7 +1776,14 @@
    "SSO"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://seacon.ai/taketaskout"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "seacon-portal-sso",
@@ -1805,7 +1812,14 @@
    "GitHub Actions"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://seacon.ai"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "ai-subscription-tracker",
@@ -1832,7 +1846,14 @@
    "SSO"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://seacon.ai/ai-tracker"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "ai-battle-practice-arena",
@@ -1887,7 +1908,14 @@
    "WeasyPrint"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/probation/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "service-fee-webapp",
@@ -1915,7 +1943,14 @@
    "NetSuite"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/servicefee/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "fnb-cash-bag",
@@ -1940,7 +1975,14 @@
    "SQLite"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/cashbag/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "infra-registry",
@@ -1993,7 +2035,14 @@
    "WeasyPrint"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/parking/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "employee-signature-api",
@@ -2042,7 +2091,14 @@
    "SQLite"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/gs/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "y-tracking-webapp-mcp",
@@ -2071,7 +2127,14 @@
    "MCP"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://seacon.ai/ytracking"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "team-brief-claude-code",
@@ -2121,7 +2184,14 @@
    "SQLite"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://mmad.seacon-dev.com/gallery/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "ai-skills-assessment",
@@ -2150,7 +2220,14 @@
    "SSO"
   ],
   "status": "pilot",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://seacon.ai/aiskill/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "server-migration",
@@ -2200,7 +2277,14 @@
    "Gemini API"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/resizer/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "ai-battle-live-console",
@@ -2276,7 +2360,14 @@
    "WebSocket"
   ],
   "status": "pilot",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/quiz/"
+   }
+  ],
+  "login": false
  },
  {
   "slug": "mail-relay-standard",
@@ -2349,7 +2440,14 @@
    "SQLite"
   ],
   "status": "live",
-  "highlight": false
+  "highlight": false,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://mmad.seacon-dev.com/opencall/"
+   }
+  ],
+  "login": false
  },
  {
   "slug": "store-requisition",
@@ -2377,7 +2475,18 @@
    "FoodStory"
   ],
   "status": "live",
-  "highlight": true
+  "highlight": true,
+  "links": [
+   {
+    "label": "เปิดระบบ",
+    "url": "https://edp.seacon-dev.com/sr/"
+   },
+   {
+    "label": "คู่มือการใช้งาน",
+    "url": "https://edp.seacon-dev.com/sr/manual/"
+   }
+  ],
+  "login": true
  },
  {
   "slug": "pantry-call",
