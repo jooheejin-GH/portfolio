@@ -42,17 +42,17 @@ button{font:inherit;color:inherit}
 .top{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
 .top .mark{font-weight:600;letter-spacing:.02em}
 .theme-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--ink-2)}
-.hero{padding:40px 0 28px}
+.hero{padding:28px 0 8px}
 .eyebrow{font-size:13px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
 .hero h1{font-size:clamp(34px,6vw,60px);line-height:1.1;margin:10px 0 14px;font-weight:700;letter-spacing:-.01em}
 .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--ink-2);max-width:720px;margin:0}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:32px 0 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0 0}
 @media(min-width:720px){.stats{grid-template-columns:repeat(5,1fr)}}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;text-align:left;cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:9px 12px;text-align:left;cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}
 .stat:hover{box-shadow:var(--shadow)}
 .stat[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.stat b{display:block;font-size:30px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
-.stat span{font-size:14px;color:var(--ink-2)}
+.stat b{display:block;font-size:20px;line-height:1.2;font-weight:700;font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;color:var(--ink-2)}
 .stat i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
 
 /* growth chart */
@@ -60,13 +60,13 @@ section{padding:36px 0}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .sec-h h2{font-size:24px;margin:0;font-weight:700}
 .sec-h p{margin:0;color:var(--ink-3);font-size:14px}
-.chart{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 12px;overflow:hidden}
-.bars{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;align-items:end;height:200px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 10px;overflow:hidden}
+.bars{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;align-items:end;height:90px}
 .bar{display:flex;flex-direction:column;gap:2px;height:100%;justify-content:flex-end}
 .bar .seg{border-radius:4px;min-height:3px;cursor:default}
-.bar .tot{text-align:center;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
-.xlab{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;margin-top:8px;font-size:12px;color:var(--ink-3);text-align:center}
-.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:13px;color:var(--ink-2)}
+.bar .tot{text-align:center;font-size:11px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.xlab{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;margin-top:4px;font-size:10.5px;line-height:1.3;color:var(--ink-3);text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:12px;color:var(--ink-2)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 
 /* filters */
@@ -142,14 +142,13 @@ footer{padding:40px 0 60px;color:var(--ink-3);font-size:14px;border-top:1px soli
   <div class="hero">
     <div class="eyebrow mono">Work Portfolio · 2025–2026</div>
     <h1>Thana Portfolio</h1>
-    <p class="lead">รวมผลงานตั้งแต่สูตร Google Sheets, n8n + LINE Bot จนถึงเว็บแอปเต็มระบบ ที่สร้างให้ทีมการเงิน บัญชี HR การตลาด และหน้างานของ Seacon Square, Seacon Bangkae และ YOYO Land</p>
     <div class="stats" id="stats"></div>
   </div>
 </div>
 
 <div class="wrap">
-  <section aria-labelledby="growthH">
-    <div class="sec-h"><h2 id="growthH">ผลงานรายไตรมาส</h2><p>แยกตามประเภทงาน</p></div>
+  <section aria-labelledby="growthH" style="padding:20px 0 28px">
+    <div class="sec-h" style="margin-bottom:8px"><h2 id="growthH" style="font-size:18px">ผลงานรายไตรมาส</h2><p>แยกตามประเภทงาน</p></div>
     <div class="chart"><div class="bars" id="bars"></div><div class="xlab mono" id="xlab"></div><div class="legend" id="legend"></div></div>
   </section>
 </div>
