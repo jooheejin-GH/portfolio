@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__NAME__ — Work Portfolio</title>
+<meta name="description" content="__ROLE__ · รวมผลงานระบบอัตโนมัติ LINE bot และเว็บแอป __COUNT__ ชิ้น">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --surface-2:#efeee9; --ink:#16181d; --ink-2:#4a4f59; --ink-3:#7c818b;
+  --line:#e2e0d8; --focus:#1f5eff;
+  --sdc:#1f5eff; --sbk:#f97316; --yoyo:#d6336c; --both:#6d5bd0;
+  --c-webapp:#1f5eff; --c-line-bot:#06a94d; --c-automation:#d97706; --c-ai:#8b5cf6; --c-infra:#475569;
+  --radius:14px; --shadow:0 1px 2px rgba(20,20,30,.05),0 6px 24px rgba(20,20,30,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111317; --surface:#1a1d23; --surface-2:#22262e; --ink:#eceef2; --ink-2:#b3b8c2; --ink-3:#848a95;
+    --line:#2c313a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+    --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111317; --surface:#1a1d23; --surface-2:#22262e; --ink:#eceef2; --ink-2:#b3b8c2; --ink-3:#848a95;
+  --line:#2c313a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 "Anuphan",system-ui,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+@media(min-width:720px){.wrap{padding:0 32px}}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.top .mark{font-weight:600;letter-spacing:.02em}
+.theme-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--ink-2)}
+.hero{padding:40px 0 28px}
+.eyebrow{font-size:13px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
+.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.1;margin:10px 0 14px;font-weight:700;letter-spacing:-.01em}
+.hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--ink-2);max-width:720px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:32px 0 0}
+@media(min-width:720px){.stats{grid-template-columns:repeat(5,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.stat b{display:block;font-size:30px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
+.stat span{font-size:14px;color:var(--ink-2)}
+.stat i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+/* growth chart */
+section{padding:36px 0}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.sec-h h2{font-size:24px;margin:0;font-weight:700}
+.sec-h p{margin:0;color:var(--ink-3);font-size:14px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 16px 12px;overflow:hidden}
+.bars{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;align-items:end;height:200px}
+.bar{display:flex;flex-direction:column;gap:2px;height:100%;justify-content:flex-end}
+.bar .seg{border-radius:4px;min-height:3px;cursor:default}
+.bar .tot{text-align:center;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.xlab{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;margin-top:8px;font-size:12px;color:var(--ink-3);text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:13px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* filters */
+.filters{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);padding:12px 0;border-bottom:1px solid var(--line)}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frow + .frow{margin-top:8px}
+.search{flex:1 1 220px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;font:inherit;color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:14px;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.count{font-size:14px;color:var(--ink-3);margin-left:auto}
+
+/* cards */
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid.hl{grid-template-columns:1fr}
+@media(min-width:720px){.grid.hl{grid-template-columns:repeat(2,1fr)}}
+.card{display:flex;flex-direction:column;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;padding:0;transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+.cover{aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--surface-2)}
+.cover.g{aspect-ratio:16/6}
+.m-cover.g{aspect-ratio:16/5}
+.cover img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.gen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:16px;color:#fff}
+.gen svg{width:40px;height:40px;opacity:.95}
+.gen .big{position:absolute;right:-18px;bottom:-26px;width:150px;height:150px;opacity:.14}
+.gen .cl{font-size:13px;opacity:.9;letter-spacing:.02em}
+.gen .tl{display:flex;gap:6px;flex-wrap:wrap}
+.gen .tl span{font-size:12px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:2px 9px}
+.gen .ttl{font-weight:600;font-size:18px;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.15);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{margin:0;font-size:17px;line-height:1.35;font-weight:600}
+.card .tag{margin:0;color:var(--ink-2);font-size:15px;line-height:1.5}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto;font-size:12.5px;color:var(--ink-3)}
+.badge{border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:500;border:1px solid currentColor}
+.b-SDC{color:var(--sdc)} .b-SBK{color:var(--sbk)} .b-YOYO{color:var(--yoyo)} .b-BOTH{color:var(--both)}
+.st{display:inline-flex;align-items:center;gap:5px}
+.st i{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
+.st.live i{background:#16a34a;box-shadow:0 0 0 3px color-mix(in srgb,#16a34a 22%,transparent)}
+.st.pilot i{background:#eab308}
+.st.discovery i{background:#94a3b8}
+.empty{padding:40px;text-align:center;color:var(--ink-3)}
+
+/* modal */
+dialog{border:0;padding:0;border-radius:18px;max-width:760px;width:calc(100% - 24px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,12,16,.55)}
+.m-cover{aspect-ratio:16/9;position:relative;background:var(--surface-2)}
+.m-cover img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.m-thumbs{display:flex;gap:8px;padding:10px 20px 0;overflow-x:auto}
+.m-thumbs button{border:2px solid transparent;border-radius:8px;padding:0;width:84px;flex:none;aspect-ratio:16/10;overflow:hidden;cursor:pointer;background:none}
+.m-thumbs button[aria-current="true"]{border-color:var(--focus)}
+.m-thumbs img{width:100%;height:100%;object-fit:cover}
+.m-body{padding:18px 20px 22px}
+.m-body h2{margin:6px 0 4px;font-size:24px;line-height:1.3}
+.m-body .tag{color:var(--ink-2);margin:0 0 14px}
+.m-body h4{margin:16px 0 4px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.m-body p{margin:0}
+.m-body ul{margin:4px 0 0;padding-left:20px}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tools span{font-size:13px;background:var(--surface-2);border-radius:6px;padding:2px 9px}
+.close{position:absolute;top:10px;right:10px;z-index:2;border:0;border-radius:999px;width:36px;height:36px;background:rgba(0,0,0,.55);color:#fff;font-size:20px;cursor:pointer}
+footer{padding:40px 0 60px;color:var(--ink-3);font-size:14px;border-top:1px solid var(--line);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="mark">__NAME__</span>
+    <button class="theme-btn" id="themeBtn" type="button">โหมดมืด/สว่าง</button>
+  </header>
+  <div class="hero">
+    <div class="eyebrow mono">Work Portfolio · __SPAN__</div>
+    <h1>__HEADLINE__</h1>
+    <p class="lead">__LEAD__</p>
+    <div class="stats" id="stats"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section aria-labelledby="growthH">
+    <div class="sec-h"><h2 id="growthH">ผลงานรายไตรมาส</h2><p>แยกตามประเภทงาน</p></div>
+    <div class="chart"><div class="bars" id="bars"></div><div class="xlab mono" id="xlab"></div><div class="legend" id="legend"></div></div>
+  </section>
+  <section aria-labelledby="hlH">
+    <div class="sec-h"><h2 id="hlH">ผลงานเด่น</h2></div>
+    <div class="grid hl" id="hl"></div>
+  </section>
+</div>
+
+<div class="filters" id="filters">
+  <div class="wrap">
+    <div class="frow">
+      <input class="search" id="q" type="search" placeholder="ค้นหาผลงาน เครื่องมือ หรือหน่วยงาน…" aria-label="ค้นหา">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="frow" id="fcat"></div>
+    <div class="frow" id="fmore"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section aria-labelledby="allH">
+    <div class="sec-h"><h2 id="allH">ผลงานทั้งหมด</h2><p>ใหม่สุดขึ้นก่อน · กดการ์ดเพื่อดูรายละเอียด</p></div>
+    <div class="grid" id="all"></div>
+  </section>
+  <footer>__FOOTER__</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dTitle"><div id="dIn"></div></dialog>
+
+<script>
+const JOBS = __JOBS__;
+const CAT = {
+  webapp:{th:"เว็บแอป",icon:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>'},
+  "line-bot":{th:"LINE Bot",icon:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>'},
+  automation:{th:"Automation / รายงาน",icon:'<path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/>'},
+  ai:{th:"AI",icon:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/>'},
+  infra:{th:"Infra / Platform",icon:'<rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/>'}
+};
+const CATS = Object.keys(CAT);
+const STATUS = {live:"ใช้งานจริง",done:"ส่งมอบแล้ว",pilot:"ทดลองใช้",discovery:"กำลังออกแบบ"};
+const QORD = j => j.year*10 + +j.quarter.slice(1);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const coClass = c => c==="SDC"?"SDC":c==="SBK"?"SBK":c==="YOYO Land"?"YOYO":"BOTH";
+
+JOBS.forEach((j,i)=>{ j._i=i; j._t=(j.title+" "+j.tagline+" "+j.solution+" "+(j.tools||[]).join(" ")+" "+j.department+" "+j.company).toLowerCase(); });
+const sorted = [...JOBS].sort((a,b)=> QORD(b)-QORD(a) || a._i-b._i);
+
+function cover(j, big){
+  if (j.shots && j.shots.length) return `<img src="${esc(j.shots[0])}" alt="ภาพหน้าจอ ${esc(j.title)}" loading="lazy">`;
+  const c = `var(--c-${j.category})`;
+  return `<div class="gen" style="background:linear-gradient(135deg, ${c}, color-mix(in srgb, ${c} 55%, #0b0d12))">
+    <svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CAT[j.category].icon}</svg>
+    <div class="cl">${esc(CAT[j.category].th)}</div>
+    <div class="tl">${(j.tools||[]).slice(0,4).map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>`;
+}
+function card(j){
+  return `<button class="card" type="button" data-i="${j._i}" aria-label="ดูรายละเอียด ${esc(j.title)}">
+    <div class="cover${j.shots&&j.shots.length?"":" g"}">${cover(j)}</div>
+    <div class="body"><h3>${esc(j.title)}</h3><p class="tag">${esc(j.tagline)}</p>
+    <div class="meta"><span class="badge b-${coClass(j.company)}">${esc(j.company)}</span>
+      <span class="mono">${j.year} ${j.quarter}</span>·<span>${esc(CAT[j.category].th)}</span>
+      ${j.status!=="done"?`·<span class="st ${j.status}"><i></i>${STATUS[j.status]}</span>`:""}</div></div></button>`;
+}
+
+// stats
+(function(){
+  const n=c=>JOBS.filter(j=>j.category===c).length;
+  const items=[["ผลงานทั้งหมด",JOBS.length,""],["เว็บแอป",n("webapp"),"--c-webapp"],["LINE Bot",n("line-bot"),"--c-line-bot"],["Automation / รายงาน",n("automation"),"--c-automation"],["AI + Infra",n("ai")+n("infra"),"--c-ai"]];
+  document.getElementById("stats").innerHTML=items.map(([l,v,c])=>`<div class="stat"><b>${v}</b><span>${c?`<i style="background:var(${c})"></i>`:""}${l}</span></div>`).join("");
+})();
+
+// growth chart
+function drawBars(){
+  const keys=[...new Set(JOBS.map(j=>j.year+" "+j.quarter))].sort();
+  const max=Math.max(...keys.map(k=>JOBS.filter(j=>j.year+" "+j.quarter===k).length));
+  document.getElementById("bars").innerHTML=keys.map(k=>{
+    const js=JOBS.filter(j=>j.year+" "+j.quarter===k);
+    const segs=[...CATS].reverse().map(c=>{const v=js.filter(j=>j.category===c).length;return v?`<div class="seg" title="${CAT[c].th}: ${v}" style="height:${v/max*85}%;background:var(--c-${c})"></div>`:""}).join("");
+    return `<div class="bar" role="img" aria-label="${k}: ${js.length} ผลงาน"><span class="tot mono">${js.length}</span>${segs}</div>`;
+  }).join("");
+  document.getElementById("xlab").innerHTML=keys.map(k=>`<span>${k.replace(" ","<br>")}</span>`).join("");
+  document.getElementById("legend").innerHTML=CATS.map(c=>`<span><i style="background:var(--c-${c})"></i>${CAT[c].th}</span>`).join("");
+}
+drawBars();
+
+document.getElementById("hl").innerHTML=sorted.filter(j=>j.highlight).map(card).join("");
+
+// filters
+const state={q:"",cat:"",co:"",year:""};
+function chips(){
+  const mk=(key,val,label,dot)=>`<button type="button" class="chip" data-k="${key}" data-v="${esc(val)}" aria-pressed="${state[key]===val}">${dot?`<i style="background:${dot}"></i>`:""}${esc(label)}</button>`;
+  document.getElementById("fcat").innerHTML=mk("cat","","ทุกประเภท")+CATS.map(c=>mk("cat",c,CAT[c].th,`var(--c-${c})`)).join("");
+  const cos=["SDC","SBK","SDC & SBK","YOYO Land"].filter(c=>JOBS.some(j=>j.company===c));
+  const yrs=[...new Set(JOBS.map(j=>String(j.year)))].sort().reverse();
+  document.getElementById("fmore").innerHTML=mk("co","","ทุกบริษัท")+cos.map(c=>mk("co",c,c)).join("")+`<span style="width:8px"></span>`+mk("year","","ทุกปี")+yrs.map(y=>mk("year",y,y)).join("");
+}
+function render(){
+  const q=state.q.trim().toLowerCase();
+  const list=sorted.filter(j=>(!state.cat||j.category===state.cat)&&(!state.co||j.company===state.co)&&(!state.year||String(j.year)===state.year)&&(!q||j._t.includes(q)));
+  document.getElementById("all").innerHTML=list.length?list.map(card).join(""):`<div class="empty">ไม่พบผลงานที่ตรงกับตัวกรอง</div>`;
+  document.getElementById("count").textContent=`${list.length} / ${JOBS.length} ผลงาน`;
+  chips();
+}
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;state[b.dataset.k]=b.dataset.v;render();});
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
+render();
+
+// detail dialog
+const dlg=document.getElementById("dlg");
+function open(i){
+  const j=JOBS[i]; const shots=j.shots||[];
+  document.getElementById("dIn").innerHTML=`
+    <button class="close" type="button" aria-label="ปิด" onclick="dlg.close()">×</button>
+    <div class="m-cover${shots.length?"":" g"}" id="mc">${cover(j,true)}</div>
+    ${shots.length>1?`<div class="m-thumbs">${shots.map((s,k)=>`<button type="button" data-s="${esc(s)}" aria-current="${k===0}"><img src="${esc(s)}" alt=""></button>`).join("")}</div>`:""}
+    <div class="m-body">
+      <div class="meta"><span class="badge b-${coClass(j.company)}">${esc(j.company)}</span><span class="mono">${j.year} ${j.quarter}</span>·<span>${esc(CAT[j.category].th)}</span>·<span>${esc(j.department)}</span>·<span class="st ${j.status}"><i></i>${STATUS[j.status]}</span></div>
+      <h2 id="dTitle">${esc(j.title)}</h2><p class="tag">${esc(j.tagline)}</p>
+      <h4>โจทย์</h4><p>${esc(j.problem)}</p>
+      <h4>สิ่งที่ทำ</h4><p>${esc(j.solution)}</p>
+      ${(j.features||[]).length?`<h4>ความสามารถหลัก</h4><ul>${j.features.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+      <h4>เครื่องมือ</h4><div class="tools">${(j.tools||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+    </div>`;
+  dlg.showModal();
+  history.replaceState(null,"","#"+j.slug);
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest(".card"); if(c){open(+c.dataset.i);return;}
+  const t=e.target.closest(".m-thumbs button");
+  if(t){document.getElementById("mc").innerHTML=`<img src="${t.dataset.s}" alt="">`;document.querySelectorAll(".m-thumbs button").forEach(b=>b.setAttribute("aria-current",b===t));}
+});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname));
+if(location.hash){const j=JOBS.find(x=>x.slug===location.hash.slice(1));if(j)open(j._i);}
+
+// theme toggle
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement; const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme=dark?"light":"dark"; try{localStorage.setItem("theme",r.dataset.theme)}catch(e){}
+});
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+</script>
+</body>
+</html>
