@@ -83,8 +83,6 @@ section{padding:36px 0}
 .grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media(min-width:620px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
-.grid.hl{grid-template-columns:1fr}
-@media(min-width:720px){.grid.hl{grid-template-columns:repeat(2,1fr)}}
 .card{display:flex;flex-direction:column;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;padding:0;transition:transform .15s ease,box-shadow .15s ease}
 .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 @media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
@@ -153,10 +151,6 @@ footer{padding:40px 0 60px;color:var(--ink-3);font-size:14px;border-top:1px soli
   <section aria-labelledby="growthH">
     <div class="sec-h"><h2 id="growthH">ผลงานรายไตรมาส</h2><p>แยกตามประเภทงาน</p></div>
     <div class="chart"><div class="bars" id="bars"></div><div class="xlab mono" id="xlab"></div><div class="legend" id="legend"></div></div>
-  </section>
-  <section aria-labelledby="hlH">
-    <div class="sec-h"><h2 id="hlH">ผลงานเด่น</h2></div>
-    <div class="grid hl" id="hl"></div>
   </section>
 </div>
 
@@ -238,7 +232,6 @@ function drawBars(){
 }
 drawBars();
 
-document.getElementById("hl").innerHTML=sorted.filter(j=>j.highlight).map(card).join("");
 
 // filters
 const state={q:"",cat:"",co:"",year:""};
