@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEACON Portal · เดโม</title>
+<meta name="description" content="เดโม SEACON Portal — SSO gateway + app launcher + คอนโซลจัดการสิทธิ์กลาง ข้อมูลตัวอย่างทั้งหมด ทำงานในเบราว์เซอร์ล้วน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#fc574a;--primary-hover:#e84638;--accent:#003681;--accent-hover:#002a66;--bg:#f2f2f2;--surface:#fff;--text:#313131;--muted:#6f6f6f;--border:#e2e2e2;
+--line-green:#06c755;--line-green-hover:#05b14e;--ok:#1a9e54;--err:#d63a30;--radius:14px;--shadow:0 10px 30px rgba(0,0,0,.08);
+--sdc:#1f5eff;--sdc-bg:#e8efff;--sbk:#f97316;--sbk-bg:#fff1e6;--ext:#7c3aed;--ext-bg:#f1eafe;
+--r-viewer:#e8f0fb;--r-viewer-t:#0b4aa2;--r-editor:#e7f6ee;--r-editor-t:#157a42;--r-admin:#fde9e7;--r-admin-t:#b3261e}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans Thai","Helvetica Neue",Helvetica,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent)}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid rgba(0,54,129,.45);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sticky{position:sticky;top:0;z-index:100}
+.demobar{background:#1c2230;color:#eef1f7;font-size:13px}
+.demobar .in{max-width:1180px;margin:0 auto;padding:4px 16px;display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;min-height:34px}
+.demobar .tag{background:#f5b301;color:#1d1a0f;font-weight:700;border-radius:4px;padding:0 6px;font-size:12px}
+.demobar .sp{flex:1}
+.demobar a{color:#9cc2ff;white-space:nowrap}
+.demobar button{background:none;border:1px solid #56607a;color:#eef1f7;border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer}
+.demobar button:hover{background:#2c3446}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.topbar .in{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;min-height:60px}
+.brand{display:inline-flex;align-items:center;gap:9px;font-weight:700;letter-spacing:1.2px;color:var(--accent);text-decoration:none;font-size:15px;white-space:nowrap}
+.brand .dot{width:12px;height:12px;border-radius:4px;background:var(--primary)}
+.brand small{letter-spacing:0;font-weight:400;color:var(--muted);font-size:12px}
+.who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);flex-wrap:wrap;justify-content:flex-end}
+.viewas{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.viewas select{border:1px solid var(--accent);border-radius:8px;padding:5px 8px;color:var(--accent);font-weight:600;background:#f3f6fb;max-width:220px;font-size:13px}
+.linkbtn{background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;text-decoration:underline;padding:0}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.avatar.lg{width:64px;height:64px;font-size:24px}
+.avatar.sm{width:28px;height:28px;font-size:12px}
+.center{min-height:calc(100vh - 34px);display:grid;place-items:center;padding:24px 16px}
+.card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 26px;font-weight:700;font-size:24px;letter-spacing:2px;color:var(--accent)}
+.logo .dot{width:16px;height:16px;border-radius:5px;background:var(--primary)}
+.logo span.p{color:var(--primary);letter-spacing:1px}
+h1.title{font-size:28px;line-height:1.25;margin:0 0 8px}
+h2.title{font-size:23px;margin:0 0 8px}
+.subtitle{color:var(--muted);font-size:15px;margin:0 0 24px}
+.providers{display:flex;flex-direction:column;gap:16px;margin:8px 0 4px}
+.btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:13px 18px;border-radius:10px;border:1px solid transparent;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s,transform .05s}
+.btn:active{transform:translateY(1px)}
+.btn.inline{display:inline-flex;width:auto;padding:9px 16px;font-size:15px}
+.btn.sm{display:inline-flex;width:auto;padding:5px 12px;font-size:13px;border-radius:8px}
+.btn-google{background:#fff;color:#3c4043;border-color:#dadce0;box-shadow:0 1px 2px rgba(0,0,0,.05)}.btn-google:hover{background:#f7f8f8}
+.btn-line{background:var(--line-green);color:#fff}.btn-line:hover{background:var(--line-green-hover)}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}.btn-primary:disabled{opacity:.6;cursor:default}
+.btn-navy{background:var(--accent);color:#fff}.btn-navy:hover{background:var(--accent-hover)}
+.btn-outline{background:#fff;color:var(--accent);border-color:var(--accent)}.btn-outline:hover{background:#f3f6fb}
+.btn-ghost{background:#fff;color:var(--text);border-color:var(--border)}.btn-ghost:hover{background:#f7f7f7}
+.btn-danger{background:#fff;color:var(--err);border-color:var(--err)}.btn-danger:hover{background:#fdf1f0}
+.note{font-size:13px;color:var(--muted);line-height:1.6;margin-top:22px;padding-top:16px;border-top:1px solid var(--border)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.field input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:#fbfbfb;font-size:16px;letter-spacing:1px}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,54,129,.12);background:#fff}
+.alert{background:#fde9e7;border:1px solid var(--err);color:#a32a22;padding:10px 14px;border-radius:10px;font-size:14px;margin-bottom:16px}
+.mock-banner{background:#eaf0fb;border:1px dashed var(--accent);color:var(--accent);font-size:13px;border-radius:10px;padding:9px 13px;margin-bottom:20px}
+.mock-banner button{background:none;border:0;color:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#e7f6ee;color:var(--ok);border:1px solid #b6e3c9;border-radius:999px;padding:2px 11px;font-size:13px;font-weight:600;white-space:nowrap}
+.badge.ext{background:var(--ext-bg);color:var(--ext);border-color:#d7c6fb}
+.badge.warn{background:#fff4e0;color:#8a4b00;border-color:#f3d39c}
+.chip{display:inline-block;border-radius:999px;padding:0 8px;font-size:12px;font-weight:600;white-space:nowrap;line-height:20px}
+.chip.sdc{background:var(--sdc-bg);color:var(--sdc)}.chip.sbk{background:var(--sbk-bg);color:#c2560a}.chip.ext{background:var(--ext-bg);color:var(--ext)}
+.chip.viewer{background:var(--r-viewer);color:var(--r-viewer-t)}.chip.editor{background:var(--r-editor);color:var(--r-editor-t)}.chip.admin{background:var(--r-admin);color:var(--r-admin-t)}
+.chip.new{background:var(--primary);color:#fff}
+.chip.gray{background:#eee;color:#666}
+.container{max-width:1000px;margin:0 auto;padding:28px 16px 56px}
+.container.wide{max-width:1180px}
+.hero{margin-bottom:22px}.hero h1{font-size:27px;margin:0 0 6px;line-height:1.3}.hero p{color:var(--muted);margin:0}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:28px;display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center}
+.profile-card .item{min-width:120px}
+.profile-card .k{font-size:12px;color:var(--muted);letter-spacing:.4px}
+.profile-card .v{font-size:15px;font-weight:600;margin-top:2px}
+.section-title{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:0 0 12px}
+.gridbar{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.sizes{display:flex;gap:6px;align-items:center}
+.sizes span{font-size:12px;color:#999;margin-right:2px}
+.sizes button{padding:4px 12px;border-radius:6px;cursor:pointer;font-size:13px;border:1px solid #ccc;background:#fff;color:#555}
+.sizes button[aria-pressed=true]{border-color:var(--accent);background:var(--accent);color:#fff}
+.app-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.app-grid.large{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.app-grid.small{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.app{position:relative;text-decoration:none;color:inherit;background:#fff;border:1px solid #e6e6e6;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s,transform .15s,border-color .15s}
+.app:hover{box-shadow:0 6px 18px rgba(0,0,0,.08);border-color:#cfd8e6;transform:translateY(-1px)}
+.app .ic{width:40px;height:40px;border-radius:11px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:23px}
+.app .nm{font-weight:700;font-size:16px;line-height:1.3}
+.app .ds{font-size:13.5px;color:var(--muted);line-height:1.45;flex:1}
+.app .ft{display:flex;gap:6px;flex-wrap:wrap}
+.app-grid.small .app{padding:12px;text-align:center;align-items:center}
+.app-grid.small .app .ds,.app-grid.small .app .ft{display:none}
+.app-grid.small .nm{font-size:13px}
+.app-grid.large .ic{width:48px;height:48px;font-size:28px}
+.app .newdot{position:absolute;top:-8px;right:-6px}
+.app.fresh{animation:pop .9s ease}
+@keyframes pop{0%{box-shadow:0 0 0 0 rgba(252,87,74,.6)}100%{box-shadow:0 0 0 14px rgba(252,87,74,0)}}
+.hidden-note{margin-top:16px;font-size:13px;color:var(--muted);background:#fff;border:1px dashed #ccc;border-radius:10px;padding:10px 14px}
+.adminlink{margin-top:22px}
+.empty{color:#888;padding:20px;background:#fff;border:1px dashed #ccc;border-radius:12px}
+/* consent */
+.gcard{max-width:450px;width:100%;background:#fff;border:1px solid #dadce0;border-radius:8px;padding:36px 34px 28px}
+.gcard h2{font-weight:400;font-size:23px;margin:14px 0 6px;color:#202124}
+.gcard p{color:#5f6368;font-size:14px;margin:0 0 18px}
+.acct{display:flex;gap:12px;align-items:center;border:1px solid #dadce0;border-radius:8px;padding:12px 14px;margin:14px 0;width:100%;background:#fff;cursor:pointer;text-align:left}
+.acct:hover{background:#f8f9fa}
+.acct small{display:block;color:#5f6368}
+.scopes{list-style:none;padding:0;margin:12px 0 20px;font-size:14px;color:#3c4043}
+.scopes li{padding:8px 0;border-bottom:1px solid #eee;display:flex;gap:10px}
+.lcard{max-width:420px;width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+.lcard .lhead{background:var(--line-green);color:#fff;padding:14px 20px;font-weight:700;display:flex;gap:8px;align-items:center}
+.lcard .lbody{padding:24px 22px}
+.spinner{width:22px;height:22px;border:3px solid #cfd8e6;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fakeurl{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#5f6368;background:#f1f3f4;border-radius:999px;padding:4px 12px;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.match{display:flex;gap:16px;align-items:center;background:#f7f9fc;border:1px solid #dfe6f2;border-radius:12px;padding:16px;margin:4px 0 18px}
+.match .k{font-size:12px;color:var(--muted)}
+/* sso */
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed #e6e6e6;color:#aaa;transition:color .2s}
+.steps li.done{color:var(--text)}
+.steps li.run{color:var(--accent)}
+.steps .mk{width:24px;height:24px;border-radius:50%;border:2px solid #ddd;flex:0 0 24px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-top:1px}
+.steps li.done .mk{background:var(--ok);border-color:var(--ok);color:#fff}
+.steps li.run .mk{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+.steps small{display:block;color:var(--muted);font-size:12.5px}
+.browser{background:#fff;border:1px solid #d6d9df;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-top:18px}
+.browser .bar{background:#eef0f3;padding:8px 12px;display:flex;gap:8px;align-items:center;min-width:0}
+.browser .dots{display:flex;gap:5px;flex:0 0 auto}.browser .dots i{width:10px;height:10px;border-radius:50%;background:#ccc;display:block}
+.browser .dots i:nth-child(1){background:#ff5f57}.browser .dots i:nth-child(2){background:#febc2e}.browser .dots i:nth-child(3){background:#28c840}
+.browser .body{padding:22px}
+.okhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.okhead .big{font-size:40px}
+pre.code{background:#0f1726;color:#d7e3ff;border-radius:10px;padding:14px;font-size:12.5px;overflow:auto;margin:10px 0 0;white-space:pre-wrap;word-break:break-all;font-family:ui-monospace,Menlo,monospace}
+pre.code .k{color:#8fd3ff}pre.code .s{color:#b6f09c}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:760px){.split{grid-template-columns:1fr}}
+/* admin */
+.adm-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.adm-head h1{font-size:23px;color:var(--accent);margin:0}
+.tabs{display:flex;gap:6px;margin:14px 0 16px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.tabs a{padding:8px 14px;text-decoration:none;color:#555;border-bottom:3px solid transparent;margin-bottom:-1px;font-weight:600;font-size:15px}
+.tabs a[aria-current=page]{color:var(--accent);border-bottom-color:var(--primary)}
+.panel{background:#fff;border:1px solid #e6e6e6;border-radius:12px;padding:16px;min-width:0}
+.h2{font-size:18px;margin:0 0 6px;border-left:4px solid var(--primary);padding-left:10px}
+.help{color:#888;font-size:13px;margin:0 0 12px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input,.tools select{padding:8px 10px;border:1px solid #ccc;border-radius:8px;font-size:14px;background:#fff}
+.tools input{min-width:0;flex:1 1 200px;max-width:320px}
+.legend{display:flex;gap:6px 12px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+.scroll{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;border:1px solid #eee;border-radius:10px}
+table.mx{border-collapse:separate;border-spacing:0;font-size:13px;min-width:100%}
+.mx th,.mx td{border-bottom:1px solid #eee;padding:5px 4px;text-align:center;vertical-align:middle;background:#fff}
+.mx thead th{background:#f7f9fc;position:sticky;top:0;z-index:2;font-weight:600}
+.mx .uc{position:sticky;left:0;z-index:3;text-align:left;min-width:210px;max-width:240px;border-right:1px solid #e6e6e6;background:#fff}
+.mx thead .uc{z-index:4;background:#f7f9fc}
+.mx .uc .row{display:flex;gap:8px;align-items:center}
+.mx .uc b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx .uc small{color:var(--muted);font-size:11.5px;white-space:nowrap;display:block;overflow:hidden;text-overflow:ellipsis}
+.mx .uc .row>span{min-width:0;overflow:hidden}
+.mx .uc .chip{font-size:10.5px;line-height:17px;padding:0 6px}
+.mx .ah{min-width:84px;max-width:92px}
+.mx .ah .ai{font-size:20px;display:block}
+.mx .ah .an{display:block;font-size:12px;line-height:1.25;margin:2px 0 4px}
+.pol{border:1px solid #ccc;background:#fff;border-radius:999px;font-size:11px;padding:1px 8px;cursor:pointer;white-space:nowrap}
+.pol.open{border-color:#b6e3c9;background:#e7f6ee;color:var(--ok)}
+.pol.closed{border-color:#f3c1bc;background:#fdf1f0;color:#b3261e}
+.mx select{font-size:12px;padding:4px 2px;border-radius:6px;border:1px solid #d5d9e0;background:#fff;width:76px;cursor:pointer}
+.mx td.r-viewer select{background:var(--r-viewer);color:var(--r-viewer-t);border-color:#bcd0ef;font-weight:600}
+.mx td.r-editor select{background:var(--r-editor);color:var(--r-editor-t);border-color:#b6e3c9;font-weight:600}
+.mx td.r-admin select{background:var(--r-admin);color:var(--r-admin-t);border-color:#f3c1bc;font-weight:600}
+.mx td.r-implicit select{background:#f7fbff;color:#5b7fb8;border-style:dashed}
+.mx td.r-none select{color:#aaa}
+.mx td.flash{animation:flash 1s ease}
+@keyframes flash{0%{background:#fff3b0}100%{background:#fff}}
+.mx .cnt{font-weight:700;color:var(--accent);white-space:nowrap}
+.mx tr.dis td{opacity:.55}
+.mx .sa{white-space:nowrap}
+.sortbtn{background:none;border:0;font-weight:600;cursor:pointer;padding:0;color:inherit}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left;vertical-align:top}
+.tbl th{border-bottom:2px solid #eee;white-space:nowrap}
+.tbl th button{background:none;border:0;padding:0;font-weight:700;cursor:pointer;color:inherit}
+.tbl th.asc button::after{content:" ▲";font-size:10px}.tbl th.desc button::after{content:" ▼";font-size:10px}
+.tbl td.at{white-space:nowrap;color:var(--muted);font-size:13px}
+.addform{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
+.addform label{font-size:13px;display:flex;flex-direction:column;gap:3px;flex:1 1 180px}
+.addform input{padding:8px 10px;border:1px solid #ccc;border-radius:8px;font-size:15px;width:100%}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px;font-size:13px;color:var(--muted)}
+.denied{max-width:520px;margin:48px auto;text-align:center;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px}
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:6px 16px 28px}
+#toasts{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 32px)}
+.toast{background:#1c2230;color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:420px}
+.toast.err{background:#a32a22}
+.toast button{background:#fff;color:#1c2230;border:0;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;cursor:pointer}
+@media (max-width:600px){
+ #toasts{left:12px;right:12px;bottom:12px;max-width:none}.toast{max-width:none}
+ .card{padding:28px 20px}.gcard{padding:28px 20px}
+ .hero h1{font-size:23px}
+ .who .nm{display:none}
+ .viewas select{max-width:170px}
+ .app-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+ .app-grid.large{grid-template-columns:1fr}
+ .app{padding:14px}
+ .mx .uc{min-width:150px;max-width:160px}
+ .container{padding-top:20px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <div class="demobar" role="note"><div class="in">
+    <span class="tag">DEMO</span><span>เดโม · ข้อมูลตัวอย่างทั้งหมด ไม่มีการล็อกอินจริง</span>
+    <span class="sp"></span>
+    <button type="button" id="reset">↺ รีเซ็ตข้อมูลเดโม</button>
+    <a href="../../#seacon-portal-sso">← กลับไปหน้าผลงาน</a>
+  </div></div>
+  <header class="topbar" id="topbar" hidden><div class="in">
+    <a class="brand" href="#/home"><span class="dot" aria-hidden="true"></span>SEACON <small>Portal</small></a>
+    <div class="who">
+      <label class="viewas">ดูในมุมของ
+        <select id="viewas" aria-label="ดูในมุมของผู้ใช้"></select>
+      </label>
+      <span class="nm" id="who-name"></span>
+      <span class="avatar" id="who-av" aria-hidden="true"></span>
+      <button class="linkbtn" type="button" id="logout">ออกจากระบบ</button>
+    </div>
+  </div></header>
+</div>
+<main id="app" tabindex="-1"></main>
+<footer class="foot" id="foot">SEACON Portal · เดโมสำหรับพอร์ตโฟลิโอ · ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น</footer>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='demo-seacon-portal-v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TH=new Intl.Collator('th');
+const ROLES=['viewer','editor','admin'];
+const ROLE_TH={viewer:'viewer',editor:'editor',admin:'admin'};
+const RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const APPS=[
+ {id:'sr',name:'เบิกของออนไลน์',icon:'📦',desc:'ใบเบิก → อนุมัติ → สโตร์จ่ายของ → export บัญชี'},
+ {id:'servicefee',name:'ค่าบริการร้านค้า',icon:'🧾',desc:'ออกใบแจ้งค่าบริการผู้เช่า + กระทบยอด'},
+ {id:'parking',name:'ที่จอดรถ',icon:'🚗',desc:'ลงทะเบียนรถ/สติกเกอร์จอดรถพนักงาน'},
+ {id:'probation',name:'ประเมินทดลองงาน',icon:'📝',desc:'แบบประเมินพนักงานทดลองงาน + ลายเซ็นอนุมัติ'},
+ {id:'ytracking',name:'Y-Tracking & Proactive',icon:'📈',desc:'ระบบคะแนนผลงานพนักงาน — บันทึก/ตรวจ/อนุมัติ'},
+ {id:'aitracker',name:'AI Subscription Tracker',icon:'📊',desc:'ติดตามค่าใช้จ่าย AI subscription ของบริษัท'},
+ {id:'coop',name:'สหกรณ์ออมทรัพย์',icon:'🏦',desc:'ดูหุ้น เงินกู้ ปันผล (เฉพาะสมาชิก)'},
+ {id:'aiskill',name:'ผลประเมินทักษะ AI',icon:'🎓',desc:'ดูผลประเมินทักษะการใช้ AI ของคุณ (ระดับ 1–5)'},
+ {id:'battle',name:'AI Battle Arena',icon:'🎮',desc:'สนามฝึก — เลือกโจทย์ ทำ แล้วให้ AI ตัดสินตาม rubric'},
+ {id:'taketaskout',name:'Take Task Out',icon:'🧩',desc:'Workshop ค้นหางานที่ AI ช่วยได้'},
+ {id:'qr',name:'QR Generator',icon:'🔳',desc:'สร้าง QR code สำหรับป้าย/เอกสาร'},
+ {id:'mediabook',name:'จองสื่อโฆษณา',icon:'📺',desc:'จองพื้นที่สื่อในศูนย์ + ออกใบแจ้งหนี้'}
+];
+const APP=Object.fromEntries(APPS.map(a=>[a.id,a]));
+
+const USERS=[
+ {id:'10001',name:'สมชาย ใจดี',dept:'ฝ่ายไอที',co:'SDC',email:'somchai.demo@example.com'},
+ {id:'10042',name:'วิภาวรรณ แสงทอง',dept:'ฝ่ายบัญชี',co:'SDC'},
+ {id:'10077',name:'ธนากร พรหมมา',dept:'ฝ่ายอาคาร',co:'SBK'},
+ {id:'10103',name:'กมลชนก ศรีสุข',dept:'ฝ่ายบุคคล',co:'SDC'},
+ {id:'10128',name:'ประเสริฐ วงศ์ใหญ่',dept:'ฝ่ายจัดซื้อ',co:'SBK'},
+ {id:'10156',name:'นภัสสร บุญมา',dept:'ฝ่ายการตลาด',co:'SDC'},
+ {id:'10190',name:'อนุชา คงเจริญ',dept:'ฝ่ายรักษาความปลอดภัย',co:'SBK'},
+ {id:'10215',name:'ศิริพร ทองดี',dept:'แผนกสโตร์',co:'SDC'}
+];
+const PRIMARY=['10001','10042','EXT-001'];
+const AV_COLORS=['#003681','#fc574a','#1a9e54','#7c3aed','#0e8fa3','#c2560a','#b3261e','#5b6b8c'];
+
+let S;
+function seed(){
+  const t0=Date.now();
+  const ago=m=>new Date(t0-m*60000).toISOString();
+  S={v:1,
+    policy:{sr:'closed',servicefee:'closed',parking:'open',probation:'closed',ytracking:'open',aitracker:'closed',coop:'open',aiskill:'open',battle:'open',taketaskout:'closed',qr:'open',mediabook:'closed'},
+    externals:[
+      {id:'EXT-001',name:'Alex Morgan',email:'alex.m@partner.example',dept:'Outsource · ที่ปรึกษาระบบ',status:'ACTIVE'},
+      {id:'EXT-002',name:'ปิยะ วัฒนา',email:'piya.w@consult.example',dept:'ผู้ตรวจสอบภายนอก',status:'ACTIVE'}
+    ],
+    grants:{
+      '10001':{sr:'admin',servicefee:'admin',probation:'admin',aitracker:'admin',taketaskout:'admin',mediabook:'admin',ytracking:'admin'},
+      '10042':{servicefee:'editor',sr:'viewer'},
+      '10077':{servicefee:'viewer',parking:'editor'},
+      '10103':{probation:'admin',ytracking:'editor'},
+      '10128':{sr:'editor'},
+      '10156':{mediabook:'editor',qr:'editor'},
+      '10215':{sr:'editor'},
+      'EXT-001':{taketaskout:'viewer',battle:'viewer'},
+      'EXT-002':{servicefee:'viewer'}
+    },
+    superAdmins:['10001'],
+    audit:[
+      {at:ago(60*26),by:'สมชาย ใจดี',act:'ให้สิทธิ์',detail:'ศิริพร ทองดี → เบิกของออนไลน์ (editor)'},
+      {at:ago(60*20),by:'สมชาย ใจดี',act:'เพิ่มผู้ใช้ภายนอก',detail:'ปิยะ วัฒนา <piya.w@consult.example>'},
+      {at:ago(60*19),by:'สมชาย ใจดี',act:'ให้สิทธิ์',detail:'ปิยะ วัฒนา → ค่าบริการร้านค้า (viewer)'},
+      {at:ago(60*5),by:'สมชาย ใจดี',act:'เปลี่ยนนโยบายแอป',detail:'QR Generator → พนักงานทุกคน'},
+      {at:ago(42),by:'สมชาย ใจดี',act:'เปลี่ยนสิทธิ์',detail:'นภัสสร บุญมา → จองสื่อโฆษณา (viewer → editor)'}
+    ],
+    session:null, bindings:{google:null,line:null}, viewAs:null, seen:{}, size:'medium', fails:0};
+}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(d&&d.v===1&&d.policy&&d.grants){S=d;return;}}}catch(e){}seed();save();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+function allUsers(){return USERS.map(u=>Object.assign({ext:false,status:'ACTIVE'},u)).concat(S.externals.map(x=>Object.assign({ext:true,co:'EXT'},x)));}
+function user(id){return allUsers().find(u=>u.id===id)||null;}
+function initials(n){const f=w=>(w||'').replace(/^[เแโใไ]/,'').charAt(0);const p=String(n).trim().split(/\s+/);return (f(p[0])||'?')+f(p[1]);}
+function avColor(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;return AV_COLORS[h%AV_COLORS.length];}
+function avatar(u,cls){return `<span class="avatar ${cls||''}" style="background:${avColor(u.id)}" aria-hidden="true">${esc(initials(u.name))}</span>`;}
+function coChip(u){return u.ext?'<span class="chip ext">ภายนอก</span>':`<span class="chip ${u.co==='SBK'?'sbk':'sdc'}">${u.co}</span>`;}
+function roleOf(u,appId){
+  if(!u||u.status!=='ACTIVE')return null;
+  const g=(S.grants[u.id]||{})[appId]; if(g)return g;
+  if(!u.ext&&S.policy[appId]==='open')return 'viewer';
+  return null;
+}
+function visibleApps(u){return APPS.filter(a=>roleOf(u,a.id));}
+function isSA(id){return S.superAdmins.includes(id);}
+function me(){return S.session?user(S.session.empId):null;}
+function viewer(){return user(S.viewAs)||me();}
+function logAudit(act,detail){const m=me();S.audit.push({at:new Date().toISOString(),by:m?m.name:'-',act,detail});}
+function fmtAt(iso){const d=new Date(iso);return d.toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
+
+function toast(msg,opt){opt=opt||{};const el=document.createElement('div');el.className='toast'+(opt.err?' err':'');el.innerHTML=`<span>${msg}</span>`;
+  if(opt.action){const b=document.createElement('button');b.type='button';b.textContent=opt.action.label;b.onclick=()=>{el.remove();opt.action.fn();};el.appendChild(b);}
+  const box=$('#toasts');while(box.children.length>=2)box.firstChild.remove();box.appendChild(el);setTimeout(()=>el.remove(),opt.action?7000:3500);}
+
+/* ---------- icons ---------- */
+const GOOGLE='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18A10.97 10.97 0 0 0 1 12c0 1.78.43 3.46 1.18 4.93l3.66-2.83z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"/></svg>';
+const LINE='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="#fff"><path d="M12 2.5c-5.52 0-10 3.64-10 8.12 0 4.01 3.55 7.37 8.35 8.01.33.07.77.22.88.5.1.26.06.66.03.92l-.14.86c-.04.25-.2 1 .87.55 1.07-.46 5.78-3.4 7.88-5.83C21.21 14.04 22 12.2 22 10.62 22 6.14 17.52 2.5 12 2.5z"/></svg>';
+const LOGO='<div class="logo" role="img" aria-label="SEACON Portal"><span class="dot"></span>SEACON <span class="p">Portal</span></div>';
+
+/* ---------- router ---------- */
+let timers=[];
+function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+function later(fn,ms){timers.push(setTimeout(fn,RM?Math.min(ms,50):ms));}
+function go(h){if(location.hash===h)render();else location.hash=h;}
+
+function render(){
+  clearTimers();
+  const h=location.hash.replace(/^#/,'')||'/';
+  const parts=h.split('/').filter(Boolean);
+  const m=me();
+  const app=$('#app');
+  // guards
+  if(!S.session){
+    if(parts[0]==='consent'){topbar(false);app.innerHTML=consentView(parts[1]);bindConsent(parts[1]);return focusMain();}
+    if(parts[0]!==undefined&&parts[0]!=='login'){location.replace('#/');return;}
+    topbar(false);app.innerHTML=loginView();bindLogin();return focusMain();
+  }
+  if(!S.session.empId){topbar(false);app.innerHTML=bindView();bindBind();return focusMain();}
+  if(!S.viewAs)S.viewAs=m.id;
+  topbar(true);
+  if(parts[0]==='sso'&&APP[parts[1]]){app.innerHTML=ssoView(parts[1]);runSso(parts[1]);return focusMain();}
+  if(parts[0]==='admin'){app.innerHTML=adminView(parts[1]||'matrix');bindAdmin(parts[1]||'matrix');return focusMain(true);}
+  if(parts[0]!=='home'){location.replace('#/home');return;}
+  app.innerHTML=homeView();bindHome();focusMain();
+}
+function focusMain(keepScroll){if(!keepScroll)window.scrollTo(0,0);$('#app').focus({preventScroll:true});}
+
+function topbar(show){
+  $('#topbar').hidden=!show;
+  if(!show)return;
+  const m=me(),v=viewer();
+  const opts=[];const seen=new Set();
+  const add=(id,g)=>{if(seen.has(id))return;const u=user(id);if(!u)return;seen.add(id);opts.push({u,g});};
+  add(m.id,'p');PRIMARY.forEach(id=>add(id,'p'));allUsers().forEach(u=>add(u.id,'o'));
+  const lab=u=>`${u.name}${u.id===m.id?' (คุณ)':''} · ${isSA(u.id)?'super-admin':u.ext?'ภายนอก':'พนักงาน'}`;
+  $('#viewas').innerHTML=`<optgroup label="ผู้ใช้เดโมหลัก">${opts.filter(o=>o.g==='p').map(o=>`<option value="${o.u.id}">${esc(lab(o.u))}</option>`).join('')}</optgroup><optgroup label="คนอื่นๆ">${opts.filter(o=>o.g==='o').map(o=>`<option value="${o.u.id}">${esc(lab(o.u))}</option>`).join('')}</optgroup>`;
+  $('#viewas').value=v.id;
+  $('#who-name').textContent=v.name;
+  const av=$('#who-av');av.textContent=initials(v.name);av.style.background=avColor(v.id);
+}
+
+/* ---------- login ---------- */
+function loginView(){
+  return `<div class="center"><div class="card">${LOGO}
+  <h1 class="title">เข้าสู่ระบบ</h1>
+  <p class="subtitle">ประตูเข้าใช้งานแอปพนักงาน SEACON — ยืนยันตัวตนครั้งเดียว ใช้ได้ทุกแอป</p>
+  <div class="mock-banner">โหมดเดโม — กดปุ่มไหนก็ได้ ระบบจะจำลองหน้าขอสิทธิ์ของ Google/LINE แล้วพาไปผูกบัญชีกับรหัสพนักงาน</div>
+  <div class="providers">
+    <button class="btn btn-google" type="button" data-p="google"><span class="icon">${GOOGLE}</span>เข้าสู่ระบบด้วย Google</button>
+    <button class="btn btn-line" type="button" data-p="line"><span class="icon">${LINE}</span>เข้าสู่ระบบด้วย LINE</button>
+  </div>
+  <p class="note">ครั้งแรกต้องผูกบัญชีกับ <b>รหัสพนักงาน + เลขบัตรประชาชน</b> (ตรวจกับฐานข้อมูล HR) — ผูกแล้วครั้งต่อไปเข้าได้ทันที<br>ผู้ใช้ภายนอก (outsource) ต้องได้รับอนุญาตอีเมล Google จากผู้ดูแลก่อน</p>
+  </div></div>`;
+}
+function bindLogin(){document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>go('#/consent/'+b.dataset.p));}
+
+function consentView(p){
+  if(p==='line')return `<div class="center"><div class="lcard" role="dialog" aria-labelledby="lc-h">
+    <div class="lhead">${LINE}<span>LINE Login</span></div>
+    <div class="lbody"><h2 class="title" id="lc-h" style="font-size:20px">SEACON Portal ขอสิทธิ์เข้าถึง</h2>
+    <p class="subtitle" style="margin-bottom:10px">บัญชี LINE: <b>สมชาย (เดโม)</b></p>
+    <ul class="scopes"><li>👤 <span>ชื่อที่แสดงและรูปโปรไฟล์</span></li><li>🔑 <span>รหัสผู้ใช้ LINE (ใช้ผูกกับรหัสพนักงาน)</span></li></ul>
+    <div id="cwork"><button class="btn btn-line" type="button" id="allow">อนุญาต</button>
+    <p style="text-align:center;margin:12px 0 0"><a href="#/" >ยกเลิก</a></p></div>
+    <p class="note" style="margin-top:16px">หน้านี้จำลองขึ้น ไม่มีการเชื่อมต่อ LINE จริง</p></div></div></div>`;
+  return `<div class="center"><div class="gcard" role="dialog" aria-labelledby="gc-h">
+    ${GOOGLE}<h2 id="gc-h">เลือกบัญชี</h2><p>เพื่อดำเนินการต่อไปยัง <b style="color:#1a73e8">SEACON Portal</b></p>
+    <div id="cwork"><button class="acct" type="button" id="allow"><span class="avatar" style="background:#1a73e8">ส</span><span><b>สมชาย (เดโม)</b><small>somchai.demo@example.com</small></span></button>
+    <p style="font-size:12px">Google จะแชร์ชื่อ อีเมล และรูปโปรไฟล์ของคุณกับ SEACON Portal (openid · email · profile)</p>
+    <p><a href="#/">ยกเลิก</a></p></div>
+    <p class="note">หน้านี้จำลองขึ้น ไม่มีการเชื่อมต่อ Google จริง</p></div></div>`;
+}
+function bindConsent(p){
+  if(p!=='google'&&p!=='line'){location.replace('#/');return;}
+  $('#allow').onclick=()=>{
+    $('#cwork').innerHTML='<p style="display:flex;gap:10px;align-items:center;color:#5f6368"><span class="spinner"></span> กำลังส่งกลับไป SEACON Portal…</p>';
+    later(()=>{
+      const bound=S.bindings[p];
+      S.session={provider:p,empId:bound||null};
+      if(bound){S.viewAs=bound;save();toast(`บัญชี ${p==='google'?'Google':'LINE'} นี้ผูกไว้แล้ว — เข้าได้ทันที`);go('#/home');}
+      else{save();go('#/bind');}
+    },900);
+  };
+}
+
+/* ---------- bind ---------- */
+let bindStep={empId:null,err:null};
+function bindView(){
+  const p=S.session.provider,pn=p==='google'?'Google':'LINE';
+  const other=S.bindings[p==='google'?'line':'google'];
+  if(bindStep.empId){
+    const u=user(bindStep.empId);
+    return `<div class="center"><div class="card">${LOGO}
+      <h2 class="title">ใช่คุณหรือไม่?</h2><p class="subtitle">พบข้อมูลในระบบ HR ตรงกับรหัสและเลขบัตรที่กรอก</p>
+      <div class="match">${avatar(u,'lg')}<div><div style="font-weight:700;font-size:18px">${esc(u.name)}</div>
+      <div class="k">รหัสพนักงาน ${u.id}</div><div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><span class="chip gray">${esc(u.dept)}</span>${coChip(u)}</div></div></div>
+      <button class="btn btn-primary" type="button" id="confirm">ยืนยัน ผูกบัญชี ${pn} กับรหัสนี้</button>
+      <p style="text-align:center;margin:14px 0 0"><button class="linkbtn" type="button" id="back">ไม่ใช่ฉัน — กรอกใหม่</button></p>
+      <p class="note">ระบบจริง: บัญชีหนึ่งผูกได้กับพนักงานคนเดียว (Google และ LINE ของคนเดียวกันรวมเป็นตัวตนเดียว) · ถ้าพนักงานลาออก จะหลุดจากฐาน HR และเข้าไม่ได้อัตโนมัติ</p>
+    </div></div>`;
+  }
+  return `<div class="center"><div class="card">${LOGO}
+    <h2 class="title">ยืนยันตัวตนพนักงาน</h2>
+    <p class="subtitle">เข้าสู่ระบบด้วย ${pn} แล้ว — ผูกบัญชีกับรหัสพนักงานครั้งแรกครั้งเดียว</p>
+    <div class="mock-banner">โหมดเดโม — ลองรหัส <button type="button" data-fill="10001">10001</button> (super-admin) หรือ <button type="button" data-fill="10042">10042</button> (พนักงานทั่วไป) + เลขบัตร 13 หลักใดก็ได้${other?`<br>บัญชีอีกช่องทางผูกกับ ${other} อยู่แล้ว — ผูกรหัสเดิมได้ = ตัวตนเดียวกัน`:''}</div>
+    <form id="bindf" novalidate>
+      ${bindStep.err?`<div class="alert" role="alert">${esc(bindStep.err)}</div>`:''}
+      <div class="field"><label for="empId">รหัสพนักงาน (5 หลัก)</label><input id="empId" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="12345" required></div>
+      <div class="field"><label for="idCard">เลขบัตรประชาชน (13 หลัก)</label><input id="idCard" inputmode="numeric" autocomplete="off" maxlength="17" placeholder="x xxxx xxxxx xx x" required></div>
+      <button class="btn btn-primary" type="submit" id="bindbtn">ยืนยันตัวตน</button>
+    </form>
+    <p style="text-align:center;margin:14px 0 0"><button class="linkbtn" type="button" id="cancel">ยกเลิก / ออกจากระบบ</button></p>
+    <p class="note">ผิดเกิน 3 ครั้ง ระบบจริงจะบล็อก 24 ชม. (กันการสุ่มรหัส)</p>
+  </div></div>`;
+}
+function bindBind(){
+  const cancel=$('#cancel');if(cancel)cancel.onclick=logout;
+  const back=$('#back');if(back)back.onclick=()=>{bindStep={empId:null,err:null};render();};
+  document.querySelectorAll('[data-fill]').forEach(b=>b.onclick=()=>{$('#empId').value=b.dataset.fill;$('#idCard').value='1 1037 00123 45 6';$('#empId').focus();});
+  const cf=$('#confirm');
+  if(cf)cf.onclick=()=>{
+    const p=S.session.provider,id=bindStep.empId;
+    S.bindings[p]=id;S.session.empId=id;S.viewAs=id;S.fails=0;bindStep={empId:null,err:null};
+    save();toast('ผูกบัญชีสำเร็จ ✓ ยินดีต้อนรับ');go('#/home');
+  };
+  const f=$('#bindf');
+  if(f)f.onsubmit=e=>{
+    e.preventDefault();
+    const id=$('#empId').value.trim(),card=$('#idCard').value.replace(/[\s-]/g,'');
+    if(S.fails>=3){bindStep.err='ผิดเกิน 3 ครั้ง — (ระบบจริงบล็อก 24 ชม.) เดโม: กดรีเซ็ตข้อมูลเดโมเพื่อลองใหม่';return render();}
+    if(!/^\d{5}$/.test(id)){bindStep.err='กรุณากรอกรหัสพนักงาน 5 หลัก';return render();}
+    if(!/^\d{13}$/.test(card)){bindStep.err='เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก';return render();}
+    $('#bindbtn').disabled=true;$('#bindbtn').textContent='กำลังตรวจสอบกับ HR…';
+    later(()=>{
+      const u=USERS.find(x=>x.id===id);
+      if(!u){S.fails++;save();bindStep.err=`ไม่พบรหัสพนักงาน ${id} ในระบบ HR หรือเลขบัตรไม่ตรง (ผิด ${S.fails}/3)`;return render();}
+      bindStep={empId:id,err:null};render();
+    },700);
+  };
+}
+
+/* ---------- home / launcher ---------- */
+function homeView(){
+  const v=viewer(),m=me();
+  const apps=visibleApps(v);
+  const seen=S.seen[v.id];
+  const fresh=seen?apps.filter(a=>!seen.includes(a.id)).map(a=>a.id):[];
+  const hiddenN=APPS.length-apps.length;
+  const imp=v.id!==m.id;
+  const loginVia=imp?'—':(S.session.provider==='google'?'Google':'LINE');
+  let h=`<div class="container">`;
+  if(imp)h+=`<div class="mock-banner" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span>👁 กำลังดูในมุมของ <b>${esc(v.name)}</b> — เห็นเฉพาะแอปที่คนนี้มีสิทธิ์</span><button type="button" class="btn sm btn-outline" id="backme">กลับเป็นตัวเอง</button></div>`;
+  if(v.status!=='ACTIVE')return h+`<div class="denied"><h2>บัญชีนี้ถูกระงับ</h2><p class="help">ผู้ใช้ภายนอกที่ถูกปิดใช้งาน จะเข้า Portal และทุกแอปไม่ได้ทันที</p></div></div>`;
+  h+=`<section class="hero"><h1>สวัสดี, ${esc(v.name)}</h1><p>ยืนยันตัวตนเรียบร้อย ${v.ext?'<span class="badge ext">✓ ผู้ใช้ภายนอกที่ได้รับอนุญาต</span>':'<span class="badge">✓ พนักงาน SEACON</span>'} — เลือกแอปที่ต้องการเข้าใช้งานได้เลย</p></section>
+  <div class="profile-card">${avatar(v,'lg')}
+    <div class="item"><div class="k">${v.ext?'รหัสภายใน':'รหัสพนักงาน'}</div><div class="v">${v.id}</div></div>
+    <div class="item"><div class="k">หน่วยงาน</div><div class="v">${esc(v.dept)}</div></div>
+    <div class="item"><div class="k">บริษัท</div><div class="v">${coChip(v)}</div></div>
+    <div class="item"><div class="k">เข้าสู่ระบบด้วย</div><div class="v">${loginVia}</div></div>
+    ${isSA(v.id)?'<div class="item"><div class="k">บทบาท Portal</div><div class="v"><span class="chip admin">super-admin</span></div></div>':''}
+  </div>
+  <div class="gridbar"><p class="section-title" style="margin:0">แอปของคุณ (${apps.length})</p>
+  <div class="sizes" role="group" aria-label="ขนาดการ์ด"><span>ขนาด:</span>${[['large','ใหญ่'],['medium','กลาง'],['small','เล็ก']].map(([k,l])=>`<button type="button" data-size="${k}" aria-pressed="${S.size===k}">${l}</button>`).join('')}</div></div>`;
+  if(!apps.length)h+=`<p class="empty">ยังไม่มีแอปที่คุณมีสิทธิ์เข้าใช้ — ติดต่อผู้ดูแลระบบ</p>`;
+  else h+=`<div class="app-grid ${S.size}">`+apps.map(a=>{const r=roleOf(v,a.id);const isNew=fresh.includes(a.id);
+    return `<a class="app${isNew?' fresh':''}" href="#/sso/${a.id}" aria-label="${esc(a.name)} — สิทธิ์ ${r}${isNew?' (ใหม่)':''}">
+    ${isNew?'<span class="chip new newdot">ใหม่</span>':''}
+    <span class="ic" aria-hidden="true">${a.icon}</span><span class="nm">${esc(a.name)}</span><span class="ds">${esc(a.desc)}</span>
+    <span class="ft"><span class="chip ${r}">${ROLE_TH[r]}</span>${(S.grants[v.id]||{})[a.id]?'':'<span class="chip gray">เปิดทุกคน</span>'}</span></a>`;}).join('')+`</div>`;
+  if(hiddenN)h+=`<p class="hidden-note">🔒 อีก ${hiddenN} แอปถูกซ่อนจากหน้านี้ เพราะ${esc(v.name)}ไม่มีสิทธิ์ — แอปแบบ "เฉพาะเจาะจง" จะไม่โผล่ให้เห็นเลย${isSA(m.id)?' · ผู้ดูแลเปิดสิทธิ์ได้ที่ <a href="#/admin">คอนโซลจัดการสิทธิ์</a>':''}</p>`;
+  if(isSA(v.id))h+=`<p class="adminlink"><a class="btn inline btn-outline" href="#/admin">⚙️ จัดการสิทธิ์ระบบ (ผู้ดูแล)</a></p>`;
+  h+=`</div>`;
+  S.seen[v.id]=apps.map(a=>a.id);save();
+  return h;
+}
+function bindHome(){
+  document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{S.size=b.dataset.size;save();render();});
+  const bm=$('#backme');if(bm)bm.onclick=()=>{S.viewAs=me().id;save();render();};
+}
+
+/* ---------- SSO handoff ---------- */
+function b64u(o){const s=typeof o==='string'?o:JSON.stringify(o);return btoa(unescape(encodeURIComponent(s))).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');}
+function fakeSig(s){let h1=0x811c9dc5,h2=5381;for(let i=0;i<s.length;i++){h1=Math.imul(h1^s.charCodeAt(i),16777619)>>>0;h2=((h2<<5)+h2+s.charCodeAt(i))>>>0;}let out='';for(let k=0;k<5;k++){out+=((h1^(h2*(k+7)))>>>0).toString(36);h1=Math.imul(h1,2654435761)>>>0;}return out.slice(0,43);}
+function ssoView(id){
+  const v=viewer(),a=APP[id],r=roleOf(v,id);
+  if(!r)return `<div class="container"><div class="denied"><div style="font-size:40px">🔒</div><h2>ไม่มีสิทธิ์เข้าแอปนี้</h2>
+    <p class="help">${esc(v.name)} ไม่มีสิทธิ์ใน <b>${esc(a.name)}</b> — Portal ปฏิเสธที่ /sso/authorize และไม่ออก token ให้</p>
+    <a class="btn inline btn-navy" href="#/home">← กลับหน้าหลัก</a></div></div>`;
+  const now=Math.floor(Date.now()/1000);
+  const payload={iss:'seacon-portal',aud:id,sub:v.id,name:v.name,role:r,dept:v.dept,ext:v.ext,iat:now,exp:now+300};
+  const hd=b64u({alg:'HS256',typ:'JWT'}),pl=b64u(payload),tok=hd+'.'+pl+'.'+fakeSig(hd+pl);
+  window.__tok={payload,tok};
+  const steps=[
+    ['ตรวจ session ของ Portal','ยังล็อกอินอยู่ + เช็คซ้ำว่ายังเป็นพนักงาน (ไม่ลาออก)'],
+    ['ตรวจสิทธิ์แอป',`${esc(v.name)} มีสิทธิ์ <b>${r}</b> ใน ${esc(a.name)}`],
+    ['ออก SSO token','JWT HS256 อายุสั้น 300 วินาที ผูกกับแอปนี้ (aud)'],
+    ['ส่งกลับไปที่แอป','redirect ไปยัง redirect_uri ที่ลงทะเบียนไว้เท่านั้น'],
+    ['แอปตรวจ token ด้วย sso-sdk','ตรวจลายเซ็น + aud + exp แล้วสร้าง session ของแอปเอง']
+  ];
+  return `<div class="container"><p style="margin:0 0 12px"><a href="#/home">← กลับ Portal</a></p>
+  <div class="split"><div class="panel"><h1 class="h2" style="font-size:19px">SSO → ${esc(a.name)}</h1><p class="help">จำลองการส่งต่อตัวตนจาก Portal เข้าแอปลูก (ไม่มีการเปลี่ยนหน้าจริง)</p>
+  <ol class="steps" id="steps">${steps.map((s,i)=>`<li data-i="${i}"><span class="mk" aria-hidden="true"></span><span><b>${s[0]}</b><small>${s[1]}</small></span></li>`).join('')}</ol>
+  <p class="sr-only" aria-live="polite" id="ssolive"></p></div>
+  <div class="panel"><h2 class="h2" style="font-size:16px">Token ที่ส่งให้แอป</h2><p class="help">header.payload.signature — ลายเซ็นในเดโมเป็นค่าสุ่ม</p>
+  <pre class="code" aria-label="SSO token">${esc(tok)}</pre>
+  <pre class="code" aria-label="payload ที่ถอดแล้ว">${Object.entries(payload).map(([k,val])=>`<span class="k">${k}</span>: <span class="s">${esc(JSON.stringify(val))}</span>`).join('\n')}</pre></div></div>
+  <div id="landed"></div></div>`;
+}
+function runSso(id){
+  const v=viewer(),a=APP[id],r=roleOf(v,id);if(!r)return;
+  const lis=[...document.querySelectorAll('#steps li')];
+  let i=0;
+  const tick=()=>{
+    if(i>0){lis[i-1].classList.remove('run');lis[i-1].classList.add('done');lis[i-1].querySelector('.mk').textContent='✓';}
+    if(i<lis.length){lis[i].classList.add('run');i++;later(tick,520);return;}
+    $('#ssolive').textContent='เข้าสู่แอปแล้ว';
+    const can={viewer:'ดูข้อมูลได้',editor:'ดู + แก้ไข/สร้างรายการได้',admin:'จัดการทุกอย่างในแอป รวมถึงตั้งค่า'}[r];
+    $('#landed').innerHTML=`<div class="browser" role="region" aria-label="หน้าแอปปลายทาง (จำลอง)"><div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fakeurl">https://${id}.apps.example/auth/sso/callback?token=…</span></div>
+    <div class="body"><div class="okhead"><span class="big" aria-hidden="true">${a.icon}</span><div><div style="font-size:13px;color:var(--ok);font-weight:700">✓ SSO → เข้าสู่แอปแล้ว</div><h2 style="margin:2px 0 0;font-size:22px">${esc(a.name)}</h2></div></div>
+    <p style="margin:14px 0 6px">สวัสดี <b>${esc(v.name)}</b> (${v.id}) — token ผ่านการตรวจด้วย <code>sso-sdk</code> แล้ว แอปไม่ต้องมีหน้า login ของตัวเอง</p>
+    <p class="help" style="margin:0 0 14px">สิทธิ์ในแอปนี้: <span class="chip ${r}">${r}</span> — ${can}</p>
+    <pre class="code">const user = await verifySsoToken(token, { aud: "${id}" });\n// → { sub: "${v.id}", role: "${r}" }  ✓ signature · ✓ aud · ✓ exp</pre>
+    <p style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn inline btn-navy" href="#/home">← กลับ Portal</a><button type="button" class="btn inline btn-ghost" id="replay">เล่นซ้ำ</button></p></div></div>`;
+    $('#replay').onclick=()=>render();
+  };
+  later(tick,250);
+}
+
+/* ---------- admin ---------- */
+let mxState={q:'',kind:'all',sort:'id',dir:1};
+let auState={page:0,sort:'at',dir:-1};
+function adminView(tab){
+  const v=viewer(),m=me();
+  if(!isSA(v.id))return `<div class="container"><div class="denied"><div style="font-size:40px">⛔</div><h2>ไม่มีสิทธิ์</h2><p class="help">หน้านี้สำหรับผู้ดูแลระบบ (Portal super-admin) เท่านั้น — ตอนนี้กำลังดูในมุมของ ${esc(v.name)}</p>
+   <p style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="btn inline btn-ghost" href="#/home">← หน้าหลัก</a>${isSA(m.id)?`<button type="button" class="btn inline btn-navy" id="backme">กลับเป็น ${esc(m.name)}</button>`:''}</p></div></div>`;
+  const t=(k,l)=>`<a href="#/admin/${k}"${tab===k?' aria-current="page"':''}>${l}</a>`;
+  let h=`<div class="container wide"><div class="adm-head"><h1>จัดการสิทธิ์ระบบ</h1><a href="#/home">← หน้าหลัก</a></div>
+  <nav class="tabs" aria-label="เมนูผู้ดูแล">${t('matrix','สิทธิ์รายแอป')}${t('external','ผู้ใช้ภายนอก ('+S.externals.length+')')}${t('audit','บันทึกการเปลี่ยนแปลง ('+S.audit.length+')')}</nav>`;
+  if(tab==='external')h+=externalView();
+  else if(tab==='audit')h+=auditView();
+  else h+=matrixView();
+  return h+`</div>`;
+}
+function matrixUsers(){
+  const q=mxState.q.trim().toLowerCase();
+  let us=allUsers().filter(u=>(mxState.kind==='all'||(mxState.kind==='ext')===u.ext)&&(!q||(u.name+' '+u.id+' '+u.dept+' '+(u.email||'')).toLowerCase().includes(q)));
+  const k=mxState.sort,d=mxState.dir;
+  us.sort((a,b)=>d*(k==='name'?TH.compare(a.name,b.name):k==='cnt'?visibleApps(a).length-visibleApps(b).length:TH.compare(a.id,b.id)));
+  return us;
+}
+function cellHtml(u,a){
+  const g=(S.grants[u.id]||{})[a.id]||'';
+  const implicit=!g&&!u.ext&&S.policy[a.id]==='open';
+  const cls=g?'r-'+g:implicit?'r-implicit':'r-none';
+  const none=implicit?'ทุกคน':'—';
+  return `<td class="${cls}" data-cell="${u.id}|${a.id}"><select aria-label="สิทธิ์ของ ${esc(u.name)} ในแอป ${esc(a.name)}" data-u="${u.id}" data-a="${a.id}"${u.status!=='ACTIVE'?' disabled':''}>
+  <option value=""${!g?' selected':''}>${none}</option>${ROLES.map(r=>`<option value="${r}"${g===r?' selected':''}>${r}</option>`).join('')}</select></td>`;
+}
+function rowHtml(u){
+  const cnt=visibleApps(u).length;
+  return `<tr data-row="${u.id}"${u.status!=='ACTIVE'?' class="dis"':''}><th scope="row" class="uc"><div class="row">${avatar(u,'sm')}<span style="min-width:0"><b>${esc(u.name)}</b><small title="${esc(u.dept)}">${u.id} · ${esc(u.dept)}</small>${coChip(u)}${u.status!=='ACTIVE'?' <span class="chip gray">ระงับ</span>':''}</span></div></th>
+  <td class="sa">${u.ext?'<span class="help" title="ผู้ใช้ภายนอกเป็นผู้ดูแลไม่ได้">—</span>':`<input type="checkbox" data-sa="${u.id}" aria-label="${esc(u.name)} เป็นผู้ดูแล Portal"${isSA(u.id)?' checked':''}>`}</td>
+  ${APPS.map(a=>cellHtml(u,a)).join('')}<td class="cnt" data-cnt="${u.id}">${cnt}/${APPS.length}</td></tr>`;
+}
+function matrixView(){
+  const us=matrixUsers();
+  const sb=(k,l)=>`<button type="button" class="sortbtn" data-sort="${k}" aria-label="เรียงตาม${l}">${l}${mxState.sort===k?(mxState.dir>0?' ▲':' ▼'):''}</button>`;
+  return `<div class="panel"><h2 class="h2">สิทธิ์รายแอป (ผู้ใช้ × แอป)</h2>
+  <p class="help">เปลี่ยนแล้วมีผลทันที — ลองให้สิทธิ์แอปที่ “เฉพาะเจาะจง” กับ <b>วิภาวรรณ</b> แล้วสลับ “ดูในมุมของ” ด้านบน การ์ดแอปใหม่จะโผล่บนหน้าหลักของเขา · กดป้าย 🌐/🔒 ใต้ชื่อแอปเพื่อสลับนโยบาย</p>
+  <div class="tools"><input type="search" id="mxq" placeholder="ค้นหา ชื่อ / รหัส / หน่วยงาน / อีเมล" aria-label="ค้นหาผู้ใช้" value="${esc(mxState.q)}">
+  <select id="mxkind" aria-label="ประเภทผู้ใช้"><option value="all">ทั้งหมด</option><option value="emp">พนักงาน</option><option value="ext">ผู้ใช้ภายนอก</option></select>
+  <span class="legend"><span class="chip viewer">viewer</span>ดู <span class="chip editor">editor</span>แก้ไข <span class="chip admin">admin</span>จัดการแอป <span class="chip gray">ทุกคน</span>= แอปเปิดทุกคน (viewer อัตโนมัติ)</span></div>
+  <div class="scroll"><table class="mx"><thead><tr><th class="uc" scope="col">${sb('name','ผู้ใช้')} <span style="font-weight:400;color:#999">·</span> ${sb('id','รหัส')}</th><th scope="col" title="ผู้ดูแล Portal (super-admin)">Portal<br>admin</th>
+  ${APPS.map(a=>`<th scope="col" class="ah"><span class="ai" aria-hidden="true">${a.icon}</span><span class="an">${esc(a.name)}</span><button type="button" class="pol ${S.policy[a.id]}" data-pol="${a.id}" aria-label="นโยบาย ${esc(a.name)}: ${S.policy[a.id]==='open'?'พนักงานทุกคน':'เฉพาะเจาะจง'} (กดเพื่อสลับ)">${S.policy[a.id]==='open'?'🌐 ทุกคน':'🔒 เฉพาะ'}</button></th>`).join('')}
+  <th scope="col">${sb('cnt','เห็น')}</th></tr></thead>
+  <tbody id="mxbody">${us.length?us.map(rowHtml).join(''):`<tr><td colspan="${APPS.length+3}" style="padding:16px;color:#999">— ไม่พบผู้ใช้ —</td></tr>`}</tbody></table></div></div>`;
+}
+function refreshRow(uid){
+  const u=user(uid),tr=document.querySelector(`tr[data-row="${uid}"]`);if(!u||!tr)return;
+  APPS.forEach(a=>{const td=tr.querySelector(`td[data-cell="${uid}|${a.id}"]`);const g=(S.grants[uid]||{})[a.id]||'';const implicit=!g&&!u.ext&&S.policy[a.id]==='open';td.className=g?'r-'+g:implicit?'r-implicit':'r-none';});
+  tr.querySelector(`[data-cnt="${uid}"]`).textContent=visibleApps(u).length+'/'+APPS.length;
+}
+function viewAsAction(u){return {label:`ดูในมุมของ ${u.name.split(' ')[0]}`,fn:()=>{S.viewAs=u.id;save();go("#/home");}};}
+function bindAdmin(tab){
+  const bm=$('#backme');if(bm){bm.onclick=()=>{S.viewAs=me().id;save();render();};return;}
+  if(tab==='external')return bindExternal();
+  if(tab==='audit')return bindAudit();
+  const q=$('#mxq');if(!q)return;
+  $('#mxkind').value=mxState.kind;
+  q.oninput=()=>{mxState.q=q.value;const pos=q.selectionStart;render();const n=$('#mxq');n.focus();try{n.setSelectionRange(pos,pos);}catch(e){}};
+  $('#mxkind').onchange=e=>{mxState.kind=e.target.value;render();$('#mxkind').focus();};
+  document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{const k=b.dataset.sort;if(mxState.sort===k)mxState.dir*=-1;else{mxState.sort=k;mxState.dir=1;}render();const nb=document.querySelector(`[data-sort="${k}"]`);if(nb)nb.focus();});
+  $('#mxbody').addEventListener('change',e=>{
+    const t=e.target;
+    if(t.dataset.sa){const id=t.dataset.sa,u=user(id);
+      if(!t.checked&&id===me().id){t.checked=true;return toast('ถอดสิทธิ์ผู้ดูแลของตัวเองไม่ได้ (กันล็อกตัวเองออก)',{err:true});}
+      if(t.checked)S.superAdmins.push(id);else S.superAdmins=S.superAdmins.filter(x=>x!==id);
+      logAudit(t.checked?'ตั้งเป็นผู้ดูแล Portal':'ถอดผู้ดูแล Portal',u.name);save();topbar(true);
+      return toast(`${esc(u.name)} ${t.checked?'เป็นผู้ดูแล Portal แล้ว':'ไม่ใช่ผู้ดูแล Portal แล้ว'}`);}
+    if(!t.dataset.u)return;
+    const uid=t.dataset.u,aid=t.dataset.a,u=user(uid),a=APP[aid];
+    const before=(S.grants[uid]||{})[aid]||'',beforeSee=!!roleOf(u,aid);
+    const val=t.value;
+    S.grants[uid]=S.grants[uid]||{};
+    if(val)S.grants[uid][aid]=val;else delete S.grants[uid][aid];
+    const afterSee=!!roleOf(u,aid);
+    logAudit(!before?'ให้สิทธิ์':!val?'เพิกถอนสิทธิ์':'เปลี่ยนสิทธิ์',`${u.name} → ${a.name} (${before?before+' → ':''}${val||'ไม่มี'})`);
+    save();refreshRow(uid);
+    const td=t.closest('td');td.classList.remove('flash');void td.offsetWidth;td.classList.add('flash');
+    const msg=afterSee&&!beforeSee?`✓ ${esc(u.name)} จะเห็น “${esc(a.name)}” บนหน้าหลักทันที`:!afterSee&&beforeSee?`${esc(u.name)} จะไม่เห็น “${esc(a.name)}” อีกต่อไป`:`อัปเดตสิทธิ์ ${esc(u.name)} ใน ${esc(a.name)} แล้ว`;
+    toast(msg,{action:viewAsAction(u)});
+  });
+  document.querySelectorAll('[data-pol]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.pol,a=APP[id];S.policy[id]=S.policy[id]==='open'?'closed':'open';
+    logAudit('เปลี่ยนนโยบายแอป',`${a.name} → ${S.policy[id]==='open'?'พนักงานทุกคน':'เฉพาะเจาะจง'}`);save();render();
+    const nb=document.querySelector(`[data-pol="${id}"]`);if(nb)nb.focus();
+    toast(S.policy[id]==='open'?`“${esc(a.name)}” เปิดให้พนักงานทุกคน (viewer)`:`“${esc(a.name)}” เหลือเฉพาะคนที่ได้รับสิทธิ์`);
+  });
+}
+
+function externalView(){
+  return `<div class="panel"><h2 class="h2">ผู้ใช้ภายนอก (ไม่ใช่พนักงาน)</h2>
+  <p class="help">คนนอก HR ที่อนุญาตให้เข้าระบบผ่านอีเมล Google (เช่น outsource) — เพิ่มที่นี่ก่อน แล้วจึงให้สิทธิ์รายแอปในแท็บ “สิทธิ์รายแอป” · ผู้ใช้ภายนอก <b>ไม่เห็นแอปแบบเปิดทุกคน</b> ต้องให้สิทธิ์ทีละแอป</p>
+  <div class="scroll" style="border:0"><table class="tbl"><thead><tr><th>อีเมล Google</th><th>ชื่อ</th><th>รหัสภายใน</th><th>แอปที่เข้าได้</th><th>สถานะ</th><th><span class="sr-only">จัดการ</span></th></tr></thead><tbody>
+  ${S.externals.map(x=>{const u=user(x.id);return `<tr><td>${esc(x.email)}</td><td>${esc(x.name)}<br><small class="help">${esc(x.dept)}</small></td><td>${x.id}</td><td>${visibleApps(Object.assign({},u,{status:'ACTIVE'})).map(a=>`<span title="${esc(a.name)}">${a.icon}</span>`).join(' ')||'<span class="help">—</span>'}</td>
+  <td style="color:${x.status==='ACTIVE'?'var(--ok)':'#999'};font-weight:600">${x.status}</td>
+  <td><button type="button" class="btn sm ${x.status==='ACTIVE'?'btn-danger':'btn-outline'}" data-tog="${x.id}">${x.status==='ACTIVE'?'ระงับ':'เปิดใช้'}</button></td></tr>`;}).join('')}
+  </tbody></table></div>
+  <form class="addform" id="extf" novalidate><label>อีเมล Google<input type="email" id="xemail" placeholder="name@company.com" required autocomplete="off"></label>
+  <label>ชื่อ-นามสกุล<input id="xname" placeholder="ชื่อที่จะแสดง" required autocomplete="off"></label>
+  <label>บริษัท / บทบาท<input id="xdept" placeholder="เช่น Outsource IT" autocomplete="off"></label>
+  <button class="btn inline btn-navy" type="submit">+ เพิ่ม</button></form></div>`;
+}
+function bindExternal(){
+  document.querySelectorAll('[data-tog]').forEach(b=>b.onclick=()=>{const x=S.externals.find(e=>e.id===b.dataset.tog);x.status=x.status==='ACTIVE'?'DISABLED':'ACTIVE';
+    logAudit(x.status==='ACTIVE'?'เปิดใช้ผู้ใช้ภายนอก':'ระงับผู้ใช้ภายนอก',`${x.name} <${x.email}>`);save();render();toast(x.status==='ACTIVE'?`เปิดใช้ ${esc(x.name)} แล้ว`:`ระงับ ${esc(x.name)} แล้ว — เข้าไม่ได้ทุกแอปทันที`);});
+  $('#extf').onsubmit=e=>{e.preventDefault();
+    const email=$('#xemail').value.trim().toLowerCase(),name=$('#xname').value.trim(),dept=$('#xdept').value.trim()||'ผู้ใช้ภายนอก';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return toast('อีเมลไม่ถูกต้อง',{err:true});
+    if(!name)return toast('กรุณากรอกชื่อ',{err:true});
+    if(S.externals.some(x=>x.email===email))return toast('อีเมลนี้อยู่ในรายชื่อแล้ว',{err:true});
+    const n=S.externals.reduce((mx,x)=>Math.max(mx,+x.id.slice(4)||0),0)+1;const id='EXT-'+String(n).padStart(3,'0');
+    S.externals.push({id,name,email,dept,status:'ACTIVE'});logAudit('เพิ่มผู้ใช้ภายนอก',`${name} <${email}>`);save();render();
+    toast(`เพิ่ม ${esc(name)} (${id}) แล้ว — ไปให้สิทธิ์รายแอปต่อ`,{action:{label:'ไปหน้าสิทธิ์',fn:()=>{mxState.q=id;go('#/admin/matrix');}}});};
+}
+
+function auditView(){
+  const k=auState.sort,d=auState.dir;
+  const rows=S.audit.slice().sort((a,b)=>d*(k==='at'?a.at.localeCompare(b.at):TH.compare(a[k],b[k])));
+  const pages=Math.max(1,Math.ceil(rows.length/10));if(auState.page>=pages)auState.page=pages-1;
+  const pg=rows.slice(auState.page*10,auState.page*10+10);
+  const th=(key,l)=>`<th class="${auState.sort===key?(auState.dir>0?'asc':'desc'):''}" aria-sort="${auState.sort===key?(auState.dir>0?'ascending':'descending'):'none'}"><button type="button" data-asort="${key}">${l}</button></th>`;
+  return `<div class="panel"><h2 class="h2">บันทึกการเปลี่ยนแปลง (Audit log)</h2><p class="help">ทุกการให้/เพิกถอนสิทธิ์ เปลี่ยนนโยบาย และผู้ใช้ภายนอก ถูกบันทึกว่าใครทำ เมื่อไร</p>
+  <div class="scroll" style="border:0"><table class="tbl"><thead><tr>${th('at','เวลา')}${th('by','ผู้ทำ')}${th('act','การกระทำ')}${th('detail','รายละเอียด')}</tr></thead><tbody>
+  ${pg.map(r=>`<tr><td class="at">${fmtAt(r.at)}</td><td>${esc(r.by)}</td><td><b>${esc(r.act)}</b></td><td>${esc(r.detail)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="pager"><span>หน้า ${auState.page+1}/${pages} · ${rows.length} รายการ</span><button type="button" class="btn sm btn-ghost" id="aprev"${auState.page===0?' disabled':''}>‹ ก่อนหน้า</button><button type="button" class="btn sm btn-ghost" id="anext"${auState.page>=pages-1?' disabled':''}>ถัดไป ›</button></div></div>`;
+}
+function bindAudit(){
+  document.querySelectorAll('[data-asort]').forEach(b=>b.onclick=()=>{const k=b.dataset.asort;if(auState.sort===k)auState.dir*=-1;else{auState.sort=k;auState.dir=k==='at'?-1:1;}auState.page=0;render();});
+  $('#aprev').onclick=()=>{auState.page--;render();};$('#anext').onclick=()=>{auState.page++;render();};
+}
+
+/* ---------- global ---------- */
+function logout(){S.session=null;S.viewAs=null;bindStep={empId:null,err:null};save();toast('ออกจากระบบแล้ว');go('#/');}
+$('#logout').onclick=logout;
+$('#viewas').onchange=e=>{S.viewAs=e.target.value;save();const u=viewer();toast(`กำลังดูในมุมของ ${esc(u.name)}`);
+  if(location.hash.startsWith('#/sso/'))go('#/home');else render();};
+$('#reset').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}seed();save();bindStep={empId:null,err:null};mxState={q:'',kind:'all',sort:'id',dir:1};auState={page:0,sort:'at',dir:-1};toast('รีเซ็ตข้อมูลเดโมแล้ว');go('#/');};
+window.addEventListener('hashchange',render);
+load();render();
+})();
+</script>
+</body>
+</html>

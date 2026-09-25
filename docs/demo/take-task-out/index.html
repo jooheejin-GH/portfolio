@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Take Task Out · เดโม</title>
+<meta name="description" content="เดโม Take Task Out — เครื่องมือ workshop ค้นหางานที่ AI ช่วยได้ (AI Workflow Discovery) ข้อมูลตัวอย่างทั้งหมด ทำงานในเบราว์เซอร์ล้วน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1a365d;--navy2:#2a4a7f;--pri:#2b6cb0;--pri-d:#2c5282;--ink:#2d3748;--ink2:#4a5568;--mut:#64748b;--line:#e2e8f0;--bg:#f0f4f8;--soft:#f7fafc;--sky:#ebf8ff;--sky2:#bee3f8;
+--qw:#c6f6d5;--qw-t:#22543d;--st:#bee3f8;--st-t:#2c5282;--as:#feebc8;--as-t:#7b341e;--nr:#fed7d7;--nr-t:#822727}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Sarabun","Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);overflow-x:hidden}
+a{color:var(--pri)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+.sticky{position:sticky;top:0;z-index:30}
+.demobar{background:#0f1f33;color:#e6eefb;font-size:13px}
+.demobar .wrap{display:flex;align-items:center;gap:6px 10px;min-height:34px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px}
+.demobar .tag{background:#f5b301;color:#1d1a0f;font-weight:700;border-radius:4px;padding:0 6px;font-size:12px}
+.demobar .msg{flex:1 1 260px;min-width:0}
+.demobar .links{display:flex;gap:6px 12px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.demobar a{color:#9fd0ff;white-space:nowrap}
+.demobar button{font:inherit;font-size:12px;background:transparent;color:#e6eefb;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:1px 8px;cursor:pointer;white-space:nowrap}
+.demobar button:hover{background:rgba(255,255,255,.12)}
+.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.top .wrap{display:flex;align-items:center;gap:6px 14px;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.brand{color:#fff;text-decoration:none;line-height:1.2}
+.brand b{font-size:18px;display:block}.brand small{font-size:12px;opacity:.75}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tabs a{color:#fff;text-decoration:none;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.3);font-size:14px;white-space:nowrap}
+.tabs a:hover{background:rgba(255,255,255,.14)}
+.tabs a[aria-current=page]{background:#fff;color:var(--navy);font-weight:700}
+main.wrap{padding:20px 16px 40px;outline:none}
+.foot{text-align:center;color:var(--mut);font-size:12px;padding:0 16px 30px}
+h1.title{font-size:22px;color:var(--navy);margin:0 0 4px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 18px}
+h2{font-size:17px;color:var(--navy);margin:0 0 10px}
+h3{font-size:15px;color:var(--ink);margin:14px 0 8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;min-width:0}
+.muted{color:var(--mut)}.small{font-size:13px}
+.hidden{display:none!important}
+/* stepper */
+.stepper{display:flex;gap:6px;margin:0 0 18px;padding:0;list-style:none;counter-reset:s;overflow-x:auto;scrollbar-width:none}
+.stepper::-webkit-scrollbar{display:none}
+.stepper li{flex:1 1 0;min-width:0}
+.stepper>li>a,.stepper>li>span{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;background:#fff;border:1.5px solid var(--line);color:var(--mut);font-size:13px;text-decoration:none;white-space:nowrap}
+.stepper .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--line);color:var(--ink2);font-weight:700;font-size:12px;flex:none}
+.stepper>li>a:hover{border-color:#90cdf4}
+.stepper .done .n{background:#38a169;color:#fff}
+.stepper .done{color:var(--ink)}
+.stepper .cur{border-color:var(--pri);color:var(--navy);font-weight:700;background:var(--sky)}
+.stepper .cur .n{background:var(--pri);color:#fff}
+.stepper>li>span{opacity:.6}
+/* forms */
+label.f{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:12px}
+input,select,textarea,button{font:inherit}
+input:not([type=radio]):not([type=checkbox]),select,textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;background:#fff;color:var(--ink);min-width:0;margin-top:5px}
+textarea{resize:vertical;min-height:64px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(43,108,176,.15)}
+.hint{font-size:12px;color:var(--mut);font-weight:400}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.hl{background:var(--sky);border:1px solid var(--sky2);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.hl label.f{margin-bottom:4px;color:var(--pri)}
+.presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.preset{text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;color:var(--ink);min-width:0}
+.preset:hover{border-color:#90cdf4;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.preset[aria-pressed=true]{border-color:var(--pri);background:var(--sky);box-shadow:0 0 0 3px rgba(43,108,176,.12)}
+.preset .ic{font-size:22px;display:block}.preset b{display:block;font-size:15px;margin-top:2px}.preset small{color:var(--mut);font-size:12px}
+.mapnote{background:#fffaf0;border:1px solid #feebc8;color:#744210;border-radius:8px;padding:8px 12px;font-size:13px;margin:0 0 12px}
+.err{background:#fff5f5;border:1px solid #fed7d7;color:#c53030;border-radius:8px;padding:8px 12px;font-size:13px;margin:0 0 12px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:9px;border:1.5px solid transparent;cursor:pointer;font-weight:600;font-size:14px;text-decoration:none;line-height:1.3;white-space:nowrap}
+.btn.pri{background:var(--pri);color:#fff}.btn.pri:hover{background:var(--pri-d)}
+.btn.ok{background:#38a169;color:#fff}.btn.ok:hover{background:#276749}
+.btn.out{background:#fff;color:var(--ink2);border-color:var(--line)}.btn.out:hover{border-color:#cbd5e0;background:var(--soft)}
+.btn.ghost{background:transparent;color:var(--mut);padding:5px 9px;font-size:13px}.btn.ghost:hover{color:var(--pri)}
+.btn.del{background:transparent;color:#c53030;padding:5px 9px;font-size:13px}.btn.del:hover{background:#fff5f5}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn:focus-visible,a:focus-visible,.preset:focus-visible,summary:focus-visible,.chip-btn:focus-visible,tr[tabindex]:focus-visible{outline:3px solid #90cdf4;outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.row .grow{flex:1}
+/* jobs */
+.job{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:6px 10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.job:first-of-type{border-top:0}
+.job .no{width:26px;height:26px;border-radius:50%;background:var(--sky);color:var(--pri);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:8px}
+.job input{margin-top:0;font-weight:600}
+.job textarea{margin-top:6px;min-height:40px;font-size:13px;color:var(--ink2)}
+.srcchip{font-size:11px;padding:1px 8px;border-radius:10px;background:#e9d8fd;color:#553c9a;font-weight:600;white-space:nowrap}
+.srcchip.user{background:#edf2f7;color:var(--ink2)}
+/* tasks */
+.jobhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.jobhead .hrs{font-size:13px;color:var(--mut)}
+.task{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;background:var(--soft)}
+.task .tn{display:flex;gap:8px;align-items:center}
+.task .tn input{margin-top:0;font-weight:600;background:#fff}
+.task .td{font-size:13px;color:var(--mut);margin:4px 2px 0}
+.tfreq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:8px;align-items:end;margin-top:8px}
+.tfreq label{font-size:12px;color:var(--mut);display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.tfreq select{height:36px}.tfreq input{height:36px}
+.tfreq input,.tfreq select{padding:6px 8px;margin-top:3px;background:#fff}
+.tfreq .calc{font-size:13px;color:var(--ink2);white-space:nowrap;padding-bottom:7px;text-align:right}
+.tfreq .calc b{color:var(--navy)}
+.totalbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.totalbar b{font-size:20px}
+/* chips / levels */
+.lv{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:2px 10px;border-radius:12px;white-space:nowrap}
+.lv-quick_win{background:var(--qw);color:var(--qw-t)}.lv-strategic{background:var(--st);color:var(--st-t)}
+.lv-assist_only{background:var(--as);color:var(--as-t)}.lv-not_recommended{background:var(--nr);color:var(--nr-t)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.chip-btn{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--ink2)}
+.chip-btn[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip-btn .c{opacity:.7;margin-left:2px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.tile b{display:block;font-size:24px;color:var(--navy);line-height:1.2}
+.tile span{font-size:12px;color:var(--mut)}
+.tile.hot{background:var(--sky);border-color:var(--sky2)}
+.res{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.res-top{display:flex;gap:8px 12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.res-top .nm{font-weight:700;font-size:15px}
+.res-top .jb{font-size:12px;color:var(--mut)}
+.score{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut);margin:8px 0}
+.score .bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden;max-width:220px}
+.score .bar i{display:block;height:100%;background:linear-gradient(90deg,#63b3ed,#2b6cb0)}
+.help{font-size:14px;margin:4px 0 10px}
+.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.kv div{background:var(--soft);border-radius:8px;padding:7px 10px;min-width:0}
+.kv small{display:block;font-size:11px;color:var(--mut)}
+.kv span{font-size:13px;font-weight:600}
+.tool{display:flex;gap:4px;align-items:flex-start;flex-direction:column}
+.tflag{font-size:10px;font-weight:600;padding:0 6px;border-radius:8px;background:#edf2f7;color:var(--ink2);white-space:nowrap}
+.tflag.it{background:#fefcbf;color:#744210}
+.next{background:#fffaf0;border:1px solid #feebc8;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:13px;color:#744210}
+details.more{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.more summary{cursor:pointer;color:var(--pri);font-weight:600;font-size:13px;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"▸ "}details.more[open] summary::before{content:"▾ "}
+.pre{background:#1a202c;color:#e2e8f0;border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;margin:8px 0 0;max-height:260px;overflow:auto}
+.pre-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:13px;font-weight:700}
+.safety{background:#fff5f5;border:1px solid #feb2b2;border-radius:8px;padding:8px 12px 8px 12px;margin-top:10px;font-size:13px;color:#9b2c2c}
+.safety ul{margin:4px 0 0;padding-left:18px}
+.notice{background:#fffaf0;border:1px solid #feebc8;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;color:#744210}
+.notice .btn{margin-left:auto}
+.empty{text-align:center;color:var(--mut);padding:24px;font-size:14px}
+/* summary doc */
+.doc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+.doc-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:16px}
+.doc-head .k{font-size:12px;color:var(--mut);letter-spacing:.3px}
+.doc-head h1{font-size:22px;margin:2px 0 2px;color:var(--navy)}
+.doc-head .meta{font-size:13px;color:var(--ink2);text-align:right}
+.dist{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--line);margin:6px 0}
+.dist i{display:block;height:100%}
+.legend{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12px;color:var(--ink2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th,.tbl td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:var(--navy);color:#fff;font-weight:600;white-space:nowrap}
+.tbl .num{text-align:right;white-space:nowrap}
+.tbl tfoot td{font-weight:700;background:var(--soft)}
+.sortable th[data-k]{cursor:pointer;user-select:none}
+.sortable th[aria-sort=ascending]::after{content:" ▲";font-size:10px}.sortable th[aria-sort=descending]::after{content:" ▼";font-size:10px}
+.rowlink tbody tr.main{cursor:pointer}.rowlink tbody tr.main:hover td{background:var(--sky)}
+.tbl tr.me td{background:#fffff0}
+.tbl tr.det td{background:var(--soft);font-size:13px}
+.prog{display:flex;align-items:center;gap:6px;min-width:120px}
+.prog .bar{flex:1;height:7px;border-radius:4px;background:var(--line);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:#38a169}
+.prog small{font-size:12px;color:var(--mut);white-space:nowrap}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.qlist{margin:0;padding-left:20px}.qlist li{margin-bottom:8px}
+.appx{page-break-before:auto}
+.appx .pre{max-height:none;background:#f7fafc;color:var(--ink);border:1px solid var(--line)}
+/* loading */
+.ov{position:fixed;inset:0;background:rgba(26,54,93,.45);display:none;align-items:center;justify-content:center;z-index:60;backdrop-filter:blur(3px);padding:16px}
+.ov.show{display:flex}
+.ov-box{background:#fff;border-radius:14px;padding:26px 30px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);width:340px;max-width:100%}
+.spin{width:40px;height:40px;border:4px solid var(--line);border-top-color:var(--pri);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov-t{font-weight:700;color:var(--ink2)}.ov-s{font-size:13px;color:var(--mut);min-height:20px;margin-top:4px}
+.ov-p{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:14px 0 12px}.ov-p i{display:block;height:100%;width:0;background:var(--pri);transition:width .2s linear}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#276749;color:#fff;padding:9px 16px;border-radius:8px;font-size:14px;font-weight:600;z-index:70;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.5s}#toast,.ov-p i{transition:none}}
+@media (max-width:760px){
+  .presets{grid-template-columns:1fr}.preset{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center}.preset .ic{grid-row:span 2}.preset b{margin:0}
+  .grid2,.cols2{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr}
+  .kv{grid-template-columns:1fr 1fr}
+  .stepper .lbl{display:none}.stepper .cur .lbl{display:inline}
+  .stepper li{flex:0 0 auto}.stepper li.curli{flex:1 1 auto}
+  .tfreq{grid-template-columns:1fr 1fr 1.3fr}.tfreq .calc{grid-column:1/-1;text-align:left;padding:0}
+  .doc{padding:16px}.doc-head .meta{text-align:left}
+  .tabs{margin-left:0;width:100%}.tabs a{flex:1;text-align:center}
+  main.wrap{padding:14px 12px 30px}.card{padding:14px}
+  .demobar .wrap{font-size:12px}
+  h1.title{font-size:20px}
+}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff;font-size:12.5px}
+  .sticky,.stepper,.foot,.noprint,#toast,.ov{display:none!important}
+  main.wrap{padding:0}.wrap{max-width:none;padding:0}
+  .doc{border:0;padding:0}
+  .tbl th{background:#e2e8f0!important;color:#1a202c!important}
+  .tile,.res,.doc,table,tr{break-inside:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .appx{break-before:page}
+}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <div class="demobar" role="note"><div class="wrap"><span class="tag">DEMO</span><span class="msg">เดโม · ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง (คำตอบ AI เป็นตัวอย่างที่เตรียมไว้)</span><span class="links"><button type="button" id="reset">↺ รีเซ็ตข้อมูลเดโม</button><a href="../../#take-task-out">← กลับไปหน้าผลงาน</a></span></div></div>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#/start"><b>🔍 Take Task Out</b><small>ค้นหางานที่ AI ช่วยได้ · AI Workflow Discovery</small></a>
+      <nav class="tabs" aria-label="มุมมอง"><a href="#/start" id="tab-me">ผู้เข้าร่วม</a><a href="#/facilitator" id="tab-fac">ผู้ดำเนินการ (Facilitator)</a></nav>
+    </div>
+  </header>
+</div>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer class="foot">Take Task Out · เดโมสำหรับพอร์ตโฟลิโอ · ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการเรียก AI จริง</footer>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ov-t">
+  <div class="ov-box">
+    <div class="spin" aria-hidden="true"></div>
+    <div class="ov-t" id="ov-t">กำลังประมวลผล…</div>
+    <div class="ov-s" id="ov-s" aria-live="polite"></div>
+    <div class="ov-p" aria-hidden="true"><i id="ov-p"></i></div>
+    <button class="btn out sm" type="button" id="ov-cancel">ยกเลิก</button>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='tto-demo-v1';
+
+/* ---------------- Tool Registry (ตัวอย่าง) ---------------- */
+const TOOLS={
+  prompt:{name:'Prompt Template',cat:'DIY',approved:1,cost:'ฟรี',internal:0,it:0,note:'คัดลอก prompt ไปใช้กับแชต AI ที่องค์กรอนุมัติ'},
+  gem:{name:'Gemini Gem (บัญชีองค์กร)',cat:'DIY',approved:1,cost:'รวมใน Workspace',internal:1,it:0,note:'สร้างผู้ช่วยเฉพาะงาน ใส่คู่มือ/ตัวอย่างไว้ในตัว'},
+  gpt:{name:'Custom GPT',cat:'DIY',approved:1,cost:'เสียเงิน',internal:0,it:0,note:'ใช้ได้กับข้อมูลที่ไม่ใช่ข้อมูลภายใน'},
+  claude:{name:'Claude (บัญชีองค์กร)',cat:'DIY',approved:1,cost:'เสียเงิน',internal:1,it:0,note:'งานเขียน/สรุป/วิเคราะห์เอกสารยาว'},
+  sheets:{name:'Google Sheets',cat:'ข้อมูล',approved:1,cost:'ฟรี',internal:1,it:0,note:'ตาราง + สูตร + ชีทกลางของทีม'},
+  forms:{name:'Google Forms',cat:'ข้อมูล',approved:1,cost:'ฟรี',internal:1,it:0,note:'เก็บข้อมูลเป็นระบบแทนการส่งไฟล์'},
+  n8n:{name:'n8n (ระบบอัตโนมัติกลาง)',cat:'Automation',approved:1,cost:'ฟรี (self-host)',internal:1,it:1,note:'ต่อระบบ/ตั้งเวลา/ส่งเมลอัตโนมัติ — ทีมกลางช่วยตั้ง'},
+  erp:{name:'ERP (โมดูลบัญชี)',cat:'ระบบหลัก',approved:1,cost:'มีอยู่แล้ว',internal:1,it:1,note:'ดึงรายงาน/saved search ต้องขอสิทธิ์'},
+  line:{name:'LINE OA',cat:'ช่องทาง',approved:1,cost:'ตามแพ็กเกจ',internal:0,it:1,note:'ตอบกลับอัตโนมัติ/แจ้งเตือน — ต้องให้ IT เชื่อม'},
+  empapi:{name:'Employee API กลาง',cat:'ระบบหลัก',approved:1,cost:'ฟรี',internal:1,it:1,note:'ข้อมูลพนักงานกลาง ห้าม sync ชีทเอง'},
+  webapp:{name:'Web App ภายใน (App Portal)',cat:'ระบบ',approved:1,cost:'ทีมกลางพัฒนา',internal:1,it:1,note:'งานที่ต้องเป็นระบบถาวร — ส่ง spec ให้ทีมกลางประเมิน'},
+  human:{name:'คนทำเอง (ไม่ใช้ AI)',cat:'—',approved:1,cost:'—',internal:1,it:0,note:'งานตัดสินใจ/ความรับผิดชอบสูง'}
+};
+const LV={quick_win:'⚡ Quick Win',strategic:'🎯 Strategic',assist_only:'✍️ ช่วยร่าง',not_recommended:'⚠️ ยังไม่แนะนำ'};
+const LVDESC={quick_win:'ทำเองได้วันนี้',strategic:'ต้องต่อระบบ / ส่งทีมกลาง',assist_only:'AI ช่วยร่าง คนตัดสิน',not_recommended:'ความเสี่ยงสูง ให้คนทำ'};
+const LVCOLOR={quick_win:'#48bb78',strategic:'#4299e1',assist_only:'#ed8936',not_recommended:'#f56565'};
+const FREQ={day:{l:'ต่อวัน',m:22},week:{l:'ต่อสัปดาห์',m:4.33},month:{l:'ต่อเดือน',m:1}};
+
+/* ---------------- Canned AI output ----------------
+ task = [name, desc, mins, freq, n, level, score, help, tool, pct, diff, check, first, prompt, cautions[]] */
+const PRESETS={
+ap:{icon:'🧾',pos:'เจ้าหน้าที่บัญชีเจ้าหนี้',dept:'ฝ่ายบัญชีและการเงิน',blurb:'รับ Invoice · ตั้งจ่าย · กระทบยอด',
+ desc:'ดูแลเจ้าหนี้การค้าของศูนย์การค้า ประมาณ 300 ผู้ขาย รับใบแจ้งหนี้ ตั้งจ่ายรายสัปดาห์ และปิดบัญชีสิ้นเดือน',
+ kw:['บัญชี','เจ้าหนี้','การเงิน','ap','invoice','ใบแจ้งหนี้','จ่ายเงิน','ภาษี','ตั้งหนี้','accounting','finance','ปิดงบ'],
+ jobs:[
+ ['รับและตรวจสอบใบแจ้งหนี้จากผู้ขาย','รับ Invoice ทั้งกระดาษและอีเมล ตรวจความครบถ้วน แล้วบันทึกตั้งหนี้',[
+  ['คีย์ข้อมูลใบแจ้งหนี้เข้าระบบ','อ่านเลขที่ วันที่ ยอดเงิน VAT จาก PDF แล้วพิมพ์ลง ERP',12,'day',15,'strategic',84,'ให้ AI อ่าน PDF ใบแจ้งหนี้แล้วดึงฟิลด์หลัก (ผู้ขาย เลขที่ วันที่ ยอด VAT) ลงชีทรอตรวจ ก่อนนำเข้า ERP ทีเดียว','n8n',0.6,'ปานกลาง','ตรวจยอดรวมและเลขผู้เสียภาษีทุกใบก่อนนำเข้า','ลองส่ง PDF 5 ใบให้ Claude ดึงข้อมูลเป็นตาราง เทียบกับที่คีย์เองว่าตรงกี่ %',
+   'คุณคือผู้ช่วยบัญชีเจ้าหนี้\nอ่านใบแจ้งหนี้ที่แนบ แล้วตอบเป็นตาราง 1 แถวต่อใบ คอลัมน์:\nชื่อผู้ขาย | เลขผู้เสียภาษี | เลขที่ใบแจ้งหนี้ | วันที่ | ยอดก่อน VAT | VAT | ยอดรวม | เลขที่ PO (ถ้ามี)\n\nกฎ:\n- ถ้าอ่านไม่ชัด ให้ใส่ "?" ห้ามเดา\n- ตรวจว่า ยอดก่อน VAT + VAT = ยอดรวม ถ้าไม่ตรงให้หมายเหตุ "ยอดไม่ตรง"',
+   ['ใบแจ้งหนี้มีเลขบัญชีธนาคารผู้ขาย — ใช้เฉพาะ AI ที่องค์กรอนุมัติ','AI อ่านตัวเลขผิดได้ (เช่น 8 กับ 3) ต้องมีขั้นตรวจยอดก่อนตั้งหนี้เสมอ']],
+  ['จับคู่ PO / ใบรับของ / ใบแจ้งหนี้ (3-way match)','เปิดเอกสาร 3 ใบเทียบจำนวนและราคาทีละบรรทัด',8,'day',15,'strategic',72,'ดึงรายงาน PO และใบรับของจาก ERP มาเทียบอัตโนมัติในชีท ไฮไลต์เฉพาะใบที่ไม่ตรง ให้คนตรวจแค่ส่วนต่าง','erp',0.45,'ยาก','คนต้องตัดสินรายการที่ต่างเกินเกณฑ์ (เช่น >1%)','ทำชีทเทียบ 1 ผู้ขายรายใหญ่ด้วยสูตร XLOOKUP ก่อน แล้วค่อยส่งให้ทีมกลางทำอัตโนมัติ',
+   'ช่วยเขียนสูตร Google Sheets สำหรับเทียบ 3 ตาราง\n- ชีท PO: เลขที่ PO, รหัสสินค้า, จำนวน, ราคา/หน่วย\n- ชีท GR: เลขที่ PO, รหัสสินค้า, จำนวนรับจริง\n- ชีท INV: เลขที่ PO, รหัสสินค้า, จำนวน, ราคา/หน่วย\nต้องการคอลัมน์สถานะ "ตรง / จำนวนไม่ตรง / ราคาไม่ตรง / ไม่พบใบรับของ" และอธิบายสูตรทีละขั้น',
+   ['ห้ามให้ระบบอนุมัติตั้งหนี้อัตโนมัติเมื่อ "ตรง" — ยังต้องมีคนกดยืนยัน']],
+  ['ตอบอีเมลผู้ขายเรื่องเอกสารไม่ครบ','แจ้งขอใบกำกับภาษีฉบับจริง/แก้ชื่อที่อยู่/ขอสำเนา PO',6,'day',5,'quick_win',90,'ใช้ Gem ที่มีแม่แบบอีเมล 6 กรณีที่เจอบ่อย พิมพ์แค่ชื่อผู้ขาย+ปัญหา ได้อีเมลสุภาพพร้อมส่ง','gem',0.6,'ง่าย','อ่านทวนเลขที่เอกสารและกำหนดส่งก่อนกดส่ง','สร้าง Gem "อีเมลขอเอกสารผู้ขาย" ใส่ตัวอย่างอีเมลเก่าที่ดี 3 ฉบับ',
+   'คุณคือเจ้าหน้าที่บัญชีเจ้าหนี้ของศูนย์การค้า เขียนอีเมลภาษาไทยสุภาพ กระชับ ถึงผู้ขาย\nข้อมูล: ชื่อผู้ขาย = {ชื่อ}, เลขที่ใบแจ้งหนี้ = {เลขที่}, ปัญหา = {เช่น ชื่อบริษัทในใบกำกับภาษีไม่ถูกต้อง}\nให้ระบุ: สิ่งที่ต้องแก้ไข, เอกสารที่ต้องส่งกลับ, กำหนดส่งภายใน 7 วัน, ผลกระทบถ้าไม่ส่ง (เลื่อนรอบจ่าย)\nปิดท้ายด้วยช่องทางติดต่อ ห้ามใช้ภาษาตำหนิ',
+   ['ไม่ต้องแนบข้อมูลบัญชีธนาคารหรือยอดค้างทั้งหมดลงใน prompt']]]],
+ ['จัดทำรายการจ่ายเงินประจำสัปดาห์','สรุปรายการครบกำหนด เตรียมไฟล์โอน และส่งขออนุมัติ',[
+  ['สรุปรายการครบกำหนดจ่ายประจำสัปดาห์','ดึง Aging แล้วคัดรายการที่ครบกำหนด แยกตามผู้ขาย/ธนาคาร',90,'week',1,'quick_win',80,'ให้ AI เขียนสูตร/Pivot คัดรายการครบกำหนดจากไฟล์ Aging และร่างบันทึกขออนุมัติจ่ายพร้อมตารางสรุป','sheets',0.5,'ง่าย','ตรวจรายการที่ถูกระงับจ่าย (hold) ว่าไม่หลุดเข้ามา','ส่งหัวคอลัมน์ไฟล์ Aging ให้ AI เขียนสูตรคัดรายการครบกำหนด 7 วันข้างหน้า',
+   'ฉันมีไฟล์ Aging เจ้าหนี้ คอลัมน์: ผู้ขาย, เลขที่ใบแจ้งหนี้, วันที่ครบกำหนด, ยอดคงค้าง, สถานะ (ปกติ/ระงับจ่าย)\n1) เขียนสูตร Google Sheets คัดเฉพาะรายการที่ครบกำหนดภายในวันศุกร์นี้และสถานะปกติ\n2) ทำตารางสรุปยอดรวมต่อผู้ขาย เรียงจากมากไปน้อย\n3) ร่างบันทึกขออนุมัติจ่าย 5 บรรทัด ระบุจำนวนราย ยอดรวม และรายการที่ต้องจับตา',
+   ['ข้อมูลยอดค้างผู้ขายเป็นข้อมูลภายใน — ใช้ Claude/Gem บัญชีองค์กรเท่านั้น']],
+  ['เตรียมไฟล์โอนเงินให้ธนาคาร','Export จาก ERP แล้วจัดรูปแบบตาม template ธนาคาร',45,'week',1,'assist_only',48,'AI ช่วยเขียนสูตรแปลงรูปแบบไฟล์และเช็กความยาวฟิลด์ แต่ไม่ควรให้ AI แตะเลขบัญชีหรือยอดเงินโดยตรง','sheets',0.2,'ปานกลาง','คนต้องเทียบยอดรวมไฟล์โอนกับบันทึกอนุมัติทุกครั้ง','ให้ AI เขียนสูตรตรวจ "ยอดรวมไฟล์ = ยอดอนุมัติ" และความยาวเลขบัญชีเป็นเช็กลิสต์',
+   'ช่วยเขียนสูตร Google Sheets สำหรับตรวจไฟล์โอนเงินก่อนอัปโหลด (ห้ามแก้ข้อมูล แค่ตรวจ):\n- เลขบัญชีต้องเป็นตัวเลข 10 หลัก\n- ยอดเงินต้องมากกว่า 0 และมีทศนิยมไม่เกิน 2 ตำแหน่ง\n- ยอดรวมทั้งไฟล์ต้องเท่ากับช่อง "ยอดอนุมัติ" ที่ B1\nแสดงผลเป็น ✓ / ✗ พร้อมเหตุผล',
+   ['ห้ามวางเลขบัญชีธนาคารจริงลงแชต AI','ไฟล์โอนต้องผ่านผู้อนุมัติ 2 คนตามระเบียบเดิม AI ไม่เปลี่ยนขั้นตอนนี้']],
+  ['ตรวจความถูกต้องของผู้รับเงินก่อนกดโอน','ยืนยันชื่อบัญชี/เลขบัญชีตรงกับทะเบียนผู้ขาย',20,'week',1,'not_recommended',18,'เป็นจุดควบคุมทุจริต (เปลี่ยนเลขบัญชีปลอม) ควรเป็นคนตรวจกับเอกสารต้นฉบับ AI ช่วยได้แค่ทำเช็กลิสต์','human',0.05,'—','ทั้งหมด — เป็นขั้นควบคุมภายใน','ใช้เช็กลิสต์เดิมต่อไป ถ้ามีคำขอเปลี่ยนเลขบัญชีให้โทรยืนยันกับผู้ขายเสมอ',
+   'ไม่แนะนำให้ใช้ AI ในขั้นตอนนี้\nหากต้องการ ใช้ AI ช่วยร่าง "เช็กลิสต์ตรวจผู้รับเงิน" เท่านั้น:\n"ช่วยร่างเช็กลิสต์ 8 ข้อสำหรับตรวจความถูกต้องของผู้รับเงินก่อนโอน โดยเน้นการป้องกันการแจ้งเปลี่ยนเลขบัญชีปลอม"',
+   ['งานควบคุมภายในด้านการเงิน — ห้ามให้ AI ตัดสินแทนคน','ห้ามส่งข้อมูลผู้ขายและเลขบัญชีเข้า AI ใดๆ']]]],
+ ['กระทบยอดและปิดบัญชีสิ้นเดือน','กระทบยอดเจ้าหนี้กับ Statement ผู้ขาย ตั้งค้างจ่าย และอธิบายผลต่าง',[
+  ['กระทบยอด Statement ผู้ขายกับยอดในระบบ','เทียบรายการทีละบรรทัดสำหรับผู้ขายรายใหญ่',120,'month',6,'strategic',76,'ทำ workflow รับ Statement ทางอีเมล → แปลงเป็นตาราง → เทียบกับรายงานเจ้าหนี้ แล้วสรุปเฉพาะรายการค้างกระทบ','n8n',0.55,'ยาก','คนต้องตรวจรายการค้างกระทบและตัดสินการปรับปรุง','เริ่มจากผู้ขายรายใหญ่ 1 ราย ใช้ Claude เทียบ 2 ตารางแล้วดูว่าจับผลต่างได้ครบไหม',
+   'เปรียบเทียบ 2 ตารางต่อไปนี้ (A = Statement ผู้ขาย, B = รายงานเจ้าหนี้ในระบบ) โดยจับคู่ด้วยเลขที่ใบแจ้งหนี้\nสรุปเป็น 3 กลุ่ม:\n1) ตรงกัน (นับจำนวนและยอดรวม)\n2) มีใน A แต่ไม่มีใน B\n3) ยอดไม่เท่ากัน (แสดงผลต่าง)\nท้ายสุด สรุปยอดค้างกระทบสุทธิ 1 บรรทัด',
+   ['ตัด/ปิดชื่อบุคคลในเอกสารก่อนส่ง AI หากไม่ใช่บัญชีองค์กร']],
+  ['ตั้งค้างจ่ายสิ้นเดือน (Accrual)','ประมาณค่าใช้จ่ายที่รับบริการแล้วแต่ยังไม่ได้รับใบแจ้งหนี้',180,'month',1,'assist_only',55,'AI ช่วยดึงรายการที่เกิดทุกเดือนจากประวัติ 3 เดือนย้อนหลังมาเป็นร่างรายการตั้งค้าง คนปรับตัวเลขจริง','claude',0.25,'ปานกลาง','ทุกยอดประมาณการต้องมีหลักฐาน/ผู้ยืนยัน','ส่งรายการตั้งค้าง 3 เดือนล่าสุดให้ AI หา pattern รายการที่ต้องตั้งซ้ำทุกเดือน',
+   'นี่คือรายการตั้งค้างจ่าย 3 เดือนย้อนหลัง (แนบตาราง)\n1) ระบุรายการที่เกิดซ้ำทุกเดือน และค่าเฉลี่ย\n2) ระบุรายการที่เกิดเป็นครั้งคราว\n3) ร่างรายการตั้งค้างเดือนนี้พร้อมเหตุผลของตัวเลขแต่ละบรรทัด\nห้ามแต่งตัวเลขใหม่ที่ไม่มีที่มา',
+   ['ตัวเลขประมาณการมีผลต่องบ — ผู้จัดการบัญชีต้องทบทวน']],
+  ['เขียนคำอธิบายผลต่าง (variance) ให้ผู้จัดการ','อธิบายว่าทำไมค่าใช้จ่ายหมวดต่างๆ สูง/ต่ำกว่าเดือนก่อน',60,'month',1,'quick_win',86,'ให้ AI ร่างคำอธิบายผลต่างจากตารางเทียบเดือนต่อเดือน เป็นภาษาที่ผู้บริหารอ่านง่าย','claude',0.6,'ง่าย','ตรวจว่าเหตุผลที่ AI ใส่เป็นเรื่องจริง ไม่ใช่เดา','แนบตารางเทียบเดือน + โน้ตสั้นๆ ที่รู้อยู่แล้ว ให้ AI เรียบเรียง',
+   'นี่คือตารางค่าใช้จ่ายเทียบเดือนนี้กับเดือนก่อน (แนบ) และข้อเท็จจริงที่ทราบ: {เช่น ค่าไฟขึ้นเพราะงาน Midnight Sale}\nเขียนคำอธิบายผลต่างภาษาไทย สำหรับผู้จัดการฝ่าย:\n- เฉพาะหมวดที่ต่างเกิน 10%\n- หมวดละ 1-2 ประโยค ขึ้นต้นด้วยตัวเลข\n- ถ้าไม่ทราบสาเหตุ ให้เขียนว่า "รอตรวจสอบ" ห้ามเดา',
+   []]]],
+ ['ดูแลข้อมูลผู้ขายและตอบคำถาม','เปิดผู้ขายใหม่ ตรวจเอกสาร และตอบคำถามสถานะการจ่ายเงิน',[
+  ['ตรวจเอกสารเปิดผู้ขายใหม่','ตรวจหนังสือรับรอง ภพ.20 หน้าบัญชี ให้ครบก่อนเปิดรหัส',30,'month',4,'assist_only',58,'ใช้ Google Forms ให้ผู้ขายอัปโหลดเอกสารเอง + Gem เช็กลิสต์ความครบถ้วน คนตรวจของจริงก่อนเปิดรหัส','forms',0.35,'ปานกลาง','ตรวจเอกสารต้นฉบับ/ความถูกต้องของบัญชีธนาคาร','ทำ Google Form รับเอกสารผู้ขายใหม่แทนการรับทางอีเมล',
+   'ช่วยออกแบบ Google Form สำหรับเปิดผู้ขายใหม่ของศูนย์การค้า\nต้องมี: ข้อมูลบริษัท, เลขผู้เสียภาษี, ผู้ติดต่อ, ประเภทสินค้า/บริการ, อัปโหลดเอกสาร (หนังสือรับรอง ภพ.20 หน้าบัญชี)\nระบุว่าข้อไหนบังคับ และเขียนข้อความอธิบายสั้นๆ ใต้แต่ละคำถาม',
+   ['เอกสารมีข้อมูลบัญชีธนาคาร — เก็บในไดรฟ์องค์กรที่จำกัดสิทธิ์']],
+  ['ตอบคำถามผู้ขายเรื่องสถานะการจ่ายเงิน','รับโทรศัพท์/LINE ถามว่าใบแจ้งหนี้จ่ายหรือยัง',5,'day',6,'strategic',70,'ให้ผู้ขายเช็กสถานะเองผ่าน LINE OA โดยดึงสถานะจาก ERP (ต้องให้ IT เชื่อม) ลดสายเข้าเรื่องเดิมๆ','line',0.7,'ยาก','ข้อความตอบต้องไม่เปิดเผยข้อมูลผู้ขายรายอื่น','รวบรวมคำถามที่เจอบ่อย 1 สัปดาห์ ส่งเป็นโจทย์ให้ทีมกลางประเมิน',
+   'ช่วยเขียน spec สั้นสำหรับทีม IT: "ผู้ขายเช็กสถานะการจ่ายเงินผ่าน LINE OA"\nระบุ: ผู้ใช้คือใคร, ยืนยันตัวตนผู้ขายอย่างไร, ข้อมูลที่ต้องดึงจาก ERP, ข้อความตอบกลับ 3 สถานะ (รอตรวจ/ตั้งหนี้แล้ว/จ่ายแล้ว), กรณีที่ต้องส่งต่อเจ้าหน้าที่',
+   ['ต้องยืนยันตัวตนผู้ขายก่อนแสดงสถานะ','ห้ามเปิดข้อมูลยอดเงินของผู้ขายรายอื่น']]]]
+ ]},
+mkt:{icon:'📣',pos:'เจ้าหน้าที่การตลาด',dept:'ฝ่ายการตลาด',blurb:'คอนเทนต์ · แคมเปญ · รายงานผล',
+ desc:'ดูแลโซเชียลมีเดียและกิจกรรมส่งเสริมการขายในศูนย์การค้า ประสานร้านค้าเข้าร่วมโปรโมชัน และทำรายงานผลให้ผู้บริหาร',
+ kw:['การตลาด','ตลาด','marketing','mkt','คอนเทนต์','content','โซเชียล','social','โฆษณา','แคมเปญ','ขาย','pr','กิจกรรม','อีเวนต์','event','แบรนด์','กราฟิก'],
+ jobs:[
+ ['วางแผนและผลิตคอนเทนต์โซเชียล','ดูแล Facebook, Instagram, TikTok และ LINE OA ของศูนย์',[
+  ['เขียนแคปชันโพสต์โซเชียล','เขียนแคปชันโปรโมชันร้านค้า/กิจกรรม ปรับโทนตามช่องทาง',25,'day',2,'quick_win',92,'ใช้ Gem ที่รู้โทนแบรนด์และตัวอย่างโพสต์ที่ได้ผลดี ร่างแคปชัน 3 แบบต่อโพสต์ เลือก/แก้แล้วโพสต์','gem',0.6,'ง่าย','ตรวจชื่อร้าน ราคา วันที่โปรฯ ให้ตรงกับบรีฟ','สร้าง Gem "แคปชันศูนย์ฯ" ใส่โพสต์ยอดนิยม 10 โพสต์เป็นตัวอย่างโทน',
+   'คุณคือแอดมินเพจศูนย์การค้าที่เป็นกันเองแต่สุภาพ\nเขียนแคปชัน 3 แบบ (สั้น / กลาง / เล่าเรื่อง) สำหรับ {ช่องทาง}\nข้อมูลโปรฯ: {ร้าน / สินค้า / ส่วนลด / วันที่ / ชั้นที่ตั้ง}\nกฎ: ขึ้นต้นด้วยประโยคดึงความสนใจ, มี call-to-action 1 จุด, แฮชแท็กไม่เกิน 3, ห้ามใช้คำว่า "ดีที่สุด" หรือ "ถูกที่สุด"',
+   ['ราคา/เงื่อนไขโปรฯ ต้องตรงกับที่ร้านยืนยัน — AI อาจเติมเงื่อนไขเอง']],
+  ['ทำแผนคอนเทนต์รายเดือน (Content Calendar)','จัดตารางโพสต์ทั้งเดือนตามแคมเปญ วันสำคัญ และร้านค้า',240,'month',1,'quick_win',85,'ให้ AI ร่างปฏิทินคอนเทนต์ 30 วันจากรายการแคมเปญ + วันสำคัญ แล้วทีมปรับลำดับและความถี่','claude',0.5,'ง่าย','เช็กวันชนกับกิจกรรมจริงในศูนย์และงบบูสต์โพสต์','ส่งรายการแคมเปญเดือนหน้าให้ AI จัดเป็นตาราง วันที่ | ช่องทาง | หัวข้อ | รูปแบบ',
+   'ช่วยจัด Content Calendar เดือน {เดือน} สำหรับศูนย์การค้า\nแคมเปญหลัก: {รายการ}\nวันสำคัญ: {รายการ}\nช่องทาง: Facebook, Instagram, TikTok, LINE OA\nตอบเป็นตาราง: วันที่ | ช่องทาง | หัวข้อ | รูปแบบ (ภาพ/วิดีโอสั้น/อัลบั้ม) | เป้าหมาย\nเงื่อนไข: วันละไม่เกิน 2 โพสต์ต่อช่องทาง และกระจายร้านค้าให้ทั่วถึง',
+   []],
+  ['คิดคอนเซ็ปต์ภาพและเขียนบรีฟกราฟิก','สรุปไอเดียภาพ ข้อความบนภาพ ขนาดที่ต้องใช้ ส่งให้ทีมกราฟิก',40,'week',3,'assist_only',60,'AI ช่วยระดมไอเดียคอนเซ็ปต์และเขียนบรีฟให้ครบหัวข้อ แต่การเลือกภาพและ CI ยังต้องเป็นทีม','claude',0.35,'ปานกลาง','ตรวจ CI สี/โลโก้ และสิทธิ์การใช้ภาพ','ทำแม่แบบบรีฟกราฟิกมาตรฐานให้ AI กรอกทุกครั้ง',
+   'ช่วยเขียนบรีฟงานกราฟิกจากข้อมูลนี้: {แคมเปญ / กลุ่มเป้าหมาย / ข้อความหลัก / ช่องทาง}\nหัวข้อที่ต้องมี: วัตถุประสงค์, ข้อความบนภาพ (ไม่เกิน 12 คำ), mood & tone, องค์ประกอบที่ต้องมี, ขนาดไฟล์ทุกช่องทาง, กำหนดส่ง\nเสนอคอนเซ็ปต์ภาพ 3 แบบให้เลือก',
+   ['ภาพที่ AI สร้างอาจติดลิขสิทธิ์/หน้าคนจริง — ใช้เป็นเรฟเท่านั้น']]]],
+ ['จัดแคมเปญและกิจกรรมในศูนย์','วางแผนอีเวนต์ ประสานร้านค้า และดูแลงบประมาณ',[
+  ['เขียนแผนงานอีเวนต์และไทม์ไลน์','ทำ proposal + timeline + รายการสิ่งที่ต้องเตรียม',180,'month',2,'assist_only',62,'AI ร่างโครง proposal และ timeline ย้อนจากวันงาน คนเติมรายละเอียดผู้รับผิดชอบและงบจริง','claude',0.4,'ปานกลาง','ตรวจวันขออนุญาต/พื้นที่และงบประมาณจริง','ให้ AI ทำ timeline ย้อนหลังจากวันงาน 6 สัปดาห์ เทียบกับของเดิม',
+   'ช่วยทำแผนงานอีเวนต์ "{ชื่องาน}" วันที่ {วันที่} ที่ลาน {พื้นที่}\n1) วัตถุประสงค์และกลุ่มเป้าหมาย\n2) Timeline ย้อนหลัง 6 สัปดาห์ (สัปดาห์ | งาน | ผู้รับผิดชอบ)\n3) เช็กลิสต์สิ่งที่ต้องเตรียมวันงาน\n4) ความเสี่ยงที่ควรเตรียมแผนสำรอง 3 ข้อ',
+   ['ห้ามใส่งบประมาณและชื่อผู้สนับสนุนที่ยังไม่ประกาศลงในเครื่องมือที่ไม่ใช่บัญชีองค์กร']],
+  ['ประสานร้านค้าเข้าร่วมโปรโมชัน','ส่งอีเมลเชิญ ติดตามคำตอบ รวบรวมเงื่อนไขโปรฯ ของแต่ละร้าน',60,'week',2,'strategic',78,'ใช้ Google Forms รับเงื่อนไขโปรฯ จากร้าน + n8n ส่งอีเมลเชิญ/ติดตามอัตโนมัติ สรุปลงชีทเดียว','n8n',0.5,'ปานกลาง','ตรวจเงื่อนไขโปรฯ ก่อนนำไปทำสื่อ','ทำ Google Form รับเงื่อนไขโปรฯ ใช้กับแคมเปญถัดไปก่อน',
+   'ช่วยร่างอีเมลเชิญร้านค้าเข้าร่วมแคมเปญ "{ชื่อแคมเปญ}" ระยะเวลา {วันที่}\nมีลิงก์ฟอร์มให้กรอกเงื่อนไขโปรฯ: {ลิงก์}\nระบุสิทธิประโยชน์ที่ร้านได้ (โปรโมตบนโซเชียลของศูนย์), กำหนดตอบกลับ, ผู้ติดต่อ\nร่างอีเมลติดตามรอบ 2 แบบสั้นด้วย',
+   ['อีเมลผู้ติดต่อร้านค้าเป็นข้อมูลส่วนบุคคล — เก็บในชีทที่จำกัดสิทธิ์']],
+  ['เคาะงบประมาณและเลือกผู้สนับสนุน','ตัดสินใจจัดสรรงบและเลือกพันธมิตร',90,'month',1,'not_recommended',22,'เป็นการตัดสินใจทางธุรกิจที่มีผลผูกพัน AI ช่วยได้แค่สรุปตัวเลือกให้เทียบ ไม่ควรเป็นผู้แนะนำคำตอบ','human',0.1,'—','ทั้งหมด','ใช้ AI ทำตารางเทียบข้อเสนอเท่านั้น',
+   'ไม่แนะนำให้ AI ตัดสินใจแทน\nใช้ได้แค่: "สรุปข้อเสนอผู้สนับสนุน 3 รายนี้เป็นตารางเทียบ ราคา / สิ่งที่ได้ / เงื่อนไข / ข้อควรระวัง โดยไม่ต้องสรุปว่าควรเลือกใคร"',
+   ['ข้อเสนอราคาคู่ค้าเป็นความลับทางการค้า']]]],
+ ['รายงานผลการตลาด','สรุปตัวเลข engagement และผลแคมเปญให้ผู้บริหาร',[
+  ['ดึงยอด engagement และทำรายงานประจำสัปดาห์','เข้าแต่ละแพลตฟอร์มคัดลอกตัวเลขมาใส่ Excel แล้วทำกราฟ',120,'week',1,'strategic',80,'ให้ n8n ดึงสถิติจากแพลตฟอร์มลงชีทกลางทุกจันทร์ แล้ว AI สรุปไฮไลต์ 5 บรรทัดส่งอีเมล','n8n',0.65,'ปานกลาง','ตรวจตัวเลขผิดปกติ (โพสต์บูสต์/ไวรัล) ก่อนส่ง','ทำชีทกลางรูปแบบเดียวกันทุกสัปดาห์ก่อน แล้วส่งโจทย์ต่อระบบให้ทีมกลาง',
+   'จากตาราง engagement สัปดาห์นี้เทียบสัปดาห์ก่อน (แนบ) เขียนสรุปสำหรับผู้จัดการ:\n- 5 bullet: ตัวเลขสำคัญ + % เปลี่ยนแปลง\n- โพสต์ที่ดีที่สุด 3 อันดับ และสาเหตุที่น่าจะเป็น\n- 1 ข้อเสนอสำหรับสัปดาห์หน้า\nถ้าตัวเลขไม่พอจะสรุปสาเหตุ ให้ระบุว่า "ข้อมูลไม่พอ"',
+   []],
+  ['สรุปรายงานหลังจบแคมเปญให้ผู้บริหาร','รวมตัวเลขผู้เข้าร่วม ยอดขายร้านค้า และบทเรียน',150,'month',2,'quick_win',83,'ให้ AI เรียบเรียงรายงานสรุปแคมเปญจากตัวเลขและโน้ตหน้างาน เป็นสไลด์/เอกสาร 1 หน้า','claude',0.5,'ง่าย','ตรวจตัวเลขทุกตัวกับแหล่งข้อมูล','ใช้ prompt ด้านล่างกับแคมเปญล่าสุดเทียบกับรายงานที่เคยทำ',
+   'ช่วยเขียนรายงานสรุปแคมเปญ "{ชื่อ}" สำหรับผู้บริหาร ยาว 1 หน้า\nข้อมูล: {จำนวนผู้เข้าร่วม, ยอดขายร้านที่ร่วม, engagement, งบที่ใช้, โน้ตหน้างาน}\nโครง: ผลลัพธ์เทียบเป้า → สิ่งที่ได้ผล → สิ่งที่ควรปรับ → ข้อเสนอครั้งหน้า\nใช้ตัวเลขที่ให้เท่านั้น',
+   ['ยอดขายรายร้านเป็นข้อมูลภายใน — ใช้บัญชีองค์กร']]]],
+ ['ดูแลช่องทางสื่อสารกับลูกค้า','ตอบข้อความลูกค้าและติดตามเสียงตอบรับ',[
+  ['ตอบข้อความลูกค้าใน LINE OA','ตอบคำถามซ้ำๆ เช่น เวลาเปิดปิด ที่จอดรถ โปรโมชัน',3,'day',25,'strategic',75,'ตั้ง LINE OA ตอบคำถามพื้นฐานอัตโนมัติจากคลัง FAQ ที่ทีมดูแล ส่งต่อคนเมื่อเป็นเรื่องร้องเรียน','line',0.6,'ปานกลาง','เรื่องร้องเรียน/ของหาย/อุบัติเหตุ ต้องส่งคนเสมอ','รวบรวม 20 คำถามที่เจอบ่อยพร้อมคำตอบมาตรฐานลงชีท',
+   'จากประวัติแชตลูกค้า 1 เดือน (ลบชื่อ/เบอร์ออกแล้ว) ช่วย:\n1) จัดกลุ่มคำถามที่เจอบ่อย 20 อันดับ\n2) ร่างคำตอบมาตรฐานแต่ละข้อ ไม่เกิน 3 บรรทัด\n3) ระบุคำถามที่ "ต้องส่งต่อเจ้าหน้าที่" เสมอ',
+   ['ลบชื่อ เบอร์โทร ทะเบียนรถลูกค้าออกก่อนส่งประวัติแชตให้ AI','ห้ามให้บอทตอบเรื่องร้องเรียนหรือการชดเชยเอง']],
+  ['รวบรวมรีวิวและคอมเมนต์ สรุปประเด็น','อ่านรีวิว Google/Facebook แล้วสรุปเรื่องที่ลูกค้าพูดถึง',60,'week',1,'quick_win',88,'ให้ AI จัดกลุ่มรีวิวตามหัวข้อ (ที่จอดรถ ห้องน้ำ ร้านอาหาร ฯลฯ) พร้อมสัดส่วนบวก/ลบ ส่งต่อแผนกที่เกี่ยวข้อง','claude',0.6,'ง่าย','สุ่มอ่านรีวิวจริงเทียบกับที่ AI สรุป','คัดลอกรีวิว 1 สัปดาห์ให้ AI สรุปตาม prompt ด้านล่าง',
+   'นี่คือรีวิวลูกค้าสัปดาห์นี้ (แนบ)\nจัดกลุ่มตามหัวข้อ: ที่จอดรถ / ความสะอาด / ร้านอาหาร / กิจกรรม / พนักงาน / อื่นๆ\nแต่ละหัวข้อ: จำนวน, บวก/ลบ, ตัวอย่างคำพูด 1 ประโยค, แผนกที่ควรรับเรื่อง\nปิดท้ายด้วยเรื่องเร่งด่วนที่ควรแจ้งทันที',
+   ['ไม่ต้องใส่ชื่อผู้รีวิวในรายงานที่ส่งต่อ']]]]
+ ]},
+hr:{icon:'👥',pos:'เจ้าหน้าที่ HR (สรรหาและบุคลากร)',dept:'ฝ่ายทรัพยากรบุคคล',blurb:'สรรหา · พนักงานใหม่ · รายงาน',
+ desc:'สรรหาพนักงานระดับปฏิบัติการของศูนย์ ดูแลพนักงานใหม่ ข้อมูลพนักงาน และติดตามการประเมินทดลองงาน',
+ kw:['hr','บุคคล','บุคลากร','สรรหา','รับสมัคร','พนักงาน','เงินเดือน','สวัสดิการ','ทรัพยากรมนุษย์','recruit','ฝึกอบรม','training','ประเมิน'],
+ jobs:[
+ ['สรรหาและคัดเลือกพนักงาน','ประกาศรับสมัคร คัดกรอง นัดสัมภาษณ์',[
+  ['เขียนประกาศรับสมัครงาน','เขียน JD และโพสต์ลงเว็บหางาน/โซเชียล',45,'week',1,'quick_win',90,'ให้ Gem ร่างประกาศจาก JD เดิม ปรับให้น่าสนใจและเหมาะแต่ละช่องทาง','gem',0.6,'ง่าย','ตรวจคุณสมบัติที่อาจเลือกปฏิบัติ (อายุ เพศ) และสวัสดิการให้ตรงจริง','ทำ Gem "ประกาศรับสมัคร" ใส่ JD มาตรฐานทุกตำแหน่ง',
+   'เขียนประกาศรับสมัครตำแหน่ง {ตำแหน่ง} ของศูนย์การค้า จาก JD ที่แนบ\nทำ 2 แบบ: (1) เว็บหางาน แบบเต็ม (2) โพสต์โซเชียล ไม่เกิน 6 บรรทัด\nต้องมี: หน้าที่หลัก 4-5 ข้อ, คุณสมบัติ, สวัสดิการ, วิธีสมัคร\nห้ามระบุเพศ อายุ หรือรูปร่างหน้าตา เว้นแต่จำเป็นตามลักษณะงานและมีเหตุผล',
+   ['ตรวจถ้อยคำที่อาจเข้าข่ายเลือกปฏิบัติ']],
+  ['คัดกรองใบสมัครเบื้องต้น','อ่านใบสมัคร/เรซูเม่ เทียบกับคุณสมบัติขั้นต่ำ',10,'day',10,'assist_only',50,'AI ช่วยทำเกณฑ์คัดกรองและสรุปเรซูเม่ที่ลบข้อมูลส่วนตัวแล้ว แต่ห้ามให้ AI ตัดสินผ่าน/ไม่ผ่านเอง','claude',0.3,'ปานกลาง','คนต้องตัดสินทุกใบ และตรวจอคติของเกณฑ์','ให้ AI ช่วยเขียนเกณฑ์คัดกรองเป็นข้อๆ จาก JD ก่อน (ยังไม่ต้องส่งเรซูเม่)',
+   'จาก JD ตำแหน่ง {ตำแหน่ง} ช่วยทำเกณฑ์คัดกรองใบสมัคร:\n- คุณสมบัติขั้นต่ำ (ต้องมี) 3-5 ข้อ\n- คุณสมบัติที่เป็นข้อดี 3-5 ข้อ\n- คำถามโทรคัดกรอง 5 ข้อ\nเกณฑ์ต้องวัดจากความสามารถ ห้ามใช้อายุ เพศ ศาสนา สถานะสมรส',
+   ['ใบสมัครมีข้อมูลส่วนบุคคล (PDPA) — ห้ามส่งเข้า AI สาธารณะ','ห้ามให้ AI ตัดสินคัดคนออกโดยลำพัง ต้องมีคนตรวจทุกใบ']],
+  ['นัดหมายสัมภาษณ์และแจ้งผู้สมัคร','โทร/อีเมลนัดวันเวลา ประสานผู้สัมภาษณ์ แจ้งผล',10,'day',4,'strategic',74,'ให้ผู้สมัครเลือกช่วงเวลาผ่านฟอร์ม + n8n ส่งอีเมลยืนยัน/แจ้งเตือนอัตโนมัติ','n8n',0.5,'ปานกลาง','ตรวจชื่อ/ตำแหน่งในอีเมลแจ้งผลก่อนส่ง','ทำแม่แบบอีเมลนัดสัมภาษณ์/แจ้งผล 3 แบบใน Gmail ก่อน',
+   'ร่างอีเมลภาษาไทย 3 แบบสำหรับผู้สมัครตำแหน่ง {ตำแหน่ง}:\n1) นัดสัมภาษณ์ (วัน เวลา สถานที่ สิ่งที่ต้องเตรียม)\n2) แจ้งผ่านการคัดเลือก\n3) แจ้งไม่ผ่านอย่างให้เกียรติ\nแต่ละแบบไม่เกิน 8 บรรทัด',
+   ['อีเมลแจ้งผลต้องส่งถึงผู้สมัครที่ถูกคน — ตรวจก่อนส่งทุกครั้ง']]]],
+ ['ปฐมนิเทศและดูแลพนักงานใหม่','เตรียมเอกสาร ปฐมนิเทศ และตอบคำถามช่วงแรก',[
+  ['เตรียมเอกสารและเช็กลิสต์พนักงานใหม่','แบบฟอร์ม สัญญา บัตรพนักงาน ชุดยูนิฟอร์ม สิทธิ์ระบบ',40,'month',6,'quick_win',82,'ใช้ Google Sheets เช็กลิสต์กลางต่อคน + Forms ให้พนักงานกรอกข้อมูลเอง ลดการคีย์ซ้ำ','sheets',0.5,'ง่าย','ตรวจเอกสารตัวจริงก่อนเซ็นสัญญา','ให้ AI ร่างเช็กลิสต์ onboarding 2 สัปดาห์แรกเป็นตาราง',
+   'ช่วยทำเช็กลิสต์ onboarding พนักงานใหม่ของศูนย์การค้า แบ่งเป็น: ก่อนวันเริ่มงาน / วันแรก / สัปดาห์แรก / สัปดาห์ที่ 2\nแต่ละข้อระบุผู้รับผิดชอบ (HR / หัวหน้างาน / IT) และกำหนดเสร็จ\nทำเป็นตารางที่วางลง Google Sheets ได้ทันที',
+   ['สำเนาบัตรประชาชนเก็บในโฟลเดอร์ที่จำกัดสิทธิ์เท่านั้น']],
+  ['ตอบคำถามพนักงานเรื่องสวัสดิการและระเบียบ','ลาป่วย ลาพักร้อน ค่ารักษา การแต่งกาย ฯลฯ',5,'day',8,'strategic',77,'สร้าง Gem ที่อ่านคู่มือพนักงานฉบับล่าสุด ให้พนักงานถามเองก่อน เรื่องเฉพาะบุคคลส่ง HR','gem',0.6,'ปานกลาง','คำตอบเรื่องเงิน/สิทธิ์เฉพาะบุคคลต้องให้ HR ยืนยัน','รวบรวมคู่มือพนักงาน+ประกาศล่าสุดเป็นไฟล์เดียวสำหรับใส่ Gem',
+   'คุณคือผู้ช่วย HR ตอบคำถามพนักงานจากคู่มือพนักงานที่แนบเท่านั้น\nกฎ:\n- ตอบสั้น อ้างอิงหัวข้อในคู่มือ\n- ถ้าไม่มีในคู่มือ ให้ตอบว่า "เรื่องนี้กรุณาสอบถาม HR โดยตรง"\n- ห้ามตอบเรื่องเงินเดือน/การประเมินของบุคคล\n- ห้ามเดาตัวเลขสวัสดิการ',
+   ['คู่มือต้องเป็นฉบับล่าสุดเสมอ ไม่งั้นตอบผิด','ห้ามให้พนักงานพิมพ์ข้อมูลสุขภาพลงแชต']]]],
+ ['ข้อมูลพนักงานและรายงาน','อัปเดตข้อมูลและทำรายงานกำลังคน',[
+  ['อัปเดตข้อมูลพนักงานในระบบ','ย้ายแผนก เลื่อนตำแหน่ง เปลี่ยนที่อยู่',15,'day',3,'assist_only',42,'ข้อมูลหลักอยู่ในระบบกลาง (Employee API) ควรแก้ที่ต้นทางเดียว AI ช่วยได้แค่ตรวจแบบฟอร์มคำขอให้ครบ','empapi',0.15,'ปานกลาง','ทุกการแก้ต้องมีเอกสารอนุมัติ','ทำ Google Form คำขอเปลี่ยนข้อมูลที่บังคับแนบเอกสาร',
+   'ช่วยทำเช็กลิสต์ตรวจคำขอเปลี่ยนข้อมูลพนักงาน 3 ประเภท (ย้ายแผนก / เลื่อนตำแหน่ง / เปลี่ยนที่อยู่)\nแต่ละประเภท: เอกสารที่ต้องมี, ผู้อนุมัติ, ระบบที่ต้องแก้ตาม',
+   ['ข้อมูลพนักงานเป็นข้อมูลส่วนบุคคล — ห้ามคัดลอกลงชีทส่วนตัว']],
+  ['ทำรายงาน headcount / turnover รายเดือน','ดึงรายชื่อ นับเข้า-ออก แยกแผนก ทำกราฟ',180,'month',1,'strategic',81,'ให้ n8n ดึงข้อมูลจาก Employee API ลงชีทรายงานอัตโนมัติ และ AI เขียนบทสรุปแนวโน้ม','n8n',0.6,'ปานกลาง','ตรวจตัวเลขเข้า-ออกกับเอกสารลาออกจริง','ขอสิทธิ์ Employee API แบบอ่านอย่างเดียวผ่านทีมกลาง',
+   'จากตาราง headcount รายแผนก 6 เดือน (แนบ ไม่มีชื่อบุคคล) ช่วย:\n1) คำนวณ turnover rate รายเดือนและรายแผนก\n2) ชี้แผนกที่ผิดปกติ\n3) เขียนบทสรุป 5 บรรทัดสำหรับผู้บริหาร\nใช้สูตร turnover = จำนวนลาออก / ค่าเฉลี่ยพนักงาน × 100',
+   ['ส่งเฉพาะตัวเลขรวม ไม่ส่งรายชื่อพนักงานเข้า AI']]]],
+ ['ประเมินผลและพนักงานสัมพันธ์','ติดตามการประเมินทดลองงานและดูแลเรื่องวินัย',[
+  ['ติดตามแบบประเมินทดลองงาน','ส่งแบบประเมินให้หัวหน้า ทวงถาม รวบรวมผล',20,'week',3,'strategic',79,'ใช้ Web App ประเมินทดลองงานที่แจ้งเตือนหัวหน้าอัตโนมัติตามวันครบกำหนด ไม่ต้องทวงเอง','webapp',0.6,'ปานกลาง','HR ทบทวนผลก่อนสรุปผ่าน/ไม่ผ่าน','ทำชีทรายชื่อพนักงานทดลองงาน + วันครบ 60/90/119 วันเป็นข้อมูลตั้งต้น',
+   'ช่วยเขียน spec สั้นสำหรับทีมกลาง: "ระบบติดตามการประเมินทดลองงาน"\nระบุ: ผู้ใช้ (HR / หัวหน้า / ผู้บริหาร), ข้อมูลจาก Employee API, การแจ้งเตือนก่อนครบกำหนด, หน้าจอหลัก 3 หน้า, รายงานที่ HR ต้องการ',
+   ['ผลประเมินเป็นข้อมูลลับเฉพาะผู้เกี่ยวข้อง']],
+  ['สอบข้อเท็จจริงกรณีวินัยพนักงาน','สัมภาษณ์คู่กรณี รวบรวมหลักฐาน สรุปเสนอกรรมการ',240,'month',1,'not_recommended',10,'เป็นเรื่องอ่อนไหวและมีผลต่อชีวิตคน ไม่ควรใช้ AI วิเคราะห์หรือเสนอบทลงโทษ','human',0,'—','ทั้งหมด','ใช้แบบฟอร์มสอบข้อเท็จจริงมาตรฐานเดิม',
+   'ไม่แนะนำให้ใช้ AI กับเนื้อหาของกรณีวินัย\nใช้ได้เฉพาะงานที่ไม่มีข้อมูลบุคคล เช่น "ช่วยร่างแม่แบบบันทึกการสอบข้อเท็จจริงที่เป็นกลาง มีหัวข้อ วันที่ ผู้ให้ถ้อยคำ ข้อเท็จจริง พยานหลักฐาน"',
+   ['ห้ามส่งข้อมูลกรณีวินัยเข้า AI ทุกชนิด','การตัดสินต้องเป็นคณะกรรมการตามระเบียบ']]]]
+ ]}
+};
+const PKEYS=Object.keys(PRESETS);
+const CANNED={};
+PKEYS.forEach(p=>PRESETS[p].jobs.forEach((j,ji)=>j[2].forEach((t,ti)=>{CANNED[p+'-'+ji+'-'+ti]=t;})));
+const GENERIC=(name)=>['',
+ '',0,'',0,'assist_only',55,'ใช้ AI ช่วยร่างเอกสาร/สรุปข้อมูลของงาน "'+name+'" แล้วให้คนตรวจก่อนนำไปใช้ (งานที่เพิ่มเอง — ในเดโมใช้ผลวิเคราะห์ทั่วไป)','claude',0.25,'ปานกลาง','ตรวจความถูกต้องของผลลัพธ์ทุกครั้ง','อธิบายขั้นตอนงานนี้ให้ AI แล้วให้เสนอส่วนที่ทำซ้ำได้',
+ 'ฉันทำงาน "'+name+'" เป็นประจำ ขั้นตอนปัจจุบันคือ {อธิบาย}\n1) ขั้นตอนไหนที่ AI ช่วยร่าง/สรุป/ตรวจได้\n2) เขียน prompt สำเร็จรูปสำหรับขั้นตอนนั้น\n3) จุดที่คนต้องตรวจเสมอ',
+ ['ห้ามใส่ข้อมูลส่วนบุคคลหรือข้อมูลลับลง AI ที่องค์กรไม่อนุมัติ','ต้องมีคนตรวจก่อนนำผลไปใช้']];
+
+/* ---------------- Facilitator fake sessions ---------------- */
+const SESS=[
+ ['ณัฐธิดา พรหมมา','เจ้าหน้าที่บัญชีเจ้าหนี้','บัญชีและการเงิน',5,11,21.6,4,'ดึงข้อมูลใบแจ้งหนี้จาก PDF · กระทบยอด Statement',35],
+ ['กิตติพัฒน์ วงศ์สว่าง','เจ้าหน้าที่การตลาด','การตลาด',4,10,18.2,4,'แคปชันโซเชียล · รายงาน engagement อัตโนมัติ',50],
+ ['สุภาวดี แก้วประเสริฐ','เจ้าหน้าที่สรรหา','ทรัพยากรบุคคล',3,9,0,0,'ยังไม่วิเคราะห์',12],
+ ['ธีรวัฒน์ บุญมา','ช่างซ่อมบำรุงอาคาร','วิศวกรรมอาคาร',2,0,0,0,'กำลังแก้รายการงานหลัก',8],
+ ['พิมพ์ชนก ศรีวงศ์','เจ้าหน้าที่ลูกค้าสัมพันธ์','ลูกค้าสัมพันธ์',5,12,26.4,5,'ตอบคำถามลูกค้าผ่าน LINE OA · สรุปเรื่องร้องเรียนรายสัปดาห์',64],
+ ['อนุชา ทองดี','เจ้าหน้าที่ขายพื้นที่เช่า','ขายพื้นที่เช่า',4,8,12.5,2,'ร่างข้อเสนอพื้นที่เช่า · ติดตามสัญญาใกล้หมดอายุ',22],
+ ['วราภรณ์ จันทร์เพ็ญ','เจ้าหน้าที่จัดซื้อ','จัดซื้อ',1,0,0,0,'เพิ่งเริ่ม',3],
+ ['ปกรณ์ เลิศวิริยะ','เจ้าหน้าที่ IT Support','เทคโนโลยีสารสนเทศ',5,10,15.8,3,'คัดแยก ticket อัตโนมัติ · คู่มือแก้ปัญหาเบื้องต้น',95]
+].map((a,i)=>({id:'s'+(i+1),name:a[0],pos:a[1],dept:a[2],step:a[3],tasks:a[4],saved:a[5],qw:a[6],top:a[7],ago:a[8]}));
+
+/* ---------------- state ---------------- */
+let S;
+function blank(){return {v:1,uid:1,preset:null,position:'',dept:'',desc:'',qTime:'',jobs:[],maxStep:1,analyzedAt:null,filter:'all'};}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.v===1&&Array.isArray(d.jobs)){S=d;return;}}}catch(e){}S=blank();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const nid=()=>'x'+(S.uid++);
+
+/* ---------------- utils ---------------- */
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const coll=new Intl.Collator('th',{numeric:true});
+const h1=n=>(Math.round(n*10)/10).toLocaleString('th-TH',{minimumFractionDigits:1,maximumFractionDigits:1});
+const dth=d=>d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2000);}
+const taskHrs=t=>(Number(t.mins)||0)*(Number(t.n)||0)*(FREQ[t.freq]?FREQ[t.freq].m:0)/60;
+function analysisOf(t){const c=t.ck&&CANNED[t.ck];const a=c||GENERIC(t.name);return {level:a[5],score:a[6],help:a[7],tool:a[8],pct:a[9],diff:a[10],check:a[11],first:a[12],prompt:a[13],cautions:a[14],generic:!c};}
+const allTasks=()=>S.jobs.flatMap(j=>j.tasks.map(t=>({t,j})));
+function mapPreset(text){
+  const s=String(text||'').toLowerCase();let best=null,bs=0;
+  PKEYS.forEach(k=>{if(s.includes(PRESETS[k].pos.toLowerCase().slice(0,12)))return best=k,bs=99;const sc=PRESETS[k].kw.reduce((a,w)=>a+(s.includes(w)?1:0),0);if(sc>bs){bs=sc;best=k;}});
+  return {key:best||'mkt',exact:bs>0};
+}
+
+/* ---------------- loading (simulated AI) ---------------- */
+let ovTimer=null,ovDone=null;
+function fakeAI(title,msgs,ms,done){
+  const ov=$('#ov');$('#ov-t').textContent=title;$('#ov-s').textContent=msgs[0];$('#ov-p').style.width='0';
+  ov.classList.add('show');const t0=Date.now();let i=0;const back=document.activeElement;
+  $('#ov-cancel').focus();
+  ovDone=()=>{clearInterval(ovTimer);ov.classList.remove('show');if(back&&back.focus)back.focus();};
+  ovTimer=setInterval(()=>{const p=Math.min(1,(Date.now()-t0)/ms);$('#ov-p').style.width=(p*100)+'%';
+    const k=Math.min(msgs.length-1,Math.floor(p*msgs.length));if(k!==i){i=k;$('#ov-s').textContent=msgs[k];}
+    if(p>=1){ovDone();ovDone=null;done();}},80);
+}
+$('#ov-cancel').onclick=()=>{if(ovDone){ovDone();ovDone=null;toast('ยกเลิกแล้ว');}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovDone){ovDone();ovDone=null;toast('ยกเลิกแล้ว');}});
+
+/* ---------------- views ---------------- */
+const STEPS=[['start','ตำแหน่งงาน'],['jobs','งานหลัก'],['tasks','งานย่อย + เวลา'],['results','ผลวิเคราะห์'],['summary','สรุป / PDF']];
+function stepper(cur){
+  return `<ol class="stepper" aria-label="ขั้นตอน">${STEPS.map(([k,l],i)=>{const n=i+1;const isCur=n===cur;const can=n<=S.maxStep;const cls=isCur?'cur':(n<S.maxStep||n<cur?'done':'');
+    const inner=`<span class="n">${n<cur&&can?'✓':n}</span><span class="lbl">${l}</span>`;
+    return `<li class="${isCur?'curli':''}">${can?`<a href="#/${k}" class="${cls}"${isCur?' aria-current="step"':''}>${inner}</a>`:`<span aria-disabled="true">${inner}</span>`}</li>`;}).join('')}</ol>`;
+}
+const V={};
+
+V.start=el=>{
+  const p=S.preset;
+  el.innerHTML=stepper(1)+`<h1 class="title">เริ่มสำรวจงานของคุณ</h1><p class="sub">ระบุตำแหน่งงาน แล้วให้ AI แตกออกเป็นงานหลัก → งานย่อย → วิเคราะห์ว่างานไหน AI ช่วยได้</p>
+  <div class="card">
+    <h2>1 · เลือกตำแหน่งตัวอย่าง หรือพิมพ์เอง</h2>
+    <div class="presets" role="group" aria-label="ตำแหน่งตัวอย่าง">${PKEYS.map(k=>{const x=PRESETS[k];return `<button type="button" class="preset" data-p="${k}" aria-pressed="${p===k&&S.position===x.pos}"><span class="ic" aria-hidden="true">${x.icon}</span><b>${esc(x.pos)}</b><small>${esc(x.dept)} · ${esc(x.blurb)}</small></button>`;}).join('')}</div>
+    <div id="err" class="err hidden" role="alert"></div>
+    <div id="mapnote" class="mapnote hidden"></div>
+    <div class="grid2">
+      <label class="f">ตำแหน่งงาน<input id="f-pos" value="${esc(S.position)}" placeholder="เช่น เจ้าหน้าที่การตลาด" autocomplete="off"></label>
+      <label class="f">หน่วยงาน / แผนก <span class="hint">(ไม่บังคับ)</span><input id="f-dept" value="${esc(S.dept)}" placeholder="เช่น ฝ่ายการตลาด"></label>
+    </div>
+    <div class="hl"><label class="f" for="f-desc">📝 คำอธิบายงานเพิ่มเติม — ยิ่งใส่ยิ่งตรง</label><textarea id="f-desc" placeholder="รับผิดชอบอะไร ทำร่วมกับทีมไหน">${esc(S.desc)}</textarea></div>
+    <label class="f">งานไหนกินเวลาคุณมากที่สุด? <span class="hint">(ไม่บังคับ)</span><input id="f-qtime" value="${esc(S.qTime)}" placeholder="เช่น สรุปรายงานประจำสัปดาห์"></label>
+    <div class="row"><button class="btn pri" id="go" type="button">✨ ให้ AI แตกงาน</button><span class="grow"></span><button class="btn out sm" id="quick" type="button" title="ข้ามไปดูผลลัพธ์ที่วิเคราะห์เสร็จแล้ว">⚡ ดูตัวอย่างผลลัพธ์ทันที</button></div>
+  </div>
+  <p class="small muted">ในเดโมนี้ ตำแหน่งที่พิมพ์เองจะถูกจับคู่กับตัวอย่างที่ใกล้เคียงที่สุด 1 ใน 3 แบบ — ระบบจริงเรียก AI สร้างให้ตามตำแหน่งจริงพร้อมข้อมูลจากระบบ HR</p>`;
+  const sync=()=>{S.position=$('#f-pos').value;S.dept=$('#f-dept').value;S.desc=$('#f-desc').value;S.qTime=$('#f-qtime').value;save();
+    const m=S.position.trim()?mapPreset(S.position):null;const note=$('#mapnote');
+    if(m&&!PKEYS.some(k=>PRESETS[k].pos===S.position.trim())){note.classList.remove('hidden');note.textContent=m.exact?`ตัวอย่างที่ใกล้ที่สุด: “${PRESETS[m.key].pos}” — เดโมจะใช้คำตอบ AI ชุดนี้`:`ไม่พบตัวอย่างที่ตรง — เดโมจะใช้ชุด “${PRESETS[m.key].pos}” แทน`;}else note.classList.add('hidden');
+    $$('.preset').forEach(b=>b.setAttribute('aria-pressed',String(PRESETS[b.dataset.p].pos===S.position.trim())));};
+  $$('input,textarea',el).forEach(i=>i.addEventListener('input',sync));
+  $$('.preset',el).forEach(b=>b.onclick=()=>{const x=PRESETS[b.dataset.p];$('#f-pos').value=x.pos;$('#f-dept').value=x.dept;$('#f-desc').value=x.desc;sync();});
+  sync();
+  $('#go').onclick=()=>{
+    if(!S.position.trim()){const e=$('#err');e.textContent='กรุณาเลือกหรือพิมพ์ตำแหน่งงานก่อน';e.classList.remove('hidden');$('#f-pos').focus();return;}
+    const key=mapPreset(S.position).key;
+    if(S.jobs.length&&S.preset===key&&!confirm('มีรายการงานเดิมอยู่แล้ว ต้องการให้ AI แตกงานใหม่ทับของเดิมหรือไม่?')){location.hash='#/jobs';return;}
+    fakeAI('AI กำลังแตกงาน…',['กำลังอ่านตำแหน่งงาน…','กำลังนึกถึงหน้าที่หลัก…','กำลังจัดกลุ่มงาน…','ใกล้เสร็จแล้ว…'],1700,()=>{
+      S.preset=key;S.jobs=PRESETS[key].jobs.map((j,ji)=>({id:nid(),title:j[0],desc:j[1],ck:key+'-'+ji,src:'ai',tasksGen:false,tasks:[]}));
+      S.maxStep=2;S.analyzedAt=null;save();location.hash='#/jobs';toast('AI แตกงานหลักได้ '+S.jobs.length+' รายการ');});
+  };
+  $('#quick').onclick=()=>{const key=S.preset||'ap';const x=PRESETS[key];S.preset=key;S.position=x.pos;S.dept=x.dept;S.desc=x.desc;
+    S.jobs=x.jobs.map((j,ji)=>({id:nid(),title:j[0],desc:j[1],ck:key+'-'+ji,src:'ai',tasksGen:true,tasks:j[2].map((t,ti)=>mkTask(key+'-'+ji+'-'+ti))}));
+    S.jobs.forEach(j=>j.tasks.forEach(t=>t.an=true));S.maxStep=5;S.analyzedAt=Date.now();save();location.hash='#/results';};
+};
+function mkTask(ck){const c=CANNED[ck];return {id:nid(),name:c[0],desc:c[1],mins:c[2],freq:c[3],n:c[4],ck,src:'ai',an:false};}
+
+V.jobs=el=>{
+  el.innerHTML=stepper(2)+`<h1 class="title">งานหลัก (Job) ของ${esc(S.position)}</h1><p class="sub">AI เสนอหน้าที่หลักให้ — แก้ชื่อ ลบ หรือเพิ่มเองได้ตามงานจริง แล้วไปขั้นถัดไป</p>
+  <div class="card"><div id="joblist"></div>
+  <div class="row"><button class="btn out sm" id="addjob" type="button">＋ เพิ่มงานหลักเอง</button></div></div>
+  <div class="row noprint"><a class="btn out" href="#/start">← ย้อนกลับ</a><span class="grow"></span><button class="btn pri" id="next" type="button">ถัดไป: แตกงานย่อย →</button></div>`;
+  const draw=()=>{$('#joblist').innerHTML=S.jobs.length?S.jobs.map((j,i)=>`<div class="job" data-id="${j.id}"><span class="no" aria-hidden="true">${i+1}</span>
+    <div><input class="jt" value="${esc(j.title)}" aria-label="ชื่องานหลักที่ ${i+1}" placeholder="ชื่องานหลัก"><textarea class="jd" rows="1" aria-label="รายละเอียดงานหลักที่ ${i+1}" placeholder="รายละเอียด (ไม่บังคับ)">${esc(j.desc)}</textarea></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="srcchip ${j.src==='user'?'user':''}">${j.src==='user'?'เพิ่มเอง':'AI'}</span><button class="btn del" type="button" data-del="${j.id}" aria-label="ลบงาน ${esc(j.title)}">ลบ</button></div></div>`).join(''):'<div class="empty">ยังไม่มีงานหลัก — เพิ่มเองหรือย้อนกลับไปให้ AI แตกงาน</div>';
+    $$('.job',el).forEach(r=>{const j=S.jobs.find(x=>x.id===r.dataset.id);$('.jt',r).oninput=e=>{j.title=e.target.value;save();};$('.jd',r).oninput=e=>{j.desc=e.target.value;save();};});
+    $$('[data-del]',el).forEach(b=>b.onclick=()=>{const j=S.jobs.find(x=>x.id===b.dataset.del);if(j.tasks.length&&!confirm('ลบงาน “'+j.title+'” และงานย่อยทั้งหมด?'))return;S.jobs=S.jobs.filter(x=>x!==j);save();draw();toast('ลบแล้ว');});};
+  draw();
+  $('#addjob').onclick=()=>{S.jobs.push({id:nid(),title:'',desc:'',ck:null,src:'user',tasksGen:false,tasks:[]});save();draw();const ins=$$('.jt',el);ins[ins.length-1].focus();};
+  $('#next').onclick=()=>{
+    S.jobs=S.jobs.filter(j=>j.title.trim()||j.tasks.length);
+    if(!S.jobs.length){toast('ต้องมีงานหลักอย่างน้อย 1 รายการ');draw();return;}
+    const need=S.jobs.filter(j=>!j.tasksGen);
+    const fin=()=>{S.maxStep=Math.max(S.maxStep,3);save();location.hash='#/tasks';};
+    if(!need.length)return fin();
+    fakeAI('AI กำลังแตกงานย่อย…',['กำลังแตกขั้นตอนงาน…','กำลังประมาณเวลาที่ใช้…','กำลังประเมินโอกาสใช้ AI…'],1500,()=>{
+      need.forEach(j=>{j.tasksGen=true;if(j.ck){const pj=PRESETS[j.ck.split('-')[0]].jobs[+j.ck.split('-')[1]];j.tasks=pj[2].map((t,ti)=>mkTask(j.ck+'-'+ti));}
+        else j.tasks=[{id:nid(),name:'รวบรวมข้อมูลสำหรับ'+j.title,desc:'',mins:30,freq:'week',n:1,ck:null,src:'ai',an:false},{id:nid(),name:'สรุปและรายงานผล'+j.title,desc:'',mins:45,freq:'month',n:1,ck:null,src:'ai',an:false}];});
+      toast('แตกงานย่อยแล้ว');fin();});
+  };
+};
+
+V.tasks=el=>{
+  el.innerHTML=stepper(3)+`<h1 class="title">งานย่อย (Task) และเวลาที่ใช้</h1><p class="sub">ปรับเวลาและความถี่ให้ใกล้ความจริง — ใช้คำนวณว่า AI ช่วยประหยัดเวลาได้กี่ชั่วโมงต่อเดือน</p>
+  <div class="totalbar"><span>เวลาทำงานที่สำรวจรวม</span><span><b id="tot">0</b> ชม./เดือน · <span id="cnt"></span></span></div>
+  <div id="jobs"></div>
+  <div class="row noprint"><a class="btn out" href="#/jobs">← งานหลัก</a><span class="grow"></span><button class="btn ok" id="an" type="button">🔍 วิเคราะห์ด้วย AI</button></div>`;
+  const tot=()=>{const a=allTasks();$('#tot').textContent=h1(a.reduce((s,x)=>s+taskHrs(x.t),0));$('#cnt').textContent=a.length+' งานย่อย';
+    S.jobs.forEach(j=>{const e=$('#jh-'+j.id);if(e)e.textContent=h1(j.tasks.reduce((s,t)=>s+taskHrs(t),0))+' ชม./เดือน';});};
+  const draw=()=>{$('#jobs').innerHTML=S.jobs.map((j,ji)=>`<section class="card" aria-labelledby="jt-${j.id}"><div class="jobhead"><h2 id="jt-${j.id}">${ji+1}. ${esc(j.title||'(ไม่มีชื่อ)')}</h2><span class="hrs" id="jh-${j.id}"></span></div>
+    ${j.tasks.map((t,ti)=>`<div class="task" data-j="${j.id}" data-t="${t.id}">
+      <div class="tn"><input class="tname" value="${esc(t.name)}" aria-label="ชื่องานย่อย" placeholder="ชื่องานย่อย">${t.an?'<span class="srcchip" style="background:#c6f6d5;color:#22543d">วิเคราะห์แล้ว</span>':''}<button class="btn del" type="button" data-del aria-label="ลบงานย่อย ${esc(t.name)}">ลบ</button></div>
+      ${t.desc?`<p class="td">${esc(t.desc)}</p>`:''}
+      <div class="tfreq"><label>นาทีต่อครั้ง<input type="number" min="0" max="600" inputmode="numeric" class="tm" value="${t.mins}"></label>
+      <label>จำนวนครั้ง<input type="number" min="0" max="200" inputmode="numeric" class="tc" value="${t.n}"></label>
+      <label>ความถี่<select class="tf">${Object.entries(FREQ).map(([k,v])=>`<option value="${k}"${t.freq===k?' selected':''}>${v.l}</option>`).join('')}</select></label>
+      <div class="calc">≈ <b class="th">${h1(taskHrs(t))}</b> ชม./เดือน</div></div></div>`).join('')}
+    <div class="row" style="margin-top:10px"><button class="btn out sm" type="button" data-add="${j.id}">＋ เพิ่มงานย่อย</button></div></section>`).join('');
+    $$('.task',el).forEach(r=>{const j=S.jobs.find(x=>x.id===r.dataset.j);const t=j.tasks.find(x=>x.id===r.dataset.t);
+      const upd=()=>{t.name=$('.tname',r).value;t.mins=Math.max(0,+$('.tm',r).value||0);t.n=Math.max(0,+$('.tc',r).value||0);t.freq=$('.tf',r).value;$('.th',r).textContent=h1(taskHrs(t));save();tot();};
+      $$('input,select',r).forEach(i=>i.addEventListener('input',upd));
+      $('[data-del]',r).onclick=()=>{j.tasks=j.tasks.filter(x=>x!==t);save();draw();toast('ลบงานย่อยแล้ว');};});
+    $$('[data-add]',el).forEach(b=>b.onclick=()=>{const j=S.jobs.find(x=>x.id===b.dataset.add);j.tasks.push({id:nid(),name:'',desc:'',mins:15,freq:'week',n:1,ck:null,src:'user',an:false});save();draw();const r=$$(`.task[data-j="${j.id}"] .tname`,el);r[r.length-1].focus();});
+    tot();};
+  draw();
+  $('#an').onclick=()=>{
+    S.jobs.forEach(j=>j.tasks=j.tasks.filter(t=>t.name.trim()));
+    const n=allTasks().length;if(!n){toast('ต้องมีงานย่อยอย่างน้อย 1 รายการ');draw();return;}
+    fakeAI('AI กำลังวิเคราะห์ '+n+' งานย่อย…',['กำลังประเมินว่า AI ช่วยได้แค่ไหน…','กำลังจับคู่เครื่องมือจาก Tool Registry…','กำลังเขียน Prompt Template…','กำลังตรวจข้อควรระวังตามลักษณะงาน…'],2200,()=>{
+      allTasks().forEach(x=>x.t.an=true);S.analyzedAt=Date.now();S.maxStep=5;S.filter='all';save();location.hash='#/results';toast('วิเคราะห์เสร็จ');});
+  };
+};
+
+function totals(){
+  const a=allTasks().filter(x=>x.t.an);let hrs=0,saved=0;const lv={quick_win:0,strategic:0,assist_only:0,not_recommended:0};
+  a.forEach(x=>{const r=analysisOf(x.t);const h=taskHrs(x.t);hrs+=h;saved+=h*r.pct;lv[r.level]++;});
+  return {n:a.length,hrs,saved,lv,pending:allTasks().length-a.length};
+}
+function toolHtml(k){const t=TOOLS[k]||TOOLS.claude;return `<span class="tool">${esc(t.name)}${t.it?'<span class="tflag it">ต้องให้ IT/ทีมกลางเชื่อม</span>':''}${t.internal&&k!=='human'?'<span class="tflag">ใช้ข้อมูลภายในได้</span>':''}</span>`;}
+
+V.results=el=>{
+  const T=totals();
+  const items=allTasks().filter(x=>x.t.an).map(x=>({...x,r:analysisOf(x.t),h:taskHrs(x.t)})).map(x=>({...x,s:x.h*x.r.pct})).sort((a,b)=>b.s-a.s);
+  const f=S.filter||'all';const shown=items.filter(x=>f==='all'||x.r.level===f);
+  el.innerHTML=stepper(4)+`<h1 class="title">ผลวิเคราะห์: งานไหน AI ช่วยได้</h1><p class="sub">${esc(S.position)} · เรียงตามเวลาที่ประหยัดได้มากที่สุด · เครื่องมือที่แนะนำเลือกจาก Tool Registry ขององค์กรเท่านั้น</p>
+  ${T.pending?`<div class="notice" role="status">มีงานย่อยที่เพิ่ม/แก้หลังวิเคราะห์ ${T.pending} รายการ<button class="btn out sm" id="rean" type="button">วิเคราะห์เพิ่ม</button></div>`:''}
+  <div class="tiles"><div class="tile hot"><b>${h1(T.saved)}</b><span>ชม./เดือน ที่ AI ช่วยประหยัดได้ (ประมาณ)</span></div>
+  <div class="tile"><b>${T.hrs?Math.round(T.saved/T.hrs*100):0}%</b><span>ของเวลางานที่สำรวจ ${h1(T.hrs)} ชม.</span></div>
+  <div class="tile"><b>${T.lv.quick_win}</b><span>Quick Win ทำเองได้วันนี้</span></div>
+  <div class="tile"><b>${T.lv.strategic}</b><span>ส่งต่อทีมกลาง (ต่อระบบ)</span></div></div>
+  <div class="filters" role="group" aria-label="กรองตามระดับ"><button class="chip-btn" type="button" data-f="all" aria-pressed="${f==='all'}">ทั้งหมด <span class="c">${items.length}</span></button>${Object.keys(LV).map(k=>`<button class="chip-btn" type="button" data-f="${k}" aria-pressed="${f===k}">${LV[k]} <span class="c">${T.lv[k]}</span></button>`).join('')}</div>
+  <div id="list">${shown.length?shown.map(resCard).join(''):'<div class="empty card">ไม่มีงานในระดับนี้</div>'}</div>
+  <div class="row noprint"><a class="btn out" href="#/tasks">← แก้งานย่อย</a><span class="grow"></span><a class="btn pri" href="#/summary">ดูสรุป / พิมพ์ PDF →</a></div>`;
+  $$('[data-f]',el).forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;save();V.results(el);$(`[data-f="${S.filter}"]`,el).focus();});
+  $$('[data-copy]',el).forEach(b=>b.onclick=()=>{const tx=$('#'+b.dataset.copy).textContent;const ok=()=>toast('คัดลอก prompt แล้ว');
+    try{navigator.clipboard.writeText(tx).then(ok,()=>toast('คัดลอกไม่ได้ — เลือกข้อความแล้วคัดลอกเอง'));}catch(e){toast('คัดลอกไม่ได้ — เลือกข้อความแล้วคัดลอกเอง');}});
+  const re=$('#rean',el);if(re)re.onclick=()=>fakeAI('AI กำลังวิเคราะห์งานที่เพิ่ม…',['กำลังประเมิน…','กำลังจับคู่เครื่องมือ…'],1200,()=>{allTasks().forEach(x=>x.t.an=true);save();V.results(el);toast('วิเคราะห์เพิ่มแล้ว');});
+};
+function resCard(x){const r=x.r;const pid='p-'+x.t.id;
+  return `<article class="res"><div class="res-top"><div><div class="nm">${esc(x.t.name)}</div><div class="jb">งานหลัก: ${esc(x.j.title)}</div></div><span class="lv lv-${r.level}">${LV[r.level]}</span></div>
+  <div class="score"><span>AI Opportunity</span><span class="bar" role="img" aria-label="คะแนน ${r.score} จาก 100"><i style="width:${r.score}%"></i></span><b>${r.score}</b>/100</div>
+  <p class="help">${esc(r.help)}</p>
+  <div class="kv"><div><small>เครื่องมือที่แนะนำ</small><span>${toolHtml(r.tool)}</span></div><div><small>ประหยัดได้ประมาณ</small><span>${h1(x.s)} ชม./เดือน <span class="muted small">(${Math.round(r.pct*100)}% ของ ${h1(x.h)})</span></span></div><div><small>ความยาก</small><span>${esc(r.diff)}</span></div><div><small>คนต้องตรวจตรงไหน</small><span>${esc(r.check)}</span></div></div>
+  <div class="next"><b>ขั้นแรกที่ทำได้วันนี้:</b> ${esc(r.first)}</div>
+  <details class="more"><summary>ดู Prompt Template และข้อควรระวัง</summary>
+   <div class="pre-head"><span>Prompt Template (คัดลอกไปใช้ได้)</span><button class="btn out sm" type="button" data-copy="${pid}">คัดลอก</button></div>
+   <pre class="pre" id="${pid}">${esc(r.prompt)}</pre>
+   ${r.cautions.length?`<div class="safety"><b>⚠️ ข้อควรระวังสำหรับงานนี้</b><ul>${r.cautions.map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div>`:''}
+  </details></article>`;}
+
+V.summary=el=>{
+  const T=totals();const items=allTasks().filter(x=>x.t.an).map(x=>({...x,r:analysisOf(x.t),h:taskHrs(x.t)})).map(x=>({...x,s:x.h*x.r.pct}));
+  const qw=items.filter(x=>x.r.level==='quick_win').sort((a,b)=>b.s-a.s);const st=items.filter(x=>x.r.level==='strategic').sort((a,b)=>b.s-a.s);
+  const cautions=[...new Set(items.flatMap(x=>x.r.cautions))].slice(0,8);
+  const byJob=S.jobs.map(j=>({j,rows:items.filter(x=>x.j===j)})).filter(g=>g.rows.length);
+  el.innerHTML=stepper(5)+`<div class="row noprint" style="margin:0 0 14px"><h1 class="title grow" style="margin:0">สรุปผล (Artifact)</h1><button class="btn pri" id="print" type="button">🖨️ พิมพ์ / บันทึก PDF</button></div>
+  <article class="doc" aria-label="เอกสารสรุปผล">
+   <header class="doc-head"><div><div class="k">TAKE TASK OUT · ผลสำรวจงานที่ AI ช่วยได้</div><h1>${esc(S.position)}</h1><div class="small muted">${esc(S.dept||'—')}</div></div>
+   <div class="meta">ผู้ทำ: ผู้เข้าร่วมเดโม<br>วันที่: ${dth(new Date(S.analyzedAt||Date.now()))}<br>Workshop AI Discovery · ข้อมูลตัวอย่าง</div></header>
+   <div class="tiles"><div class="tile"><b>${S.jobs.length} / ${T.n}</b><span>งานหลัก / งานย่อย</span></div><div class="tile"><b>${h1(T.hrs)}</b><span>ชม./เดือน ที่สำรวจ</span></div>
+   <div class="tile hot"><b>~${h1(T.saved)}</b><span>ชม./เดือน ที่ AI ช่วยประหยัด</span></div><div class="tile"><b>${T.hrs?Math.round(T.saved/T.hrs*100):0}%</b><span>ของเวลางาน · ≈ ${h1(T.saved*12/8)} วันทำงาน/ปี</span></div></div>
+   <h3>สัดส่วนงานตามระดับโอกาส</h3>
+   <div class="dist" role="img" aria-label="${Object.keys(LV).map(k=>LV[k].replace(/^\S+ /,'')+' '+T.lv[k]).join(', ')}">${Object.keys(LV).map(k=>T.lv[k]?`<i style="width:${T.lv[k]/T.n*100}%;background:${LVCOLOR[k]}"></i>`:'').join('')}</div>
+   <div class="legend">${Object.keys(LV).map(k=>`<span><i style="background:${LVCOLOR[k]}"></i>${LV[k]} · ${LVDESC[k]} (${T.lv[k]})</span>`).join('')}</div>
+   <div class="cols2" style="margin-top:14px">
+    <section><h3>⚡ เริ่มได้เลยสัปดาห์นี้</h3>${qw.length?`<ol class="qlist">${qw.slice(0,3).map(x=>`<li><b>${esc(x.t.name)}</b> <span class="muted small">(~${h1(x.s)} ชม./เดือน · ${esc(TOOLS[x.r.tool].name)})</span><br><span class="small">${esc(x.r.first)}</span></li>`).join('')}</ol>`:'<p class="muted small">ไม่มี</p>'}</section>
+    <section><h3>🎯 ส่งต่อทีมกลาง (ต้องต่อระบบ)</h3>${st.length?`<ol class="qlist">${st.slice(0,3).map(x=>`<li><b>${esc(x.t.name)}</b> <span class="muted small">(~${h1(x.s)} ชม./เดือน · ${esc(TOOLS[x.r.tool].name)})</span><br><span class="small">${esc(x.r.help)}</span></li>`).join('')}</ol>`:'<p class="muted small">ไม่มี</p>'}</section>
+   </div>
+   <h3>รายละเอียดทุกงานย่อย</h3>
+   <div class="scroll"><table class="tbl"><thead><tr><th scope="col">งานย่อย</th><th scope="col">ระดับ</th><th scope="col">เครื่องมือ</th><th scope="col" class="num">ชม.เดิม/เดือน</th><th scope="col" class="num">ประหยัด/เดือน</th></tr></thead>
+   <tbody>${byJob.map(g=>`<tr><td colspan="5" style="background:#ebf8ff;font-weight:700;color:#1a365d">${esc(g.j.title)}</td></tr>`+g.rows.map(x=>`<tr><td>${esc(x.t.name)}</td><td><span class="lv lv-${x.r.level}">${LV[x.r.level]}</span></td><td>${esc(TOOLS[x.r.tool].name)}</td><td class="num">${h1(x.h)}</td><td class="num"><b>${h1(x.s)}</b></td></tr>`).join('')).join('')}</tbody>
+   <tfoot><tr><td colspan="3">รวม</td><td class="num">${h1(T.hrs)}</td><td class="num">${h1(T.saved)}</td></tr></tfoot></table></div>
+   ${cautions.length?`<div class="safety" style="margin-top:14px"><b>⚠️ ข้อควรระวังรวม</b><ul>${cautions.map(c=>`<li>${esc(c)}</li>`).join('')}</ul><div style="margin-top:4px">กฎตายตัว: ห้ามใส่ข้อมูลส่วนบุคคลลง AI ที่องค์กรไม่อนุมัติ และต้องมีคนตรวจก่อนนำผลไปใช้เสมอ</div></div>`:''}
+   <p class="small muted" style="margin-top:14px">ชั่วโมงที่ประหยัดเป็นการประมาณจากเวลาที่กรอก × สัดส่วนที่ AI ประเมิน ใช้จัดลำดับความสำคัญ ไม่ใช่ตัวเลขผูกพัน</p>
+   <section class="appx"><h3>ภาคผนวก · Prompt Template ของงาน Quick Win</h3>${qw.length?qw.map(x=>`<p style="margin:10px 0 0"><b>${esc(x.t.name)}</b></p><pre class="pre">${esc(x.r.prompt)}</pre>`).join(''):'<p class="muted small">ไม่มี</p>'}</section>
+  </article>
+  <div class="row noprint"><a class="btn out" href="#/results">← ผลวิเคราะห์</a><span class="grow"></span><button class="btn out" id="newpos" type="button">เริ่มตำแหน่งใหม่</button><a class="btn out" href="#/facilitator">ดูมุมมอง Facilitator →</a></div>`;
+  $('#print').onclick=()=>window.print();
+  $('#newpos').onclick=()=>{if(!confirm('เริ่มตำแหน่งใหม่? ผลเดิมจะถูกล้าง'))return;S=blank();save();location.hash='#/start';};
+};
+
+/* ---------------- facilitator ---------------- */
+let FS={k:'ago',dir:1,open:null};
+function mySession(){if(!S.position.trim()&&!S.jobs.length)return null;const T=totals();
+  return {id:'me',me:true,name:'คุณ (ผู้เข้าร่วมเดโม)',pos:S.position||'—',dept:S.dept||'—',step:S.maxStep,tasks:allTasks().length,saved:T.saved,qw:T.lv.quick_win,top:T.n?allTasks().filter(x=>x.t.an).map(x=>({x,s:taskHrs(x.t)*analysisOf(x.t).pct})).sort((a,b)=>b.s-a.s).slice(0,2).map(o=>o.x.t.name).join(' · '):'ยังไม่วิเคราะห์',ago:0};}
+V.facilitator=el=>{
+  const rows=[...SESS];const me=mySession();if(me)rows.unshift(me);
+  const k=FS.k,d=FS.dir;
+  rows.sort((a,b)=>{const va=a[k],vb=b[k];return (typeof va==='number'?va-vb:coll.compare(va,vb))*d;});
+  const done=rows.filter(r=>r.step>=5).length,tot=rows.reduce((s,r)=>s+r.saved,0),qw=rows.reduce((s,r)=>s+r.qw,0);
+  const ago=m=>m<1?'เมื่อสักครู่':m<60?m+' นาทีที่แล้ว':Math.floor(m/60)+' ชม.ที่แล้ว';
+  const th=(key,l,cls='')=>`<th scope="col" data-k="${key}" class="${cls}" tabindex="0" aria-sort="${k===key?(d>0?'ascending':'descending'):'none'}">${l}</th>`;
+  el.innerHTML=`<h1 class="title">มุมมองผู้ดำเนินการ (Facilitator)</h1><p class="sub">Workshop AI Discovery รุ่นที่ 3 · ${dth(new Date())} · ติดตามความคืบหน้าผู้เข้าร่วมแบบเรียลไทม์ (ข้อมูลตัวอย่าง)</p>
+  <div class="tiles"><div class="tile"><b>${rows.length}</b><span>ผู้เข้าร่วม</span></div><div class="tile"><b>${done}</b><span>ทำครบ 5 ขั้น</span></div><div class="tile hot"><b>${h1(tot)}</b><span>ชม./เดือน ที่ประหยัดได้รวมทั้งห้อง</span></div><div class="tile"><b>${qw}</b><span>Quick Win ที่พบ</span></div></div>
+  <div class="card"><h2>รายการผู้เข้าร่วม</h2><p class="small muted" style="margin-top:-6px">คลิกแถวเพื่อดูโอกาสเด่น · คลิกหัวตารางเพื่อเรียง</p>
+  <div class="scroll"><table class="tbl sortable rowlink" style="min-width:680px"><thead><tr>${th('name','ผู้เข้าร่วม')}${th('pos','ตำแหน่ง')}${th('dept','หน่วยงาน')}${th('step','ความคืบหน้า')}${th('tasks','งานย่อย','num')}${th('saved','ประหยัด ชม./ด.','num')}${th('ago','อัปเดต')}</tr></thead>
+  <tbody>${rows.map(r=>`<tr class="main${r.me?' me':''}" data-id="${r.id}" tabindex="0" aria-expanded="${FS.open===r.id}"><td><b>${esc(r.name)}</b></td><td>${esc(r.pos)}</td><td>${esc(r.dept)}</td>
+   <td><div class="prog"><span class="bar" role="img" aria-label="ขั้น ${r.step} จาก 5"><i style="width:${r.step/5*100}%"></i></span><small>${r.step}/5 ${esc(STEPS[r.step-1][1])}</small></div></td>
+   <td class="num">${r.tasks||'—'}</td><td class="num">${r.saved?h1(r.saved):'—'}</td><td class="muted small">${ago(r.ago)}</td></tr>
+   ${FS.open===r.id?`<tr class="det"><td colspan="7"><b>โอกาสเด่น:</b> ${esc(r.top)} · Quick Win ${r.qw} รายการ${r.me?` · <a href="#/${STEPS[Math.min(r.step,5)-1][0]}">ไปที่งานของคุณ →</a>`:''}</td></tr>`:''}`).join('')}</tbody></table></div></div>
+  <div class="card"><h2>Tool Registry ขององค์กร (ตัวอย่าง)</h2><p class="small muted" style="margin-top:-6px">AI เลือกแนะนำเฉพาะเครื่องมือในรายการนี้ — ผู้ดูแลเปิด/ปิดได้จากหน้า admin ในระบบจริง</p>
+  <div class="scroll"><table class="tbl" style="min-width:620px"><thead><tr><th scope="col">เครื่องมือ</th><th scope="col">หมวด</th><th scope="col">ค่าใช้จ่าย</th><th scope="col">ข้อมูลภายใน</th><th scope="col">ต้อง IT</th><th scope="col">บริบทการใช้</th></tr></thead>
+  <tbody>${Object.values(TOOLS).filter(t=>t.cat!=='—').map(t=>`<tr><td><b>${esc(t.name)}</b></td><td>${esc(t.cat)}</td><td>${esc(t.cost)}</td><td>${t.internal?'✓ ได้':'✗ ห้าม'}</td><td>${t.it?'ต้อง':'—'}</td><td class="small">${esc(t.note)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  const tog=id=>{FS.open=FS.open===id?null:id;V.facilitator(el);const r=$(`tr[data-id="${id}"]`,el);if(r)r.focus();};
+  $$('tr.main',el).forEach(r=>{r.onclick=e=>{if(e.target.closest('a'))return;tog(r.dataset.id);};r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog(r.dataset.id);}};});
+  $$('th[data-k]',el).forEach(h=>{const go=()=>{const nk=h.dataset.k;FS.dir=FS.k===nk?-FS.dir:(['saved','tasks','step'].includes(nk)?-1:1);FS.k=nk;V.facilitator(el);const nh=$(`th[data-k="${nk}"]`,el);if(nh)nh.focus();};
+    h.onclick=go;h.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+};
+
+/* ---------------- router ---------------- */
+const ORDER={start:1,jobs:2,tasks:3,results:4,summary:5};
+const TITLES={start:'ตำแหน่งงาน',jobs:'งานหลัก',tasks:'งานย่อย',results:'ผลวิเคราะห์',summary:'สรุปผล',facilitator:'Facilitator'};
+let last='';
+function render(){
+  let name=(location.hash.replace(/^#\/?/,'').split(/[/?]/)[0])||'start';
+  if(!V[name])name='start';
+  if(ORDER[name]&&ORDER[name]>S.maxStep){name=Object.keys(ORDER).find(k=>ORDER[k]===S.maxStep)||'start';history.replaceState(null,'','#/'+name);}
+  $('#tab-me').toggleAttribute('aria-current',false);$('#tab-fac').toggleAttribute('aria-current',false);
+  (name==='facilitator'?$('#tab-fac'):$('#tab-me')).setAttribute('aria-current','page');
+  if(name!=='facilitator')$('#tab-me').setAttribute('href','#/'+name);
+  V[name]($('#app'));
+  document.title=TITLES[name]+' · Take Task Out · เดโม';
+  if(location.hash!==last){const first=!last;last=location.hash;if(!first){window.scrollTo(0,0);$('#app').focus({preventScroll:true});}}
+}
+$('#reset').onclick=()=>{if(!confirm('รีเซ็ตข้อมูลเดโมทั้งหมด?'))return;try{localStorage.removeItem(KEY);}catch(e){}S=blank();FS={k:'ago',dir:1,open:null};location.hash='#/start';render();toast('รีเซ็ตข้อมูลเดโมแล้ว');};
+window.addEventListener('hashchange',render);
+load();render();
+})();
+</script>
+</body>
+</html>

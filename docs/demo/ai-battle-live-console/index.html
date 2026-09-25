@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Battle Live Console · เดโม</title>
+<meta name="description" content="เดโมคอนโซลคุมเวทีแข่ง AI ภายในองค์กร — Ban/Draft โจทย์ จับเวลา กรรมการ AI ตรวจ เปิดคะแนนทีละมิติ โหวตผู้ชม และสายการแข่ง 8 ทีม (ข้อมูลตัวอย่างทั้งหมด)">
+<meta name="theme-color" content="#02080b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#02080b;--bg2:#062430;--panel:#07151c;--panel2:#0a1f28;--line:#0f3a4a;--line2:#16546a;
+  --fg:#d7f4fb;--mut:#7fa4b1;--dim:#4a7280;
+  --a:#0D96C2;--a-soft:rgba(13,150,194,.14);--b:#FF8800;--b-soft:rgba(255,136,0,.14);
+  --gold:#FFD600;--ok:#35c46a;--bad:#ff5a5a;--focus:#FFD600;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:#02080b}
+body{margin:0;font-family:"Kanit",system-ui,"Segoe UI",Tahoma,sans-serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--fg);
+  background:radial-gradient(1100px 520px at 50% -8%,rgba(13,150,194,.22),transparent 60%),linear-gradient(160deg,#000 0%,#041820 55%,#05313b 100%);
+  background-attachment:fixed;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:linear-gradient(rgba(13,150,194,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(13,150,194,.07) 1px,transparent 1px);background-size:40px 40px}
+a{color:#7fdcf5}
+b,strong{font-weight:600}
+.orb{font-family:"Orbitron","Kanit",sans-serif;letter-spacing:.04em}
+.num{font-family:"Orbitron",sans-serif;font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px;position:relative;z-index:1}
+
+/* demo bar */
+.demobar{position:sticky;top:0;z-index:50;background:#fff4c2;color:#2a2305;font-size:13px;font-weight:400;border-bottom:1px solid #e0cf7a}
+.demobar .wrap{display:flex;align-items:center;gap:6px 12px;min-height:34px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px}
+.demobar .tag{background:#2a2305;color:#FFD600;font-weight:600;border-radius:4px;padding:0 7px;font-size:11px;letter-spacing:.08em}
+.demobar .sp{flex:1}
+.demobar a{color:#0b4f66;font-weight:600;white-space:nowrap}
+.demobar button{font:inherit;font-size:12px;background:#2a2305;color:#fff4c2;border:0;border-radius:6px;padding:3px 10px;cursor:pointer;white-space:nowrap}
+
+/* header + nav */
+header.top{position:relative;z-index:2;border-bottom:1px solid var(--line);background:rgba(2,8,11,.72);backdrop-filter:blur(6px)}
+header.top .wrap{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding-top:10px;padding-bottom:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg)}
+.logo{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),#064a60);font-family:Orbitron;font-weight:900;font-size:13px;color:#fff;box-shadow:0 0 18px rgba(13,150,194,.5)}
+.brand .t1{font-family:Orbitron;font-weight:900;font-size:16px;letter-spacing:.08em;color:#fff;line-height:1.1}
+.brand .t2{font-size:11px;color:var(--mut);letter-spacing:.18em;font-family:Orbitron}
+.live-pill{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--bad);box-shadow:0 0 10px var(--bad);animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+nav.tabs{width:100%;display:flex;gap:2px;overflow-x:auto;scrollbar-width:thin;margin-top:6px}
+nav.tabs a{flex:none;padding:9px 12px 10px;color:var(--mut);text-decoration:none;font-size:14px;border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs a:hover{color:var(--fg)}
+nav.tabs a[aria-current="page"]{color:#fff;border-bottom-color:var(--a);font-weight:400}
+nav.tabs a .lk{font-size:11px;opacity:.6}
+
+main{position:relative;z-index:1;padding:24px 16px 40px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px;color:#fff}
+h1:focus{outline:none}
+h2{font-size:17px;font-weight:600;margin:0 0 10px;color:#fff}
+.sub{color:var(--mut);margin:0 0 16px;font-size:14px}
+.panel{background:linear-gradient(180deg,rgba(10,31,40,.92),rgba(7,21,28,.92));border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+.stack>*+*{margin-top:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--mut)}.small{font-size:13px}
+.btn{font:inherit;font-weight:400;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);color:var(--fg);padding:10px 16px;cursor:pointer;text-decoration:none;min-height:44px;transition:background .15s,border-color .15s,transform .1s}
+.btn:hover{border-color:var(--a);background:#0c2835}
+.btn:active{transform:translateY(1px)}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.42;cursor:not-allowed;pointer-events:none}
+.btn.pri{background:linear-gradient(135deg,#0fa6d6,#0a6f8f);border-color:#39c3ee;color:#fff;font-weight:600;box-shadow:0 0 24px rgba(13,150,194,.35)}
+.btn.pri:hover{background:linear-gradient(135deg,#19b5e6,#0b7fa3)}
+.btn.gold{background:linear-gradient(135deg,#ffd600,#f5a300);border-color:#ffe36a;color:#211a00;font-weight:600;box-shadow:0 0 24px rgba(255,214,0,.3)}
+.btn.big{font-size:18px;padding:14px 22px;min-height:56px;border-radius:14px}
+.btn.sm{padding:6px 12px;min-height:36px;font-size:13px;border-radius:10px}
+.btn.ghost{background:transparent}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
+.chip.ok{color:#9ff0bd;border-color:rgba(53,196,106,.5);background:rgba(53,196,106,.12)}
+.chip.run{color:#ffe98a;border-color:rgba(255,214,0,.45);background:rgba(255,214,0,.1)}
+.chip.a{color:#8fdcf5;border-color:rgba(13,150,194,.6);background:var(--a-soft)}
+.chip.b{color:#ffc27a;border-color:rgba(255,136,0,.6);background:var(--b-soft)}
+.ta{color:#46c3ec}.tb{color:#ffa640}
+
+/* team badges */
+.av{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;flex:none;border:2px solid var(--line2);background:#0a1f28}
+.av.a{border-color:var(--a);background:var(--a-soft)}.av.b{border-color:var(--b);background:var(--b-soft)}
+.av.xl{width:84px;height:84px;font-size:46px;border-radius:20px}
+
+/* match card */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin:6px 0 14px}
+.vs .side{display:flex;align-items:center;gap:12px;min-width:0}
+.vs .side.b{flex-direction:row-reverse;text-align:right}
+.vs .nm{font-weight:600;font-size:19px;line-height:1.2;overflow-wrap:anywhere}
+.vs .side.a .nm{color:#5fd0f3}.vs .side.b .nm{color:#ffae55}
+.vs .x{font-family:Orbitron;font-weight:900;color:var(--dim);font-size:22px}
+.probbox{border:1px dashed var(--line2);border-radius:12px;padding:10px 14px;background:rgba(255,214,0,.04)}
+.probbox .k{font-size:12px;color:var(--mut)}
+.probbox .v{font-weight:600;color:var(--gold)}
+
+/* stepper */
+ol.stepper{list-style:none;padding:0;margin:14px 0 18px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;counter-reset:s}
+ol.stepper li{counter-increment:s}
+ol.stepper a,ol.stepper span.st{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:13px;color:var(--dim);text-decoration:none;padding:8px 2px;border-radius:10px;border:1px solid transparent;height:100%}
+ol.stepper .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:Orbitron;font-weight:800;font-size:13px;border:2px solid var(--line2);background:#061319}
+ol.stepper .n::before{content:counter(s)}
+ol.stepper .done a{color:var(--mut)}
+ol.stepper .done .n{background:var(--a);border-color:var(--a);color:#fff}
+ol.stepper .done .n::before{content:"✓"}
+ol.stepper .cur a{color:#fff;border-color:var(--line2);background:rgba(13,150,194,.1)}
+ol.stepper .cur .n{border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(255,214,0,.45)}
+ol.stepper a:hover{background:rgba(13,150,194,.08)}
+
+/* log */
+ul.log{list-style:none;margin:0;padding:0;max-height:330px;overflow:auto;font-size:13px}
+ul.log li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(15,58,74,.6)}
+ul.log time{color:var(--dim);font-family:Orbitron;font-size:11px;flex:none;padding-top:2px}
+
+/* mini bracket list */
+.mlist{display:grid;gap:6px}
+.mitem{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border-radius:10px;background:#061319;border:1px solid var(--line)}
+.mitem .id{font-family:Orbitron;font-size:11px;color:var(--dim);width:34px;flex:none}
+.mitem.now{border-color:var(--gold);box-shadow:0 0 12px rgba(255,214,0,.25)}
+.mitem .w{color:#fff;font-weight:600}
+
+/* draft */
+.turn{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;margin-bottom:14px;border:1px solid var(--line2);background:#061319}
+.turn.a{border-color:var(--a);box-shadow:0 0 22px rgba(13,150,194,.2)}.turn.b{border-color:var(--b);box-shadow:0 0 22px rgba(255,136,0,.2)}
+.seq{display:flex;gap:6px;flex-wrap:wrap}
+.seq span{font-size:12px;padding:3px 9px;border-radius:8px;border:1px solid var(--line2);color:var(--dim)}
+.seq span.done{color:var(--mut);text-decoration:line-through}
+.seq span.now{color:#fff;border-color:var(--gold)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.pcard{position:relative;border:1px solid var(--line2);border-radius:14px;padding:14px;background:#071a22;display:flex;flex-direction:column;gap:8px;min-width:0;transition:opacity .25s,transform .25s,border-color .25s}
+.pcard .pid{font-family:Orbitron;font-size:11px;color:var(--dim)}
+.pcard h3{margin:0;font-size:16px;font-weight:600;line-height:1.35;color:#fff}
+.pcard p{margin:0;font-size:13px;color:var(--mut)}
+.pcard .foot{margin-top:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pcard.banned{opacity:.38;border-style:dashed}
+.pcard.banned h3{text-decoration:line-through}
+.pcard.pick-a{border-color:var(--a);box-shadow:0 0 18px rgba(13,150,194,.3)}
+.pcard.pick-b{border-color:var(--b);box-shadow:0 0 18px rgba(255,136,0,.3)}
+.pcard.spin{border-color:var(--gold);box-shadow:0 0 26px rgba(255,214,0,.55);transform:scale(1.02)}
+.pcard.chosen{border-color:var(--gold);box-shadow:0 0 34px rgba(255,214,0,.55)}
+.stamp{position:absolute;top:10px;right:10px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px}
+.stamp.ban{background:rgba(255,90,90,.18);color:#ff9a9a;border:1px solid rgba(255,90,90,.5)}
+.stamp.pa{background:var(--a-soft);color:#8fdcf5;border:1px solid var(--a)}
+.stamp.pb{background:var(--b-soft);color:#ffc27a;border:1px solid var(--b)}
+.stamp.win{background:var(--gold);color:#1d1600}
+.cat{font-size:11px;padding:1px 8px;border-radius:6px;background:rgba(127,164,177,.14);color:#b9d6df;border:1px solid rgba(127,164,177,.3)}
+
+/* timer */
+.timer{font-family:Orbitron;font-weight:900;font-size:clamp(56px,13vw,132px);line-height:1;text-align:center;color:#fff;letter-spacing:.04em;text-shadow:0 0 34px rgba(13,150,194,.55);font-variant-numeric:tabular-nums}
+.timer.warn{color:var(--gold);text-shadow:0 0 34px rgba(255,214,0,.5)}
+.timer.over{color:var(--bad);text-shadow:0 0 34px rgba(255,90,90,.55)}
+.tbar{height:8px;border-radius:99px;background:#061319;border:1px solid var(--line);overflow:hidden;margin:14px 0}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--gold));transition:width .25s linear}
+.sublist{display:grid;gap:10px}
+.subrow{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#061319;flex-wrap:wrap}
+.subrow .info{flex:1;min-width:150px}
+
+/* judge */
+.job{border:1px solid var(--line);border-radius:14px;padding:14px;background:#061319}
+.prog{height:12px;border-radius:99px;background:#02080b;border:1px solid var(--line);overflow:hidden;margin:8px 0 6px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0a6f8f,var(--a),#7fe3ff);background-size:200% 100%;animation:shimmer 1.2s linear infinite;transition:width .3s}
+.prog.done i{background:var(--ok);animation:none}
+@keyframes shimmer{to{background-position:-200% 0}}
+.poll{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;background:#01080b;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:#8fb8c4;min-height:124px;overflow:hidden;overflow-wrap:anywhere}
+.poll div{white-space:pre-wrap}
+.poll .ok{color:#9ff0bd}.poll .run{color:#ffe98a}
+.spinner{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--gold);animation:spin .8s linear infinite;display:inline-block;vertical-align:-3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+table.sc{width:100%;border-collapse:collapse;font-size:14px}
+table.sc th,table.sc td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.sc th{font-weight:400;color:var(--mut);font-size:12px}
+table.sc td.v{font-family:Orbitron;font-weight:800;white-space:nowrap;text-align:right}
+table.sc tfoot td{font-weight:600;color:#fff;border-bottom:0}
+.verdict{font-family:Orbitron;font-weight:800;font-size:12px;letter-spacing:.06em;padding:2px 9px;border-radius:6px;background:rgba(255,214,0,.14);color:var(--gold);border:1px solid rgba(255,214,0,.4)}
+.fb{margin-top:10px;font-size:14px;padding:10px 12px;border-left:3px solid var(--gold);background:rgba(255,214,0,.05);border-radius:0 10px 10px 0}
+
+/* reveal */
+.rv-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin-bottom:18px}
+.tot{text-align:center;min-width:0}
+.tot .nm{font-weight:600;font-size:18px;overflow-wrap:anywhere}
+.tot.a .nm,.tot.a .val{color:#46c3ec}.tot.b .nm,.tot.b .val{color:#ffa640}
+.tot .val{font-family:Orbitron;font-weight:900;font-size:clamp(40px,7vw,70px);line-height:1.05;font-variant-numeric:tabular-nums}
+.tot .mx{font-size:12px;color:var(--dim)}
+.tot.lead .val{text-shadow:0 0 30px currentColor}
+.rv-top .x{font-family:Orbitron;font-weight:900;color:var(--dim);font-size:26px}
+.drow{display:grid;grid-template-columns:minmax(0,1fr) 64px minmax(120px,190px) 64px minmax(0,1fr);gap:10px;align-items:center;margin:12px 0}
+.drow .barw{height:24px;border-radius:8px;background:#041017;border:1px solid var(--line);overflow:hidden;display:flex}
+.drow .barw.l{justify-content:flex-end}
+.drow .bar{height:100%;width:var(--w)}
+.drow .barw.l .bar{background:linear-gradient(270deg,#7fe3ff,var(--a))}
+.drow .barw.r .bar{background:linear-gradient(90deg,#ffc27a,var(--b))}
+.drow.new .bar{animation:grow 1.1s cubic-bezier(.2,.8,.2,1) both}
+.drow.new .dv{animation:pop .5s .9s both}
+@keyframes grow{from{width:0}}
+@keyframes pop{from{opacity:0;transform:scale(.4)}}
+.dv{font-family:Orbitron;font-weight:800;font-size:22px;text-align:center;font-variant-numeric:tabular-nums}
+.dv.a{color:#46c3ec}.dv.b{color:#ffa640}
+.dv.win{text-shadow:0 0 16px currentColor}
+.dlabel{text-align:center;font-weight:600;font-size:15px;line-height:1.25}
+.dlabel .mx{display:block;font-size:11px;color:var(--dim);font-weight:300}
+.drow.hid{opacity:.35}
+.drow.hid .dv{color:var(--dim)}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--mut);margin:-4px 0 8px}
+.why p{margin:0;padding:6px 10px;border-radius:8px;background:#041017}
+.why p:last-child{text-align:right}
+
+/* vote */
+.vgrid{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:center}
+.vbar{margin:14px 0}
+.vbar .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.vbar .cnt{font-family:Orbitron;font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
+.vbar .track{height:30px;border-radius:10px;background:#041017;border:1px solid var(--line);overflow:hidden}
+.vbar .track i{display:block;height:100%;transition:width .35s ease-out}
+.vbar.a .track i{background:linear-gradient(90deg,var(--a),#7fe3ff)}.vbar.b .track i{background:linear-gradient(90deg,var(--b),#ffc27a)}
+.qr{background:#fff;border-radius:12px;padding:10px;width:170px;margin:0 auto}
+.qr svg{display:block;width:100%;height:auto}
+
+/* result */
+.winner{text-align:center;padding:26px 10px;position:relative;overflow:hidden}
+.winner .lbl{font-family:Orbitron;font-size:13px;letter-spacing:.35em;color:var(--mut)}
+.winner .nm{font-size:clamp(28px,6vw,48px);font-weight:800;color:var(--gold);text-shadow:0 0 34px rgba(255,214,0,.5);margin:10px 0 4px}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(420px) rotate(560deg);opacity:0}}
+
+/* bracket */
+.bracket{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.bcol{display:flex;flex-direction:column;justify-content:space-around;gap:14px}
+.bcol h3{font-family:Orbitron;font-size:12px;letter-spacing:.14em;color:var(--mut);font-weight:600;margin:0 0 4px;text-align:center}
+.bm{border:1px solid var(--line2);border-radius:12px;background:#061319;overflow:hidden;position:relative}
+.bm.now{border-color:var(--gold);box-shadow:0 0 22px rgba(255,214,0,.3)}
+.bm .tag{position:absolute;top:-1px;right:-1px;font-family:Orbitron;font-size:10px;padding:1px 7px;border-radius:0 12px 0 8px;background:var(--gold);color:#1d1600;font-weight:800}
+.bm .tr{display:flex;align-items:center;gap:8px;padding:8px 10px;min-height:42px;font-size:14px}
+.bm .tr+.tr{border-top:1px solid var(--line)}
+.bm .tr .e{font-size:18px;width:24px;text-align:center}
+.bm .tr .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bm .tr .s{font-family:Orbitron;font-size:12px;color:var(--mut)}
+.bm .tr.w{background:rgba(13,150,194,.14);color:#fff;font-weight:600}
+.bm .tr.w .s{color:var(--gold)}
+.bm .tr.l{opacity:.45}
+.bm .tr.tbd{color:var(--dim);font-style:italic}
+.champ{border:2px solid var(--gold);border-radius:16px;padding:18px 12px;text-align:center;background:rgba(255,214,0,.06);box-shadow:0 0 30px rgba(255,214,0,.2)}
+.champ .e{font-size:44px}
+.champ .n{font-weight:800;color:var(--gold);font-size:19px}
+
+/* board (big screen) */
+body.stage header.top{display:none}
+.board{min-height:calc(100vh - 34px);display:flex;flex-direction:column;justify-content:center;padding:26px 0 60px;text-align:center}
+.board .hd{font-family:Orbitron;font-size:13px;letter-spacing:.3em;color:var(--mut);margin-bottom:18px}
+.board .hd b{color:var(--a);font-family:Kanit,sans-serif;letter-spacing:.06em;font-weight:600;font-size:15px}
+.board .bigvs{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;max-width:1100px;margin:0 auto;width:100%}
+.board .card{border:2px solid;border-radius:20px;padding:26px 16px;background:var(--panel);min-width:0}
+.board .card.a{border-color:var(--a);box-shadow:0 0 44px rgba(13,150,194,.35)}
+.board .card.b{border-color:var(--b);box-shadow:0 0 44px rgba(255,136,0,.35)}
+.board .card .nm{font-size:clamp(20px,3.4vw,34px);font-weight:800;margin-top:10px;overflow-wrap:anywhere}
+.board .card.a .nm{color:#46c3ec}.board .card.b .nm{color:#ffa640}
+.board .card .sc{font-family:Orbitron;font-weight:900;font-size:clamp(36px,7vw,84px);line-height:1.1}
+.board .card.a .sc{color:#46c3ec}.board .card.b .sc{color:#ffa640}
+.board .x{font-family:Orbitron;font-weight:900;font-size:clamp(26px,4vw,48px);color:var(--dim)}
+.board .kw{font-size:clamp(24px,4.6vw,52px);font-weight:800;color:var(--gold);text-shadow:0 0 30px rgba(255,214,0,.45);margin:20px auto 6px;max-width:1000px;line-height:1.25}
+.board .note{color:var(--mut);font-size:clamp(14px,1.8vw,20px)}
+.corner{position:fixed;right:14px;bottom:14px;z-index:40;display:flex;gap:8px}
+
+.lockbox{text-align:center;padding:40px 18px}
+.lockbox .ic{font-size:42px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0d2a36;border:1px solid var(--a);color:#fff;padding:10px 18px;border-radius:12px;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.5);max-width:calc(100vw - 32px);font-size:14px}
+footer.ft{position:relative;z-index:1;text-align:center;color:var(--dim);font-size:12px;padding:0 16px 30px}
+
+@media (max-width:900px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .bracket{grid-template-columns:1fr 1fr}
+  .vgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  body{font-size:14px}
+  h1{font-size:19px}
+  .panel{padding:14px;border-radius:14px}
+  ol.stepper{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .vs{gap:8px}.vs .nm{font-size:15px}.vs .side{gap:8px}.av{width:38px;height:38px;font-size:20px}
+  .vs .side.a,.vs .side.b{flex-direction:column;text-align:center}
+  .drow{grid-template-columns:40px minmax(0,1fr) minmax(0,1fr) 40px;grid-template-areas:"lab lab lab lab" "va bl br vb";gap:6px 6px;margin:14px 0}
+  .drow .dlabel{grid-area:lab}
+  .drow .dv.a{grid-area:va}.drow .dv.b{grid-area:vb}
+  .drow .bars.l{grid-area:bl}.drow .bars.r{grid-area:br}
+  .dv{font-size:17px}
+  .why{grid-template-columns:1fr}.why p:last-child{text-align:left}
+  .rv-top{gap:6px}.tot .nm{font-size:14px}
+  .bracket{grid-template-columns:minmax(0,1fr)}
+  .board .bigvs{grid-template-columns:minmax(0,1fr);gap:10px}
+  .board .card{padding:16px 10px}
+  .btn.big{font-size:16px;width:100%}
+}
+@media (min-width:641px){.drow .bars{display:contents}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .dot{animation:none}
+  .confetti{display:none}
+}
+</style>
+</head>
+<body>
+<div class="demobar" role="note"><div class="wrap"><span class="tag">DEMO</span><span>เดโม · ข้อมูลตัวอย่างทั้งหมด (คะแนน AI จำลอง)</span><span class="sp"></span><button type="button" id="reset">↺ รีเซ็ตข้อมูลเดโม</button><a href="../../#ai-battle-live-console">← กลับไปหน้าผลงาน</a></div></div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#/"><span class="logo" aria-hidden="true">AI</span><span><span class="t1">AI BATTLE</span><br><span class="t2">LIVE CONSOLE</span></span></a>
+    <div class="live-pill" id="livepill"></div>
+    <nav class="tabs" id="tabs" aria-label="หน้าจอ"></nav>
+  </div>
+</header>
+<main id="main" class="wrap" tabindex="-1"></main>
+<footer class="ft">AI Battle Live Console · เดโมสำหรับพอร์ตโฟลิโอ · ทุกอย่างจำลองในเบราว์เซอร์ ไม่มีการเรียก AI จริง · สถานะเก็บในเบราว์เซอร์ของคุณเท่านั้น</footer>
+<div id="sr-live" class="sr" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='demo-ai-battle-console-v1';
+const RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- fake data ---------- */
+const TEAMS=[
+ {id:'t1',name:'ทีมแมวส้ม',e:'🐈',skill:.78},
+ {id:'t2',name:'ทีมข้าวเหนียว',e:'🍚',skill:.66},
+ {id:'t3',name:'ทีมพรอมต์เทพ',e:'⚡',skill:.74},
+ {id:'t4',name:'ทีมชาไข่มุก',e:'🧋',skill:.69},
+ {id:'t5',name:'ทีมเป็ดน้อยสู้ชีวิต',e:'🦆',skill:.71},
+ {id:'t6',name:'ทีมบอทไก่ทอด',e:'🍗',skill:.76},
+ {id:'t7',name:'ทีมลิงซน',e:'🐒',skill:.64},
+ {id:'t8',name:'ทีมจรวดกระดาษ',e:'🚀',skill:.72}
+];
+const CAT={cs:'บริการลูกค้า',mkt:'การตลาด',data:'วิเคราะห์ข้อมูล',ops:'ปฏิบัติการ',hr:'บุคคล',fin:'จัดซื้อ/การเงิน'};
+const PROBLEMS=[
+ {id:'P01',c:'cs',t:'ลูกค้า VIP ร้องเรียนแรง — กู้ความสัมพันธ์ใน 24 ชม.',d:'แผนชดเชย · เมลตอบลูกค้า · ข้อความ LINE สั้น ≤3 บรรทัด',n:4},
+ {id:'P02',c:'mkt',t:'Pitch 3 สไลด์ เปิดตัวเครื่องดื่มใหม่',d:'Insight 1 ข้อ · โครง Hook / Value / CTA · สคริปต์พูด 60 วิ',n:3},
+ {id:'P03',c:'data',t:'ยอดขาย 3 สาขาตกพร้อมกัน หาสาเหตุจากข้อมูล',d:'สรุปสาเหตุ 3 ข้อพร้อมตัวเลข · กราฟ 1 ภาพ · ข้อเสนอแนะ',n:3},
+ {id:'P04',c:'ops',t:'วางแผนอีเวนต์วันหยุดยาว งบจำกัด',d:'ไทม์ไลน์ 2 สัปดาห์ · ตารางงบ · แผนสำรองกรณีฝนตก',n:4},
+ {id:'P05',c:'hr',t:'นโยบายทำงานนอกออฟฟิศ ฉบับอ่านจบใน 1 นาที',d:'สรุป 1 หน้า · FAQ 5 ข้อ · ประกาศถึงพนักงาน',n:3},
+ {id:'P06',c:'mkt',t:'ออกแบบเมนูร้านกาแฟให้กำไรต่อแก้วเพิ่ม',d:'จัดกลุ่มเมนู · ราคาใหม่ · เหตุผลเชิงตัวเลข',n:3},
+ {id:'P07',c:'ops',t:'บันทึกประชุม 40 นาที → Action items ที่ทำได้จริง',d:'สรุปมติ · ผู้รับผิดชอบ + กำหนดส่ง · เมลแจ้งทีม',n:3},
+ {id:'P08',c:'mkt',t:'แคมเปญโซเชียลดึงคนเข้าศูนย์วันธรรมดา',d:'แนวคิดหลัก · โพสต์ 3 ชิ้น · ตัวชี้วัดความสำเร็จ',n:4},
+ {id:'P09',c:'fin',t:'เทียบใบเสนอราคา 3 ซัพพลายเออร์ แล้วเลือกให้ได้',d:'ตารางเทียบ · ความเสี่ยง · บันทึกเสนออนุมัติ',n:3},
+ {id:'P10',c:'hr',t:'คู่มือพนักงานใหม่วันแรก ภายใน 1 หน้า',d:'Checklist วันแรก · ผังคนที่ต้องรู้จัก · ข้อความต้อนรับ',n:3},
+ {id:'P11',c:'cs',t:'ตอบรีวิว 1 ดาว 5 รีวิวให้ลูกค้ากลับมา',d:'คำตอบ 5 แบบ · แนวทางตอบรีวิว · สิ่งที่ต้องแก้ภายใน',n:3},
+ {id:'P12',c:'data',t:'ประมาณการที่จอดรถช่วงเทศกาล',d:'ตัวเลขคาดการณ์ · สมมติฐาน · แผนจัดการคิวรถ',n:3}
+];
+const DIMS=[
+ {k:'prompt',l:'คุณภาพ Prompt',mx:25},
+ {k:'insight',l:'Insight / ความเข้าใจโจทย์',mx:25},
+ {k:'orch',l:'การประสานใช้ AI',mx:20},
+ {k:'output',l:'คุณภาพผลงาน',mx:30}
+];
+const WHY={
+ prompt:{hi:['สั่งงานเป็นขั้นตอน ใส่บทบาท บริบท และรูปแบบผลลัพธ์ครบ แล้ว iterate จนตรงโจทย์','Prompt ชัด อ้างข้อมูลโจทย์ตรงจุด กำหนดความยาวและน้ำเสียงไว้ล่วงหน้า'],mid:['ให้บริบทพอใช้ แต่ยังไม่กำหนดรูปแบบผลลัพธ์ ต้องแก้ซ้ำหลายรอบ','แตกขั้นตอนได้ดีบางส่วน แต่ prompt ช่วงท้ายสั้นเกินไป'],lo:['สั่งกว้างเกินไป ขาดบริบทจากข้อมูลโจทย์ ผลจึงคลาดจากที่ขอ','ใช้ prompt เดียวรวดเดียว ไม่มีการตรวจหรือปรับแก้']},
+ insight:{hi:['จับประเด็นที่ซ่อนในข้อมูลโจทย์ได้ และใช้เป็นแกนของทุกชิ้นงาน','เห็นต้นเหตุจริงของปัญหา ไม่หยุดแค่อาการที่เห็นผิวเผิน'],mid:['เข้าใจโจทย์ถูกทาง แต่ยังไม่ได้ใช้ตัวเลขในข้อมูลโจทย์สนับสนุน','Insight สมเหตุสมผล แต่ยังกว้างและคาดเดาได้'],lo:['ตีความโจทย์คลาดไปบางส่วน พลาดเงื่อนไขสำคัญ 1 ข้อ','สรุปจากความรู้ทั่วไปมากกว่าข้อมูลที่โจทย์ให้มา']},
+ orch:{hi:['แบ่งงานให้ AI หลายตัวตามจุดเด่น แล้วใช้อีกตัวตรวจทานผลลัพธ์','ต่อผลลัพธ์จากขั้นหนึ่งไปอีกขั้นอย่างเป็นระบบ มีการ cross-check'],mid:['ใช้ AI มากกว่าหนึ่งตัว แต่ยังไม่ได้ส่งต่องานกันชัดเจน','มีขั้นตรวจทาน แต่ทำด้วยมือเป็นส่วนใหญ่'],lo:['ใช้ AI ตัวเดียวทำทุกอย่าง ไม่มีขั้นตรวจสอบ','สลับเครื่องมือไปมาโดยไม่มีเหตุผลรองรับ']},
+ output:{hi:['ส่งครบทุกชิ้น ตรงสเปก ภาษาไทยเรียบร้อย พร้อมใช้งานจริง','ผลงานครบและนำไปใช้ต่อได้ทันที ตัวเลขตรวจแล้วถูกต้อง'],mid:['ส่งครบ แต่มี 1 ชิ้นยาวเกินเงื่อนไขที่โจทย์กำหนด','คุณภาพดีโดยรวม มีจุดพิมพ์ผิดและตัวเลขไม่ตรงเล็กน้อย'],lo:['ส่งไม่ครบ ขาด 1 ชิ้นงานที่โจทย์บังคับ','ผลงานยังเป็นร่าง ต้องแก้อีกมากก่อนใช้งานจริง']}
+};
+const ROUND={QF:'รอบ 8 ทีม',SF:'รอบรองชนะเลิศ',F:'รอบชิงชนะเลิศ'};
+const NEXT={QF1:['SF1','a'],QF2:['SF1','b'],QF3:['SF2','a'],QF4:['SF2','b'],SF1:['F','a'],SF2:['F','b']};
+const DRAFT_SEQ=[['a','ban'],['b','ban'],['a','pick'],['b','pick']];
+const STEPS=[{r:'draft',l:'Ban/Draft'},{r:'live',l:'แข่ง'},{r:'judge',l:'ตรวจ'},{r:'reveal',l:'เปิดคะแนน'},{r:'vote',l:'โหวต'},{r:'result',l:'ผลแพ้ชนะ'}];
+const DUR=20*60*1000, JOB_MS=[7200,9400], VOTE_MS=7000;
+
+/* ---------- seeded rng ---------- */
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){let a=seed>>>0;return function(){a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+/* ---------- state ---------- */
+let S=null;
+function newMatch(id,r,a,b){return{id,r,a,b,step:0,draft:{pool:null,acts:[],spinAt:null,problem:null},timer:{remain:DUR,since:null,speed:1},subs:{a:null,b:null},judge:null,reveal:0,vote:{status:'idle',since:null},winner:null,final:null,done:false};}
+function seed(){
+  S={v:1,salt:Math.random().toString(36).slice(2,8),used:[],log:[],matches:[
+    newMatch('QF1','QF','t1','t2'),newMatch('QF2','QF','t3','t4'),newMatch('QF3','QF','t5','t6'),newMatch('QF4','QF','t7','t8'),
+    newMatch('SF1','SF',null,null),newMatch('SF2','SF',null,null),newMatch('F','F',null,null)]};
+  addLog('เปิดทัวร์นาเมนต์ · 8 ทีม · รอบแรก 4 คู่');
+}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.v===1&&Array.isArray(d.matches)){S=d;return;}}}catch(e){}seed();save();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function addLog(msg){const d=new Date();S.log.unshift({t:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0'),m:msg});S.log=S.log.slice(0,40);}
+const team=id=>TEAMS.find(t=>t.id===id);
+const prob=id=>PROBLEMS.find(p=>p.id===id);
+const mById=id=>S.matches.find(m=>m.id===id);
+function cur(){return S.matches.find(m=>!m.done&&m.a&&m.b)||null;}
+function champion(){const f=mById('F');return f.done?team(f.winner):null;}
+function matchNo(m){const same=S.matches.filter(x=>x.r===m.r);return same.length>1?' · คู่ที่ '+(same.indexOf(m)+1):'';}
+
+/* ---------- derived: scores, votes ---------- */
+function scoresFor(m,side){
+  const T=team(m[side]);const r=rng(hash(S.salt+m.id+T.id));
+  const base=T.skill+(r()-.5)*.18;const dims={};let total=0;
+  DIMS.forEach(d=>{let f=Math.min(.97,Math.max(.32,base+(r()-.5)*.28));let v=Math.round(f*d.mx*2)/2;const pct=v/d.mx;const bucket=pct>=.8?'hi':pct>=.6?'mid':'lo';const w=WHY[d.k][bucket][side==='b'?1:0];dims[d.k]={v,why:w};total+=v;});
+  total=Math.round(total*10)/10;
+  const verdict=total>=85?'Excellent':total>=65?'Good':total>=50?'Average':total>=35?'Weak':'Fail';
+  const rel=DIMS.map(d=>({d,p:dims[d.k].v/d.mx})).sort((x,y)=>y.p-x.p);
+  const fb=`จุดแข็งเด่นสุดของ${T.name}คือ${rel[0].d.l} — ${dims[rel[0].d.k].why.replace(/^./,c=>c)} ส่วนที่เสียคะแนนหลักคือ${rel[3].d.l} แนะนำให้กลับไปอ่านเงื่อนไขในโจทย์อีกรอบก่อนส่ง และให้ AI ช่วยตรวจทานกับข้อมูลโจทย์ทุกครั้ง`;
+  return{dims,total,verdict,fb};
+}
+function scores(m){return{a:scoresFor(m,'a'),b:scoresFor(m,'b')};}
+function voteTarget(m){const r=rng(hash(S.salt+m.id+'vote'));const tot=90+Math.floor(r()*80);const share=.34+r()*.32;const a=Math.round(tot*share);return{a,b:tot-a};}
+function voteNow(m){const t=voteTarget(m);if(m.vote.status==='closed')return t;if(m.vote.status!=='open')return{a:0,b:0};
+  const f=Math.min(1,(Date.now()-m.vote.since)/VOTE_MS);const e=1-Math.pow(1-f,1.6);
+  const jitterA=Math.sin(f*17)*.06,jitterB=Math.cos(f*13)*.06;
+  return{a:Math.round(t.a*Math.min(1,Math.max(0,e+jitterA*(1-f)))),b:Math.round(t.b*Math.min(1,Math.max(0,e+jitterB*(1-f))))};}
+function finalOf(m){const s=scores(m),v=voteTarget(m);const tot=v.a+v.b;const va=Math.round(v.a/tot*100)/10,vb=Math.round(v.b/tot*100)/10;
+  return{ai:{a:s.a.total,b:s.b.total},vote:{a:va,b:vb},cnt:v,fin:{a:Math.round((s.a.total+va)*10)/10,b:Math.round((s.b.total+vb)*10)/10}};}
+
+/* ---------- timer ---------- */
+function tRem(t){return Math.max(0,t.remain-(t.since?(Date.now()-t.since)*t.speed:0));}
+function fmt(ms){const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function tCommit(t){t.remain=tRem(t);if(t.since)t.since=Date.now();}
+function subThr(m,side){return .55+rng(hash(S.salt+m.id+side+'sub'))()*.38;}
+
+/* ---------- routing ---------- */
+function route(){const h=(location.hash||'#/').replace(/^#\/?/,'').split('/')[0];return h||'console';}
+const TABS=[['console','คอนโซล'],['draft','Ban/Draft'],['live','แข่งสด'],['judge','กรรมการ AI'],['reveal','เปิดคะแนน'],['vote','โหวต'],['result','ผลแพ้ชนะ'],['bracket','สายการแข่ง'],['board','จอใหญ่'],['timer','จอนาฬิกา']];
+let lastRoute=null;
+
+function render(){
+  const r=route();const m=cur();
+  document.body.classList.toggle('stage',r==='board'||r==='timer');
+  $('#tabs').innerHTML=TABS.map(([k,l])=>{const si=STEPS.findIndex(s=>s.r===k);const locked=si>=0&&(!m||si>m.step);
+    return `<a href="#/${k==='console'?'':k}"${r===k?' aria-current="page"':''}>${esc(l)}${locked?' <span class="lk" aria-label="ยังไม่ถึงขั้นนี้">🔒</span>':''}</a>`;}).join('');
+  $('#livepill').innerHTML=m?`<span class="dot" aria-hidden="true"></span><span>${esc(ROUND[m.r])}${esc(matchNo(m))} · ${esc(team(m.a).name)} vs ${esc(team(m.b).name)}</span>`:(champion()?`<span>🏆 แชมป์: ${esc(champion().name)}</span>`:'');
+  const V={console:vConsole,draft:vDraft,live:vLive,judge:vJudge,reveal:vReveal,vote:vVote,result:vResult,bracket:vBracket,board:vBoard,timer:vTimer}[r]||vConsole;
+  $('#main').innerHTML=V(m);
+  if(r!==lastRoute){lastRoute=r;const h=$('#main h1');if(h){h.setAttribute('tabindex','-1');if(document.activeElement&&document.activeElement!==document.body&&!document.activeElement.closest('.demobar'))h.focus({preventScroll:true});}window.scrollTo(0,0);}
+  const nav=$('#tabs [aria-current]');if(nav&&nav.scrollIntoView&&$('#tabs').scrollWidth>$('#tabs').clientWidth){const t=$('#tabs');t.scrollLeft=nav.offsetLeft-t.clientWidth/2+nav.clientWidth/2;}
+  tick(true);
+  if(r==='result'&&m&&m.step>=5&&!RM)confetti();
+}
+function say(msg){const el=$('#sr-live');el.textContent='';setTimeout(()=>{el.textContent=msg;},30);}
+let toastT=null;function toast(msg){let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';el.setAttribute('role','status');document.body.appendChild(el);}el.textContent=msg;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;},2600);}
+
+/* ---------- common fragments ---------- */
+function vsBlock(m){const A=team(m.a),B=team(m.b);
+  return `<div class="vs"><div class="side a"><span class="av a" aria-hidden="true">${A.e}</span><span class="nm">${esc(A.name)}</span></div><span class="x" aria-hidden="true">VS</span><span class="sr">พบกับ</span><div class="side b"><span class="av b" aria-hidden="true">${B.e}</span><span class="nm">${esc(B.name)}</span></div></div>`;}
+function probLine(m){const p=m.draft.problem&&prob(m.draft.problem);return p?`<div class="probbox"><div class="k">โจทย์ของคู่นี้ · ${esc(p.id)} · ${esc(CAT[p.c])}</div><div class="v">${esc(p.t)}</div></div>`:`<div class="probbox"><div class="k">โจทย์ของคู่นี้</div><div class="muted">ยังไม่ได้เลือก — รอ Ban/Draft</div></div>`;}
+function stepper(m){return `<ol class="stepper" aria-label="ขั้นตอนของแมตช์">${STEPS.map((s,i)=>{const st=i<m.step?'done':i===m.step?'cur':'todo';const lab=`<span class="n" aria-hidden="true"></span><span>${esc(s.l)}</span>`;
+  return `<li class="${st}">${i<=m.step?`<a href="#/${s.r}"${i===m.step?' aria-current="step"':''}>${lab}<span class="sr">${st==='done'?' (เสร็จแล้ว)':' (ขั้นปัจจุบัน)'}</span></a>`:`<span class="st">${lab}<span class="sr"> (ยังไม่ถึง)</span></span>`}</li>`;}).join('')}</ol>`;}
+function head(t,sub){return `<h1>${t}</h1>${sub?`<p class="sub">${sub}</p>`:''}`;}
+function locked(m,need){if(!m)return champView();
+  return `${head('ยังไม่ถึงขั้นนี้')}<div class="panel lockbox"><div class="ic" aria-hidden="true">🔒</div><p>แมตช์ปัจจุบันยังอยู่ที่ขั้น <b>${esc(STEPS[m.step].l)}</b> — ต้องทำขั้นก่อนหน้าให้เสร็จก่อนจึงจะเข้าหน้า “${esc(need)}” ได้</p><a class="btn pri" href="#/${STEPS[m.step].r}">ไปขั้น ${esc(STEPS[m.step].l)} →</a></div>`;}
+function champView(){const c=champion();if(!c)return head('ไม่มีแมตช์')+'';
+  return `${head('จบทัวร์นาเมนต์')}<div class="panel winner" role="status"><div class="confetti" id="cf"></div><div class="lbl">CHAMPION</div><div style="font-size:64px" aria-hidden="true">${c.e}</div><div class="nm">${esc(c.name)}</div><p class="muted">ครบ 7 แมตช์ · ดูเส้นทางแชมป์ได้ในสายการแข่ง</p><div class="row" style="justify-content:center"><a class="btn pri" href="#/bracket">ดูสายการแข่ง</a><button class="btn" type="button" data-act="reset">เริ่มทัวร์นาเมนต์ใหม่</button></div></div>`;}
+
+/* ---------- views ---------- */
+function vConsole(m){
+  if(!m){setTimeout(()=>{if(!RM)confetti();},50);return champView();}
+  const step=m.step;const p=m.draft.problem&&prob(m.draft.problem);
+  const acts=[
+    [`#/draft`,p?'ยืนยันโจทย์แล้ว → ไปแข่ง':'เริ่ม Ban/Draft โจทย์'],
+    ['#/live','คุมรอบแข่งสด + จับเวลา'],
+    ['#/judge',m.judge?'ดูกรรมการ AI กำลังตรวจ':'ส่งผลงานให้กรรมการ AI'],
+    ['#/reveal','เปิดคะแนนทีละมิติบนเวที'],
+    ['#/vote','เปิดโหวตผู้ชม'],
+    ['#/result','สรุปผลแพ้ชนะ']][step];
+  const done=S.matches.filter(x=>x.done).length;
+  return `${head('คอนโซลคุมเวที',`ขั้นตอนทั้งหมดของ 1 แมตช์อยู่ในหน้าเดียว — กดปุ่มใหญ่เพื่อไปขั้นถัดไป · จบแล้ว ${done}/7 แมตช์`)}
+  <div class="grid2"><div class="stack">
+   <section class="panel" aria-labelledby="mc-h"><div class="row" style="justify-content:space-between"><h2 id="mc-h" style="margin:0">แมตช์ปัจจุบัน</h2><span class="chip run">${esc(ROUND[m.r])}${esc(matchNo(m))}</span></div>
+    ${vsBlock(m)}${probLine(m)}${stepper(m)}
+    <div class="row"><a class="btn pri big" href="${acts[0]}">${esc(acts[1])} →</a>${step===1?`<span class="muted">เวลาเหลือ <b class="num" data-dyn="tmr">--:--</b></span>`:''}</div>
+   </section>
+   <section class="panel" aria-labelledby="sc-h"><h2 id="sc-h">หน้าจอสำหรับเวที</h2><p class="muted small" style="margin-top:0">ในงานจริงเปิดบนอีกเครื่องที่ต่อโปรเจกเตอร์ — ในเดโมเปิดแท็บใหม่แล้วจะอัปเดตตามคอนโซลอัตโนมัติ</p>
+    <div class="row"><a class="btn" href="#/board">📺 จอใหญ่ (Board)</a><a class="btn" href="#/timer">⏱ จอนาฬิกา</a><a class="btn" href="#/bracket">🏆 สายการแข่ง</a></div></section>
+  </div><div class="stack">
+   <section class="panel" aria-labelledby="br-h"><h2 id="br-h">ทุกแมตช์</h2><div class="mlist">${S.matches.map(x=>{const A=x.a&&team(x.a),B=x.b&&team(x.b);return `<div class="mitem${x===m?' now':''}"><span class="id">${x.id}</span><span style="flex:1;min-width:0">${A?esc(A.e+' '+A.name):'<span class="muted">รอผู้ชนะ</span>'} <span class="muted">vs</span> ${B?esc(B.e+' '+B.name):'<span class="muted">รอผู้ชนะ</span>'}</span>${x.done?`<span class="w">✓ ${esc(team(x.winner).e)}</span>`:x===m?'<span class="chip run">LIVE</span>':''}</div>`;}).join('')}</div></section>
+   <section class="panel" aria-labelledby="lg-h"><h2 id="lg-h">เหตุการณ์ล่าสุด</h2><ul class="log">${S.log.map(l=>`<li><time>${esc(l.t)}</time><span>${esc(l.m)}</span></li>`).join('')}</ul></section>
+  </div></div>`;
+}
+
+function ensurePool(m){if(m.draft.pool)return;const avail=PROBLEMS.filter(p=>!S.used.includes(p.id)).map(p=>p.id);const r=rng(hash(S.salt+m.id+'pool'));
+  for(let i=avail.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[avail[i],avail[j]]=[avail[j],avail[i]];}m.draft.pool=avail.slice(0,6);save();}
+function vDraft(m){
+  if(!m)return champView();ensurePool(m);const d=m.draft;const n=d.acts.length;const turn=DRAFT_SEQ[n];
+  const act=pid=>d.acts.find(a=>a.pid===pid);
+  const spinning=d.spinAt&&!d.problem;
+  let turnHtml;
+  if(d.problem)turnHtml=`<div class="turn"><span class="av" aria-hidden="true">🎯</span><div style="flex:1;min-width:180px"><b>ได้โจทย์แล้ว:</b> <span style="color:var(--gold)">${esc(prob(d.problem).t)}</span></div>${m.step===0?`<button class="btn pri big" type="button" data-act="goLive">ยืนยันโจทย์ & ไปแข่ง →</button>`:`<a class="btn" href="#/live">ไปหน้าแข่งสด →</a>`}</div>`;
+  else if(turn){const side=turn[0];const T=team(m[side]);turnHtml=`<div class="turn ${side}" role="status"><span class="av ${side}" aria-hidden="true">${T.e}</span><div style="flex:1;min-width:180px"><div class="small muted">ตาของ</div><b class="${side==='a'?'ta':'tb'}">${esc(T.name)}</b> — ${turn[1]==='ban'?'<b>แบน</b> 1 ข้อที่ไม่อยากเจอ':'<b>เลือก</b> 1 ข้อที่อยากเล่น'}</div><div class="seq" aria-label="ลำดับ">${DRAFT_SEQ.map((s,i)=>`<span class="${i<n?'done':i===n?'now':''}">${s[0]==='a'?'A':'B'} ${s[1]==='ban'?'แบน':'เลือก'}</span>`).join('')}<span class="${n>=4?'now':''}">🎲 สุ่ม</span></div></div>`;}
+  else turnHtml=`<div class="turn" role="status"><span class="av" aria-hidden="true">🎲</span><div style="flex:1;min-width:180px">ทั้งสองทีมเลือกแล้ว — <b>สุ่ม 1 ใน 2 ข้อ</b>ที่ถูกเลือกเป็นโจทย์จริงของคู่นี้</div><button class="btn gold big" type="button" data-act="spin"${spinning?' disabled':''}>${spinning?'<span class="spinner" aria-hidden="true"></span> กำลังสุ่ม…':'🎲 สุ่มโจทย์'}</button></div>`;
+  const cards=d.pool.map(pid=>{const p=prob(pid);const a=act(pid);let cls='',stamp='';
+    if(a&&a.type==='ban'){cls='banned';stamp=`<span class="stamp ban">แบนโดย ${esc(team(m[a.team]).name)}</span>`;}
+    if(a&&a.type==='pick'){cls='pick-'+a.team;stamp=`<span class="stamp p${a.team}">เลือกโดย ${esc(team(m[a.team]).name)}</span>`;}
+    if(d.problem===pid){cls+=' chosen';stamp=`<span class="stamp win">★ โจทย์จริง</span>`;}
+    const canAct=turn&&!a&&!d.problem;
+    return `<article class="pcard ${cls}" data-pid="${pid}" aria-label="${esc(p.t)}">${stamp}<span class="pid">${p.id}</span><h3>${esc(p.t)}</h3><p>${esc(p.d)}</p><div class="foot"><span class="cat">${esc(CAT[p.c])}</span><span class="small muted">${p.n} ชิ้นงาน</span>${canAct?`<button class="btn sm ${turn[1]==='ban'?'':'pri'}" type="button" data-act="draft" data-pid="${pid}" style="margin-left:auto">${turn[1]==='ban'?'✕ แบน':'✓ เลือก'}<span class="sr"> ข้อ ${esc(p.t)} แทน${esc(team(m[turn[0]]).name)}</span></button>`:''}</div></article>`;}).join('');
+  return `${head('Ban / Draft โจทย์',`${esc(ROUND[m.r])}${esc(matchNo(m))} · สุ่มโจทย์มา 6 ข้อจากที่ยังไม่เคยใช้ → ผลัดกันแบนทีมละ 1 · เลือกทีมละ 1 · แล้วสุ่ม 1 ใน 2 ข้อที่เลือก`)}
+  <div class="panel">${vsBlock(m)}${turnHtml}<div class="pgrid">${cards}</div>${!d.problem&&n>0?`<p style="margin:12px 0 0"><button class="btn sm ghost" type="button" data-act="undoDraft">↶ ย้อนการเลือกล่าสุด</button></p>`:''}</div>`;
+}
+
+function vLive(m){
+  if(!m||m.step<1)return locked(m,'แข่งสด');
+  const t=m.timer;const running=!!t.since;const p=prob(m.draft.problem);const ended=m.step>1;
+  const sub=side=>{const T=team(m[side]);const s=m.subs[side];return `<div class="subrow"><span class="av ${side}" aria-hidden="true">${T.e}</span><div class="info"><b class="${side==='a'?'ta':'tb'}">${esc(T.name)}</b><div class="small muted" data-dyn="subinfo-${side}">${s?`ส่งเมื่อเหลือ ${esc(s.at)} · ${p.n} ชิ้นงาน + ประวัติ prompt`:'กำลังทำงานกับ AI…'}</div></div><span data-dyn="subchip-${side}">${s?'<span class="chip ok">✓ ส่งแล้ว</span>':'<span class="chip run">กำลังทำ</span>'}</span></div>`;};
+  const both=m.subs.a&&m.subs.b;
+  return `${head('รอบแข่งสด',`โจทย์: <b style="color:var(--gold)">${esc(p.t)}</b>`)}
+  <div class="grid2"><section class="panel" aria-labelledby="tm-h"><h2 id="tm-h">นาฬิกาเวที <span class="chip">${t.speed>1?'เร่ง ×'+t.speed+' (เดโม)':'เวลาจริง'}</span></h2>
+    <div class="timer" data-dyn="tmrbig" role="timer" aria-label="เวลาที่เหลือ">--:--</div>
+    <div class="tbar" aria-hidden="true"><i data-dyn="tbar"></i></div>
+    <div class="row" style="justify-content:center">${ended?'<span class="muted">ปิดรอบแล้ว</span>':`
+      <button class="btn ${running?'':'pri'}" type="button" data-act="tToggle" aria-pressed="${running}">${running?'⏸ หยุดชั่วคราว':'▶ เริ่มจับเวลา'}</button>
+      <button class="btn" type="button" data-act="tPlus">+1 นาที</button>
+      <button class="btn" type="button" data-act="tSpeed" aria-pressed="${t.speed>1}">⏩ ${t.speed>1?'กลับเวลาจริง':'เร่งเวลา ×40'}</button>
+      <button class="btn ghost" type="button" data-act="tEnd">ข้ามไปหมดเวลา</button>`}</div>
+    <p class="small muted" style="text-align:center;margin-bottom:0">20 นาทีต่อแมตช์ · เดโมกด “เร่งเวลา” ได้ · จอนาฬิกาบนเวทีใช้ค่าเดียวกัน</p></section>
+   <section class="panel" aria-labelledby="sb-h"><h2 id="sb-h">สถานะการส่งงาน</h2><div class="sublist">${sub('a')}${sub('b')}</div>
+    <p class="small muted">ทีมส่งผ่านหน้าส่งงานของทีมเอง (จำลอง) · หมดเวลาแล้วระบบส่งให้อัตโนมัติ</p>
+    ${ended?`<a class="btn" href="#/judge">ไปหน้ากรรมการ AI →</a>`:`<button class="btn pri big" type="button" data-act="goJudge" data-dyn="gojudge"${both?'':' disabled'}>ปิดรอบ & ส่งให้กรรมการ AI →</button><p class="small muted" data-dyn="gojudge-hint" ${both?'hidden':''}>รอทั้งสองทีมส่งงานก่อน</p>`}</section></div>`;
+}
+
+function jobState(m,i){const j=m.judge.jobs[i];const f=Math.min(1,(Date.now()-j.since)/JOB_MS[i]);return{f,st:f>=1?'done':f<.1?'queued':'running'};}
+function vJudge(m){
+  if(!m||m.step<2)return locked(m,'กรรมการ AI');
+  const J=m.judge;
+  if(!J){return `${head('กรรมการ AI','ส่งผลงานทั้งสองทีมเข้าคิวตรวจแบบ async — ระบบตอบกลับทันทีด้วย job id แล้วหน้าจอ poll สถานะเรื่อยๆ (กันหน้าเว็บค้างถ้า AI ใช้เวลานาน)')}
+    <div class="panel lockbox"><div class="ic" aria-hidden="true">🤖</div><p>ผลงานของ <b class="ta">${esc(team(m.a).name)}</b> และ <b class="tb">${esc(team(m.b).name)}</b> พร้อมตรวจตามรูบริก 4 มิติ (เต็ม 100)</p><button class="btn pri big" type="button" data-act="startJudge">▶ ส่งให้กรรมการ AI ตรวจ</button><p class="small muted">เดโม: คะแนนสุ่มแบบคงที่ต่อแมตช์ ไม่มีการเรียก AI จริง</p></div>`;}
+  const allDone=J.jobs.every((_,i)=>jobState(m,i).st==='done');
+  const s=allDone?scores(m):null;
+  const jobCard=(side,i)=>{const T=team(m[side]);const j=J.jobs[i];return `<div class="job"><div class="row" style="justify-content:space-between"><b class="${side==='a'?'ta':'tb'}">${T.e} ${esc(T.name)}</b><span data-dyn="jchip-${i}"></span></div>
+    <div class="small muted">job <span class="num">${esc(j.id)}</span></div>
+    <div class="prog${jobState(m,i).st==='done'?' done':''}" data-dyn="jprog-${i}" role="progressbar" aria-label="ความคืบหน้าการตรวจ ${esc(T.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(jobState(m,i).f*100)}"><i style="width:${Math.round(jobState(m,i).f*100)}%"></i></div>
+    <div class="small" data-dyn="jphase-${i}"></div></div>`;};
+  const resTable=side=>{const T=team(m[side]);const r=s[side];return `<section class="panel" aria-label="ผลตรวจ ${esc(T.name)}"><div class="row" style="justify-content:space-between"><h2 style="margin:0" class="${side==='a'?'ta':'tb'}">${T.e} ${esc(T.name)}</h2><span class="verdict">${r.verdict}</span></div>
+   <table class="sc"><thead><tr><th scope="col">มิติ</th><th scope="col">เหตุผลจากกรรมการ AI</th><th scope="col" style="text-align:right">คะแนน</th></tr></thead><tbody>${DIMS.map(d=>`<tr><th scope="row" style="color:var(--fg);font-size:14px;font-weight:400">${esc(d.l)}</th><td class="small muted">${esc(r.dims[d.k].why)}</td><td class="v">${r.dims[d.k].v}<span class="muted small">/${d.mx}</span></td></tr>`).join('')}</tbody>
+   <tfoot><tr><td colspan="2">รวม (AI Score)</td><td class="v" style="color:var(--gold)">${r.total}<span class="muted small">/100</span></td></tr></tfoot></table>
+   <div class="fb">${esc(r.fb)}</div></section>`;};
+  return `${head('กรรมการ AI',allDone?'ตรวจเสร็จแล้ว — คะแนนยังไม่ขึ้นจอใหญ่จนกว่าจะเปิดทีละมิติในหน้า “เปิดคะแนน”':'<span class="spinner" aria-hidden="true"></span> AI กำลังตรวจ… หน้าจอ poll สถานะทุก 0.8 วินาที')}
+   <div class="grid2"><div class="stack">${jobCard('a',0)}${jobCard('b',1)}</div><section class="panel" aria-labelledby="pl-h"><h2 id="pl-h">Polling log</h2><div class="poll" data-dyn="poll" aria-hidden="true"></div><p class="small muted" style="margin-bottom:0">งานยาวใช้รูปแบบ job + poll — ไม่ถือ request ค้างไว้จน proxy ตัดกลางคัน</p></section></div>
+   ${allDone?`<div class="grid2" style="margin-top:16px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">${resTable('a')}${resTable('b')}</div>
+   <div class="row" style="margin-top:16px">${m.step===2?`<button class="btn pri big" type="button" data-act="goReveal">ไปเปิดคะแนนบนเวที →</button>`:`<a class="btn" href="#/reveal">ไปหน้าเปิดคะแนน →</a>`}</div>`:''}`;
+}
+
+function vReveal(m,board){
+  if(!m||m.step<3)return board?'':locked(m,'เปิดคะแนน');
+  const s=scores(m);const k=m.reveal;let ta=0,tb=0;
+  DIMS.forEach((d,i)=>{if(i<k){ta+=s.a.dims[d.k].v;tb+=s.b.dims[d.k].v;}});
+  ta=Math.round(ta*10)/10;tb=Math.round(tb*10)/10;
+  const rows=DIMS.map((d,i)=>{const shown=i<k;const va=s.a.dims[d.k].v,vb=s.b.dims[d.k].v;const isNew=i===k-1&&justRevealed;
+    const lab=`<div class="dlabel">${esc(d.l)}<span class="mx">เต็ม ${d.mx}</span></div>`;
+    return `<div class="drow${shown?'':' hid'}${isNew?' new':''}"${shown?'':' aria-hidden="true"'}>
+      <div class="bars l"><div class="barw l" aria-hidden="true"><span class="bar" style="--w:${shown?va/d.mx*100:0}%"></span></div></div>
+      <div class="dv a${shown&&va>vb?' win':''}">${shown?va:'?'}</div>${lab}<div class="dv b${shown&&vb>va?' win':''}">${shown?vb:'?'}</div>
+      <div class="bars r"><div class="barw r" aria-hidden="true"><span class="bar" style="--w:${shown?vb/d.mx*100:0}%"></span></div></div></div>
+      ${shown&&!board?`<div class="why"><p>${esc(s.a.dims[d.k].why)}</p><p>${esc(s.b.dims[d.k].why)}</p></div>`:''}${shown?`<span class="sr">${esc(d.l)}: ${esc(team(m.a).name)} ${va} คะแนน, ${esc(team(m.b).name)} ${vb} คะแนน</span>`:''}`;}).join('');
+  const A=team(m.a),B=team(m.b);
+  const top=`<div class="rv-top"><div class="tot a${k===4&&ta>tb?' lead':''}"><div style="font-size:30px" aria-hidden="true">${A.e}</div><div class="nm">${esc(A.name)}</div><div class="val" data-count="${ta}">${ta}</div><div class="mx">AI Score / 100</div></div><div class="x" aria-hidden="true">VS</div><div class="tot b${k===4&&tb>ta?' lead':''}"><div style="font-size:30px" aria-hidden="true">${B.e}</div><div class="nm">${esc(B.name)}</div><div class="val" data-count="${tb}">${tb}</div><div class="mx">AI Score / 100</div></div></div>`;
+  if(board)return top+`<div style="max-width:1050px;margin:0 auto;width:100%">${rows}</div>`;
+  const nextBtn=k<4?`<button class="btn gold big" type="button" data-act="revealNext">เปิดมิติที่ ${k+1}: ${esc(DIMS[k].l)} <span class="small">(Space)</span></button>`:(m.step===3?`<button class="btn pri big" type="button" data-act="goVote">ไปโหวตผู้ชม →</button>`:`<a class="btn" href="#/vote">ไปหน้าโหวต →</a>`);
+  return `${head('เปิดคะแนนทีละมิติ','กดเปิดทีละมิติให้ลุ้นบนเวที · จอใหญ่แสดงตามทันที')}
+   <section class="panel">${top}${rows}<div class="row" style="justify-content:center;margin-top:16px">${nextBtn}${k>0&&k<4?`<button class="btn ghost" type="button" data-act="revealAll">เปิดทั้งหมด</button>`:''}</div>
+   ${k===4?`<p class="small muted" style="text-align:center;margin-bottom:0">AI Score ครบแล้ว · ${ta===tb?'เสมอกัน':`<b class="${ta>tb?'ta':'tb'}">${esc((ta>tb?A:B).name)}</b> นำ ${Math.abs(Math.round((ta-tb)*10)/10)} คะแนน`} — ยังมีโหวตผู้ชมอีกสูงสุด 10 คะแนน</p>`:''}</section>`;
+}
+let justRevealed=false;
+
+function qrSvg(m){const r=rng(hash(S.salt+m.id+'qr'));const n=21;let rects='';const finder=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="#000"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#000"/>`;
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if((x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12))continue;if(r()<.48)rects+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#000"/>`;}
+  return `<svg viewBox="0 0 ${n} ${n}" role="img" aria-label="QR โหวต (ตัวอย่าง ใช้งานไม่ได้)" shape-rendering="crispEdges"><rect width="${n}" height="${n}" fill="#fff"/>${rects}${finder(0,0)}${finder(14,0)}${finder(0,14)}</svg>`;}
+function vVote(m,board){
+  if(!m||m.step<4)return board?'':locked(m,'โหวต');
+  const v=m.vote;const A=team(m.a),B=team(m.b);
+  const bar=(side,T)=>`<div class="vbar ${side}"><div class="h"><b class="${side==='a'?'ta':'tb'}">${T.e} ${esc(T.name)}</b><span><span class="cnt ${side==='a'?'ta':'tb'}" data-dyn="vc-${side}">0</span> <span class="small muted">โหวต · <span data-dyn="vp-${side}">0</span>%</span></span></div><div class="track" aria-hidden="true"><i data-dyn="vb-${side}" style="width:0"></i></div></div>`;
+  const status=v.status==='idle'?'<span class="chip">ยังไม่เปิดโหวต</span>':v.status==='open'?'<span class="chip run"><span class="spinner" aria-hidden="true" style="width:12px;height:12px"></span> กำลังรับโหวต</span>':'<span class="chip ok">ปิดโหวตแล้ว</span>';
+  const body=`<div class="vgrid"><div>${bar('a',A)}${bar('b',B)}<p class="small muted" data-dyn="vtot"></p></div><div style="text-align:center"><div class="qr">${qrSvg(m)}</div><p class="small muted">สแกนเพื่อโหวต (ตัวอย่าง)</p></div></div>`;
+  if(board)return `<div class="panel" style="max-width:1000px;margin:0 auto;width:100%;text-align:left">${body}</div>`;
+  let ctl='';
+  if(v.status==='idle')ctl=`<button class="btn gold big" type="button" data-act="voteOpen">🗳 เปิดรับโหวตผู้ชม</button>`;
+  else if(v.status==='open')ctl=`<button class="btn big" type="button" data-act="voteClose">ปิดโหวตทันที</button>`;
+  else{const f=finalOf(m);ctl=`<div style="width:100%"><table class="sc" style="margin-bottom:14px"><thead><tr><th scope="col">ทีม</th><th scope="col" style="text-align:right">AI Score</th><th scope="col" style="text-align:right">โหวต (สูงสุด 10)</th><th scope="col" style="text-align:right">รวม</th></tr></thead><tbody>
+    <tr><th scope="row" class="ta" style="font-weight:600">${esc(A.name)}</th><td class="v">${f.ai.a}</td><td class="v">+${f.vote.a}</td><td class="v" style="color:var(--gold)">${f.fin.a}</td></tr>
+    <tr><th scope="row" class="tb" style="font-weight:600">${esc(B.name)}</th><td class="v">${f.ai.b}</td><td class="v">+${f.vote.b}</td><td class="v" style="color:var(--gold)">${f.fin.b}</td></tr></tbody></table>
+    ${m.step===4?`<button class="btn pri big" type="button" data-act="goResult">สรุปผลแพ้ชนะ →</button>`:`<a class="btn" href="#/result">ไปหน้าผลแพ้ชนะ →</a>`}</div>`;}
+  return `${head('โหวตผู้ชม','ผู้ชมในงานสแกน QR โหวตความประทับใจ · สัดส่วนโหวตแปลงเป็นคะแนนสูงสุด 10 บวกเพิ่มจาก AI Score')}
+   <section class="panel"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">ผลโหวตสด</h2>${status}</div>${body}<div class="row" style="margin-top:10px">${ctl}</div></section>`;
+}
+
+function vResult(m){
+  if(!m||m.step<5)return locked(m,'ผลแพ้ชนะ');
+  const f=finalOf(m);const W=team(m.winner),L=team(m.winner===m.a?m.b:m.a);const nx=NEXT[m.id];
+  return `${head('ผลแพ้ชนะ',`${esc(ROUND[m.r])}${esc(matchNo(m))} · โจทย์: ${esc(prob(m.draft.problem).t)}`)}
+   <section class="panel winner" role="status"><div class="confetti" id="cf"></div><div class="lbl">WINNER</div><div style="font-size:64px" aria-hidden="true">${W.e}</div><div class="nm">${esc(W.name)}</div>
+   <p class="muted">รวม <b class="num" style="color:#fff">${m.winner===m.a?f.fin.a:f.fin.b}</b> ต่อ <span class="num">${m.winner===m.a?f.fin.b:f.fin.a}</span> · ชนะ ${esc(L.name)}</p>
+   <div class="row" style="justify-content:center;margin-top:14px"><button class="btn pri big" type="button" data-act="advance">${nx?`ยืนยันผล · ส่ง ${esc(W.name)} เข้า${esc(ROUND[mById(nx[0]).r])} →`:'ยืนยันผล · ประกาศแชมป์ 🏆'}</button></div></section>`;
+}
+
+function vBracket(m){
+  const box=x=>{const rowT=(side)=>{const id=x[side];if(!id)return `<div class="tr tbd"><span class="e" aria-hidden="true">·</span><span class="n">รอผู้ชนะ</span></div>`;const T=team(id);const f=x.done?finalOf(x).fin[side]:'';const cls=x.done?(x.winner===id?' w':' l'):'';return `<div class="tr${cls}"><span class="e" aria-hidden="true">${T.e}</span><span class="n">${esc(T.name)}</span>${x.done?`<span class="s">${f}</span>`:''}${x.done&&x.winner===id?'<span class="sr"> (ชนะ)</span>':''}</div>`;};
+    return `<div class="bm${x===m?' now':''}" aria-label="แมตช์ ${x.id}">${x===m?'<span class="tag">LIVE</span>':''}${rowT('a')}${rowT('b')}</div>`;};
+  const col=(r,ids)=>`<div class="bcol"><h3>${esc(ROUND[r])}</h3>${ids.map(id=>box(mById(id))).join('')}</div>`;
+  const c=champion();
+  return `${head('สายการแข่ง','8 ทีม แพ้คัดออก · คะแนนในกล่อง = AI Score + โหวตผู้ชม')}
+   <section class="panel"><div class="bracket">${col('QF',['QF1','QF2','QF3','QF4'])}${col('SF',['SF1','SF2'])}${col('F',['F'])}<div class="bcol"><h3>แชมป์</h3><div class="champ">${c?`<div class="e" aria-hidden="true">${c.e}</div><div class="n">${esc(c.name)}</div><div class="small muted">🏆 AI BATTLE CHAMPION</div>`:`<div class="e" aria-hidden="true">🏆</div><div class="muted">ยังไม่รู้ผล</div>`}</div></div></div></section>`;
+}
+
+function vBoard(m){
+  const back=`<div class="corner"><a class="btn sm" href="#/">← คอนโซล</a></div>`;
+  if(!m){const c=champion();return `<div class="board"><h1 class="sr">จอใหญ่</h1><div class="hd">AI BATTLE · <b>CHAMPION</b></div><div style="font-size:clamp(70px,12vw,140px)" aria-hidden="true">${c?c.e:'🏆'}</div><div class="kw">${c?esc(c.name):''}</div></div>${back}`;}
+  const A=team(m.a),B=team(m.b);const p=m.draft.problem&&prob(m.draft.problem);
+  const hd=`<div class="hd">AI BATTLE · <b>${esc(ROUND[m.r])}${esc(matchNo(m))}</b></div>`;
+  const cards=(sa,sb)=>`<div class="bigvs"><div class="card a"><div style="font-size:clamp(44px,7vw,80px)" aria-hidden="true">${A.e}</div><div class="nm">${esc(A.name)}</div>${sa!=null?`<div class="sc">${sa}</div>`:''}</div><div class="x" aria-hidden="true">VS</div><div class="card b"><div style="font-size:clamp(44px,7vw,80px)" aria-hidden="true">${B.e}</div><div class="nm">${esc(B.name)}</div>${sb!=null?`<div class="sc">${sb}</div>`:''}</div></div>`;
+  let body;
+  switch(m.step){
+    case 0:body=cards()+(p?`<div class="kw">${esc(p.t)}</div><div class="note">โจทย์ของคู่นี้</div>`:`<div class="kw" style="color:var(--fg);font-size:clamp(20px,3vw,34px)">กำลัง Ban / Draft โจทย์…</div><div class="note">แบนแล้ว ${m.draft.acts.filter(a=>a.type==='ban').length}/2 · เลือกแล้ว ${m.draft.acts.filter(a=>a.type==='pick').length}/2</div>`);break;
+    case 1:body=`<div class="note">${esc(A.name)} vs ${esc(B.name)}</div><div class="kw">${esc(p.t)}</div><div class="timer" data-dyn="tmrbig" style="font-size:clamp(80px,18vw,220px);margin-top:18px">--:--</div><div class="tbar" style="max-width:900px;margin:18px auto" aria-hidden="true"><i data-dyn="tbar"></i></div>`;break;
+    case 2:body=cards()+`<div class="kw" style="font-size:clamp(22px,3.6vw,40px)"><span class="spinner" aria-hidden="true" style="width:30px;height:30px;border-width:4px"></span> กรรมการ AI กำลังตรวจผลงาน…</div><div class="note">4 มิติ · เต็ม 100</div>`;break;
+    case 3:body=vReveal(m,true);break;
+    case 4:body=`<div class="kw" style="margin-top:0">🗳 โหวตทีมที่คุณประทับใจ</div>`+vVote(m,true);break;
+    default:{const f=finalOf(m);const W=team(m.winner);body=cards(f.fin.a,f.fin.b)+`<div class="kw">🏆 ${esc(W.name)} ชนะ!</div>`;}
+  }
+  return `<div class="board"><h1 class="sr">จอใหญ่บนเวที</h1>${hd}${body}</div>${back}`;
+}
+function vTimer(m){
+  const back=`<div class="corner"><a class="btn sm" href="#/">← คอนโซล</a></div>`;
+  if(!m||m.step<1)return `<div class="board"><h1 class="sr">จอนาฬิกา</h1><div class="hd">AI BATTLE · TIMER</div><div class="timer">20:00</div><div class="note">รอเริ่มรอบแข่ง</div></div>${back}`;
+  return `<div class="board"><h1 class="sr">จอนาฬิกา</h1><div class="hd">AI BATTLE · <b>TIMER</b></div><div class="timer" data-dyn="tmrbig" style="font-size:clamp(90px,24vw,300px)">--:--</div><div class="tbar" style="max-width:1000px;margin:24px auto;width:90%" aria-hidden="true"><i data-dyn="tbar"></i></div><div class="note">${esc(team(m.a).name)} vs ${esc(team(m.b).name)}</div></div>${back}`;
+}
+
+/* ---------- actions ---------- */
+function go(h){if(location.hash===h)render();else location.hash=h;}
+const ACT={
+  reset(){doReset();},
+  draft(ds){const m=cur();const d=m.draft;const turn=DRAFT_SEQ[d.acts.length];if(!turn||d.acts.some(a=>a.pid===ds.pid))return;
+    d.acts.push({team:turn[0],type:turn[1],pid:ds.pid});addLog(`${team(m[turn[0]]).name} ${turn[1]==='ban'?'แบน':'เลือก'}โจทย์ ${ds.pid}`);say(`${team(m[turn[0]]).name} ${turn[1]==='ban'?'แบน':'เลือก'} ${prob(ds.pid).t}`);save();render();
+    const nb=document.querySelector('[data-act="draft"],[data-act="spin"]');if(nb)nb.focus({preventScroll:true});},
+  undoDraft(){const m=cur();m.draft.acts.pop();save();render();},
+  spin(){const m=cur();if(m.draft.spinAt)return;m.draft.spinAt=Date.now();save();render();},
+  goLive(){const m=cur();m.step=1;addLog(`เริ่มรอบแข่ง ${m.id} · ${prob(m.draft.problem).t}`);save();go('#/live');},
+  tToggle(){const t=cur().timer;if(t.since){tCommit(t);t.since=null;addLog('หยุดนาฬิกาชั่วคราว');}else{if(tRem(t)<=0)return;t.since=Date.now();addLog('เริ่มจับเวลา');}save();render();},
+  tPlus(){const t=cur().timer;tCommit(t);t.remain+=60000;save();tick(true);},
+  tSpeed(){const t=cur().timer;tCommit(t);t.speed=t.speed>1?1:40;save();render();},
+  tEnd(){const t=cur().timer;t.remain=0;t.since=Date.now();save();tick();},
+  goJudge(){const m=cur();if(!(m.subs.a&&m.subs.b))return;tCommit(m.timer);m.timer.since=null;m.step=2;addLog('ปิดรอบแข่ง · ส่งผลงานเข้าคิวตรวจ');save();go('#/judge');},
+  startJudge(){const m=cur();if(m.judge)return;const now=Date.now();const r=rng(hash(S.salt+m.id+'job'));const id=()=>'jb-'+Math.floor(r()*0xffffff).toString(16).padStart(6,'0');
+    m.judge={jobs:[{id:id(),since:now},{id:id(),since:now+350}],doneLogged:false};addLog('สร้างงานตรวจ 2 job · เริ่ม poll');save();render();},
+  goReveal(){const m=cur();m.step=3;m.reveal=0;addLog('เข้าสู่การเปิดคะแนนบนเวที');save();go('#/reveal');},
+  revealNext(){const m=cur();if(m.reveal>=4)return;m.reveal++;justRevealed=true;const d=DIMS[m.reveal-1];const s=scores(m);addLog(`เปิดมิติ ${d.l}: ${s.a.dims[d.k].v} vs ${s.b.dims[d.k].v}`);save();render();justRevealed=false;countUp();
+    const b=document.querySelector('[data-act="revealNext"],[data-act="goVote"]');if(b)b.focus({preventScroll:true});},
+  revealAll(){const m=cur();m.reveal=4;addLog('เปิดคะแนนครบทุกมิติ');save();render();},
+  goVote(){const m=cur();m.step=4;save();go('#/vote');},
+  voteOpen(){const m=cur();m.vote={status:'open',since:Date.now()};addLog('เปิดรับโหวตผู้ชม');save();render();},
+  voteClose(){const m=cur();m.vote.status='closed';addLog('ปิดโหวต');save();render();},
+  goResult(){const m=cur();const f=finalOf(m);m.final=f.fin;m.winner=f.fin.a>f.fin.b?m.a:f.fin.b>f.fin.a?m.b:(f.ai.a>=f.ai.b?m.a:m.b);m.step=5;addLog(`ผลแมตช์ ${m.id}: ${team(m.winner).name} ชนะ (${f.fin.a} – ${f.fin.b})`);save();go('#/result');},
+  advance(){const m=cur();m.done=true;S.used.push(m.draft.problem);const nx=NEXT[m.id];
+    if(nx){const t=mById(nx[0]);t[nx[1]]=m.winner;addLog(`${team(m.winner).name} เข้าสู่${ROUND[t.r]}`);toast(`${team(m.winner).name} เข้าสู่${ROUND[t.r]} · ไปแมตช์ถัดไป`);save();go('#/');}
+    else{addLog(`🏆 ${team(m.winner).name} คว้าแชมป์`);save();go('#/bracket');}}
+};
+function doReset(){try{localStorage.removeItem(KEY);}catch(e){}seed();save();go('#/');toast('รีเซ็ตข้อมูลเดโมแล้ว');}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const f=ACT[b.dataset.act];if(f){e.preventDefault();f(b.dataset);}});
+$('#reset').addEventListener('click',()=>{if(confirm('รีเซ็ตทัวร์นาเมนต์เดโมทั้งหมด?'))doReset();});
+document.addEventListener('keydown',e=>{if(route()!=='reveal')return;if(e.target.closest('button,a,input,textarea,select'))return;if(e.key===' '||e.key==='ArrowRight'){const m=cur();if(m&&m.step===3&&m.reveal<4){e.preventDefault();ACT.revealNext();}}});
+window.addEventListener('hashchange',render);
+window.addEventListener('storage',e=>{if(e.key===KEY){load();render();}});
+
+/* ---------- animations ---------- */
+function countUp(){if(RM)return;document.querySelectorAll('.tot .val[data-count]').forEach(el=>{const to=parseFloat(el.dataset.count);const from=Math.max(0,to-30);const t0=performance.now();
+  (function step(t){const f=Math.min(1,(t-t0)/1100);const v=from+(to-from)*(1-Math.pow(1-f,3));el.textContent=f<1?v.toFixed(0):String(to);if(f<1)requestAnimationFrame(step);})(t0);});}
+function confetti(){const c=$('#cf');if(!c||c.childElementCount)return;const cols=['#FFD600','#0D96C2','#FF8800','#7fe3ff','#35c46a'];let h='';for(let i=0;i<60;i++){h+=`<i style="left:${Math.random()*100}%;background:${cols[i%5]};animation-duration:${1.8+Math.random()*1.8}s;animation-delay:${Math.random()*.6}s"></i>`;}c.innerHTML=h;}
+
+/* ---------- ticker ---------- */
+const PH=['เข้าคิว','อ่านผลงาน + ประวัติ prompt','เทียบกับเกณฑ์ในโจทย์','ให้คะแนนตามรูบริก 4 มิติ','เขียน feedback'];
+function setAll(sel,fn){document.querySelectorAll(sel).forEach(fn);}
+function tick(noTransition){
+  const m=cur();if(!m)return;let changed=false;
+  // draft spin
+  if(m.draft.spinAt&&!m.draft.problem){const el=Date.now()-m.draft.spinAt;const picks=m.draft.acts.filter(a=>a.type==='pick').map(a=>a.pid);
+    if(el>=(RM?200:2200)){const r=rng(hash(S.salt+m.id+'spin'));m.draft.problem=picks[r()<.5?0:1];addLog(`สุ่มได้โจทย์ ${m.draft.problem} · ${prob(m.draft.problem).t}`);say('สุ่มได้โจทย์ '+prob(m.draft.problem).t);changed=true;}
+    else{const i=Math.floor(el/140)%2;setAll('.pcard',c=>c.classList.toggle('spin',c.dataset.pid===picks[i]));}}
+  // timer
+  if(m.step>=1){const t=m.timer;const rem=tRem(t);
+    if(m.step===1){const frac=1-rem/DUR;['a','b'].forEach(s=>{if(!m.subs[s]&&(frac>=subThr(m,s)||rem<=0)){m.subs[s]={at:fmt(rem)};addLog(`${team(m[s]).name} ส่งงานแล้ว${rem<=0?' (อัตโนมัติเมื่อหมดเวลา)':''}`);say(team(m[s]).name+' ส่งงานแล้ว');changed=true;}});}
+    if(rem<=0&&t.since){t.remain=0;t.since=null;addLog('หมดเวลา!');changed=true;}
+    setAll('[data-dyn="tmr"],[data-dyn="tmrbig"]',el=>{el.textContent=fmt(rem);el.classList.toggle('warn',rem>0&&rem<=120000);el.classList.toggle('over',rem<=0);});
+    setAll('[data-dyn="tbar"]',el=>{el.style.width=(Math.min(1,rem/DUR)*100)+'%';});}
+  // judge
+  if(m.judge){const J=m.judge;let all=true;J.jobs.forEach((j,i)=>{const s=jobState(m,i);if(s.st!=='done')all=false;
+      const pr=document.querySelector(`[data-dyn="jprog-${i}"]`);if(pr){const pct=Math.round(s.f*100);pr.querySelector('i').style.width=pct+'%';pr.setAttribute('aria-valuenow',pct);pr.classList.toggle('done',s.st==='done');}
+      const ch=document.querySelector(`[data-dyn="jchip-${i}"]`);if(ch)ch.innerHTML=s.st==='done'?'<span class="chip ok">✓ done</span>':s.st==='queued'?'<span class="chip">queued</span>':'<span class="chip run">running</span>';
+      const ph=document.querySelector(`[data-dyn="jphase-${i}"]`);if(ph)ph.textContent=s.st==='done'?'ตรวจเสร็จ · ผลพร้อมแสดง':PH[Math.min(4,Math.floor(s.f*5))]+'… '+Math.round(s.f*100)+'%';});
+    const pl=document.querySelector('[data-dyn="poll"]');if(pl){const t0=J.jobs[0].since;const n=Math.floor((Date.now()-t0)/800);const lines=[];
+      for(let k=Math.max(0,n-5);k<=n;k++){const at=t0+k*800;const i=k%2;const j=J.jobs[i];const f=Math.max(0,Math.min(1,(at-j.since)/JOB_MS[i]));const st=f>=1?'done':f<.1?'queued':'running';
+        lines.push(`<div class="${st==='done'?'ok':'run'}">#${String(k+1).padStart(3,'0')} GET /judge/jobs/${j.id} → ${st}${st==='done'?'':' '+Math.round(f*100)+'%'}</div>`);}
+      if(all)lines.push('<div class="ok">✓ ทุก job เสร็จ · หยุด poll</div>');pl.innerHTML=lines.slice(-7).join('');}
+    if(all&&!J.doneLogged){J.doneLogged=true;addLog('กรรมการ AI ตรวจเสร็จทั้ง 2 ทีม');say('กรรมการ AI ตรวจเสร็จแล้ว');changed=true;}}
+  // vote
+  if(m.step>=4&&m.vote.status!=='idle'){if(m.vote.status==='open'&&Date.now()-m.vote.since>=VOTE_MS){m.vote.status='closed';addLog('ปิดโหวตอัตโนมัติ');say('ปิดโหวตแล้ว');changed=true;}
+    const v=voteNow(m);const tot=v.a+v.b||1;['a','b'].forEach(s=>{setAll(`[data-dyn="vc-${s}"]`,el=>{el.textContent=v[s];});setAll(`[data-dyn="vp-${s}"]`,el=>{el.textContent=Math.round(v[s]/tot*100);});setAll(`[data-dyn="vb-${s}"]`,el=>{el.style.width=(v[s]/tot*100)+'%';});});
+    setAll('[data-dyn="vtot"]',el=>{el.textContent=`รวม ${v.a+v.b} โหวต`;});}
+  if(changed){save();if(!noTransition)render();else setTimeout(render,0);}
+}
+setInterval(()=>tick(false),RM?500:200);
+
+load();render();
+})();
+</script>
+</body>
+</html>

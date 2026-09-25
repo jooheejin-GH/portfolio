@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Quiz · เดโม</title>
+<meta name="description" content="เดโมเกมโชว์สดบนมือถือ Live Quiz — จริงหรือมั่ว + AI Quiz เล่นกับบอทจำลอง ทำงานในเบราว์เซอร์ล้วน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F3FA;--card:#fff;--ink:#221C33;--muted:#6E6685;--line:#E4E0F0;
+  --accent:#6432C8;--accent-d:#4D22A3;--accent-soft:#EFE9FB;
+  --true:#0B8A5C;--false:#CE4326;
+  --stage:#1A1230;--stage2:#2A1C4D;--stage-ink:#F1ECFF;--stage-mut:#B7ABD8;--stage-line:rgba(255,255,255,.12);
+  --gold:#F5B301;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#120D1F;--card:#1E1733;--ink:#EDE8F8;--muted:#A69CC2;--line:#342A4E;--accent:#A987FF;--accent-d:#8F68F5;--accent-soft:#2B2145}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun',-apple-system,'Thonburi','Leelawadee UI',sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden}
+h1,h2,h3,button,.display{font-family:'Mitr','Sarabun',-apple-system,'Thonburi',sans-serif;font-weight:500}
+button{cursor:pointer;font-size:15px}
+button:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.nw{white-space:nowrap}
+.tnum{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1320px;margin:0 auto;padding:0 16px}
+
+/* banner */
+.sticky{position:sticky;top:0;z-index:30}
+.demobar{background:#10262c;color:#e6f6f9;font-size:13px}
+.demobar .wrap{display:flex;align-items:center;gap:10px;min-height:32px;flex-wrap:wrap;padding-top:3px;padding-bottom:3px}
+.demobar .tag{background:#f5b301;color:#1d1a0f;font-weight:700;border-radius:4px;padding:0 6px;font-size:12px}
+.demobar a{color:#8fe3f0;margin-left:auto;white-space:nowrap}
+
+/* page head */
+.head{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;padding:14px 0 10px}
+.head h1{margin:0;font-size:24px;line-height:1.2}
+.head h1 span{color:var(--accent)}
+.head p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.head .tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:8px 14px;font-weight:500;min-height:40px}
+.btn:hover{border-color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d)}
+
+/* tabs (mobile) */
+.tabs{display:none;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;margin:0 0 12px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);border-radius:10px;padding:9px 6px;min-height:44px;position:relative}
+.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+.tabs button.ping::after{content:"";position:absolute;top:8px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(245,179,1,.3);animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(245,179,1,0)}}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) 392px;gap:20px;align-items:start;padding-bottom:24px}
+.pane-label{font-size:13px;color:var(--muted);margin:0 0 6px;display:flex;align-items:center;gap:6px}
+.pane-label b{color:var(--ink);font-family:'Mitr';font-weight:500}
+
+/* ===== HOST STAGE ===== */
+.stage{background:radial-gradient(120% 90% at 0% 0%,#3B2470 0%,var(--stage2) 35%,var(--stage) 100%);color:var(--stage-ink);border-radius:20px;min-height:760px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(40,20,90,.25)}
+.st-top{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--stage-line)}
+.st-brand{font-family:'Mitr';font-size:19px;font-weight:600;letter-spacing:.3px}
+.st-brand i{font-style:normal;color:var(--gold)}
+.st-chip{font-family:'Mitr';font-size:13px;padding:2px 12px;border-radius:999px;background:rgba(255,255,255,.12)}
+.st-chip.tf{background:rgba(58,196,142,.2);color:#9FF0CB}
+.st-chip.ai{background:rgba(169,135,255,.25);color:#DCCBFF}
+.st-meta{margin-left:auto;color:var(--stage-mut);font-size:14px}
+.st-body{flex:1;padding:22px;display:flex;flex-direction:column;min-width:0}
+.console{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding:12px 20px;background:rgba(0,0,0,.28);border-top:1px solid var(--stage-line)}
+.cl-label{font-size:13px;color:var(--stage-mut)}
+.hbtn{background:var(--gold);color:#221a00;border:0;border-radius:12px;padding:9px 18px;font-size:16px;font-weight:600;min-height:44px}
+.hbtn:hover:not(:disabled){filter:brightness(1.07)}
+.cl-auto{font-size:13px;color:var(--stage-mut);min-width:110px}
+.switch{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;min-height:44px}
+.switch input{appearance:none;width:42px;height:24px;border-radius:999px;background:rgba(255,255,255,.2);position:relative;cursor:pointer;margin:0;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch input:checked{background:#3AC48E}
+.switch input:checked::after{transform:translateX(18px)}
+
+/* lobby */
+.lobby{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:22px;flex:1}
+.joincard{background:rgba(255,255,255,.06);border:1px solid var(--stage-line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.qr{width:150px;height:150px;background:#fff;border-radius:12px;padding:8px;align-self:center}
+.room{font-family:'Mitr';font-size:15px;color:var(--stage-mut);text-align:center}
+.room b{display:block;font-size:40px;color:#fff;letter-spacing:6px;line-height:1.1}
+.rules{margin:0;padding:0;list-style:none;font-size:14px;display:flex;flex-direction:column;gap:6px;color:#E4DCFA}
+.rules li{background:rgba(255,255,255,.06);border-radius:10px;padding:6px 10px}
+.lob-h{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+.lob-h h2{margin:0;font-size:22px}
+.lob-h span{color:var(--stage-mut)}
+.teamgrid-h{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tbox{border-radius:16px;padding:12px;background:rgba(255,255,255,.05);border:1px solid var(--stage-line);border-top:4px solid var(--tc);min-height:120px}
+.tbox h3{margin:0 0 8px;font-size:16px;display:flex;gap:6px;align-items:center}
+.tbox h3 small{margin-left:auto;color:var(--stage-mut);font-family:'Sarabun';font-size:13px}
+.members{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:999px;background:rgba(255,255,255,.1);font-size:14px;animation:popin .35s ease-out}
+.mchip.me{background:var(--gold);color:#221a00;font-weight:700}
+.av{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font-family:'Mitr';font-size:13px;color:#fff;background:var(--tc,#6432C8);flex-shrink:0}
+@keyframes popin{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.waiting-dots::after{content:"…";animation:dots 1.2s steps(3) infinite}
+@keyframes dots{0%{content:"."}33%{content:".."}66%{content:"…"}}
+
+/* intro */
+.intro{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+.intro .kicker{font-family:'Mitr';color:var(--gold);font-size:18px;letter-spacing:1px}
+.intro .emo{font-size:80px;line-height:1;animation:bounce 1.2s ease-in-out infinite}
+.intro h2{margin:0;font-size:52px;line-height:1.15}
+.intro p{margin:6px 0 0;max-width:520px;color:#E4DCFA;font-size:18px}
+@keyframes bounce{50%{transform:translateY(-8px)}}
+
+/* question */
+.qwrap{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:24px;flex:1}
+.qno{font-family:'Mitr';color:var(--stage-mut);font-size:15px}
+.qtext{margin:4px 0 18px;font-size:32px;line-height:1.35;font-weight:500;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opts.tf{display:grid;grid-template-columns:1fr 1fr}
+.opt{position:relative;border-radius:16px;background:rgba(255,255,255,.07);border:2px solid transparent;padding:12px 14px;overflow:hidden;transition:opacity .3s,border-color .3s,transform .3s}
+.opt .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--c);opacity:.35;transition:width .35s ease-out}
+.opt .row{position:relative;display:flex;align-items:center;gap:12px}
+.opt .ltr{width:38px;height:38px;border-radius:10px;background:var(--c);display:grid;place-items:center;font-family:'Mitr';font-weight:600;font-size:18px;flex-shrink:0;color:#fff}
+.opt .otxt{font-size:19px;font-weight:600;flex:1;min-width:0}
+.opt .ocount{font-family:'Mitr';font-size:24px;min-width:34px;text-align:right}
+.opts.tf .opt{padding:18px 16px}
+.opts.tf .otxt{font-family:'Mitr';font-size:30px}
+.opt.correct{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18);transform:scale(1.02)}
+.opt.correct .fill{opacity:.85}
+.opt.dim{opacity:.4}
+.opt .tick{position:relative;font-size:22px}
+.note{margin:16px 0 0;background:rgba(245,179,1,.14);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;color:#FFF2C9;font-size:16px}
+.qside{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.ring{position:relative;width:170px;height:170px;align-self:center}
+.ring svg{width:100%;height:100%}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.12);stroke-width:10}
+.ring-fg{fill:none;stroke:#3AC48E;stroke-width:10;stroke-linecap:round;transition:stroke .3s}
+.ring.warn .ring-fg{stroke:var(--gold)}
+.ring.hot .ring-fg{stroke:#FF6B4A}
+.ring-num{position:absolute;inset:0;display:grid;place-items:center;font-family:'Mitr';font-size:54px;font-weight:600}
+.ring-num small{display:block;font-size:13px;color:var(--stage-mut);font-weight:400;margin-top:-10px}
+.stat{background:rgba(255,255,255,.06);border-radius:14px;padding:10px 14px;text-align:center}
+.stat b{font-family:'Mitr';font-size:28px;font-weight:600;display:block;line-height:1.2}
+.stat span{color:var(--stage-mut);font-size:14px}
+.minilb{background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px}
+.minilb h3{margin:0 0 6px;font-size:14px;color:var(--stage-mut);font-weight:400}
+.minilb ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.minilb li{display:flex;align-items:center;gap:8px;font-size:14px}
+.minilb li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.minilb li.me{color:var(--gold);font-weight:700}
+.locked-flag{align-self:center;font-family:'Mitr';font-size:22px;padding:30px 0}
+
+/* board */
+.boardv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;flex:1}
+.boardv h2{margin:0 0 12px;font-size:20px}
+.tbar{margin-bottom:12px}
+.tbar .lab{display:flex;align-items:center;gap:8px;font-size:15px;margin-bottom:4px}
+.tbar .lab b{margin-left:auto;font-family:'Mitr';font-weight:500}
+.tbar .track{height:14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.tbar .track i{display:block;height:100%;border-radius:999px;background:var(--tc);transition:width .6s ease-out}
+.tbar.mine .lab{color:var(--gold);font-weight:700}
+.lb{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.lb li{display:grid;grid-template-columns:30px 28px minmax(0,1fr) auto auto;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:12px;padding:6px 10px;animation:slidein .4s ease-out both}
+.lb li.me{background:var(--gold);color:#221a00;font-weight:700}
+.lb .rk{font-family:'Mitr';font-weight:600;text-align:center}
+.lb .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .sc{font-family:'Mitr';font-weight:500}
+.lb .dl{font-size:12px;min-width:56px;text-align:right;color:#9FF0CB}
+.lb li.me .dl{color:#0b5a3a}
+.lb li.me .mv{color:#221a00!important}
+.lb .mv{font-size:11px;margin-left:4px}
+.lb .gap{background:none;justify-content:center;display:block;text-align:center;color:var(--stage-mut);padding:0}
+@keyframes slidein{from{transform:translateX(-12px);opacity:0}to{transform:none;opacity:1}}
+
+/* final */
+.final{flex:1;display:flex;flex-direction:column;gap:18px}
+.final h2{margin:0;text-align:center;font-size:30px}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end;max-width:560px;width:100%;margin:0 auto}
+.pod{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.pod .who{font-family:'Mitr';font-size:17px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .who.me{color:var(--gold)}
+.pod .av{width:52px;height:52px;font-size:22px;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.pod .blk{width:100%;border-radius:14px 14px 4px 4px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;font-family:'Mitr';animation:rise .8s ease-out both;transform-origin:bottom}
+.pod .blk .medal{font-size:32px;line-height:1}
+.pod .blk .pts{font-size:15px;opacity:.9}
+.pod.p1 .blk{height:150px;background:linear-gradient(#F5B301,#C98E00);color:#221a00}
+.pod.p2 .blk{height:110px;background:linear-gradient(#C8CDD8,#9199AA);color:#1b1f28}
+.pod.p3 .blk{height:84px;background:linear-gradient(#D88A56,#A8612F);color:#2a1407}
+@keyframes rise{from{transform:scaleY(0)}to{transform:none}}
+.final-teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ft{border-radius:14px;padding:10px;background:rgba(255,255,255,.06);border-top:4px solid var(--tc);text-align:center}
+.ft .r{font-family:'Mitr';font-size:22px}
+.ft .n{font-size:14px}
+.ft b{display:block;font-family:'Mitr';font-weight:500}
+.ft.win{background:rgba(245,179,1,.16)}
+
+/* ===== PHONE ===== */
+.phone{width:376px;margin:0 auto;border-radius:48px;background:#0F0B18;padding:12px;box-shadow:0 18px 40px rgba(20,10,50,.35),inset 0 0 0 2px #2c2440}
+.screen{background:var(--bg);border-radius:38px;height:736px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.notch{height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notch i{width:96px;height:22px;border-radius:999px;background:#0F0B18}
+.ph-top{display:flex;align-items:center;gap:10px;padding:8px 16px 10px;border-bottom:1px solid var(--line);background:var(--card)}
+.ph-top .av{width:36px;height:36px;font-size:16px}
+.ph-top .nm{font-weight:700;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-top .tc{display:inline-block;font-size:12px;color:#fff;border-radius:999px;padding:0 8px;background:var(--tc)}
+.ph-top .sc{margin-left:auto;text-align:right;font-family:'Mitr';font-size:18px;line-height:1.1}
+.ph-top .sc small{display:block;font-family:'Sarabun';font-size:11px;color:var(--muted)}
+.ph-body{flex:1;overflow-y:auto;padding:18px 16px 20px;display:flex;flex-direction:column;gap:14px}
+.center{text-align:center}
+.ph-body h2{margin:0;font-size:22px;line-height:1.35}
+.ph-body .mut{color:var(--muted);margin:0;font-size:15px}
+.big-emo{font-size:60px;line-height:1}
+.field label{display:block;font-weight:600;margin-bottom:6px}
+.field input{width:100%;font:inherit;font-size:18px;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.field input:focus{border-color:var(--accent);outline:none}
+.err{color:var(--false);font-size:14px;min-height:1.2em;margin:4px 0 0}
+.bigbtn{border:0;border-radius:16px;min-height:56px;font-size:19px;font-weight:600;background:var(--accent);color:#fff;width:100%}
+.bigbtn:hover:not(:disabled){background:var(--accent-d)}
+.ghostbtn{border:1px dashed var(--accent);border-radius:14px;min-height:48px;background:transparent;color:var(--accent);width:100%;font-weight:500}
+.teampick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.teampick button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-top:6px solid var(--tc)}
+.teampick button:hover{border-color:var(--tc)}
+.teampick .e{font-size:30px;line-height:1.1}
+.teampick small{color:var(--muted);font-family:'Sarabun'}
+.pq-no{font-family:'Mitr';font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.pq-text{font-size:19px;font-weight:600;line-height:1.45;margin:0}
+.cbar{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.cbar i{display:block;height:100%;background:var(--accent);border-radius:999px;width:100%}
+.cbar.hot i{background:var(--false)}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+.ans.stack{grid-template-columns:1fr}
+.ansbtn{border:0;border-radius:18px;color:#fff;background:var(--c);font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .08s}
+.ansbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.ans:not(.stack) .ansbtn{min-height:150px;font-size:32px;flex-direction:column;gap:0}
+.ans:not(.stack) .ansbtn small{font-size:14px;font-weight:400;opacity:.9;font-family:'Sarabun'}
+.ans.stack .ansbtn{min-height:62px;justify-content:flex-start;padding:10px 14px;font-size:16px;text-align:left;line-height:1.3;font-family:'Sarabun'}
+.ansbtn .l{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.25);display:grid;place-items:center;font-family:'Mitr';font-size:18px;flex-shrink:0}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.lockcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:center}
+.lockcard .pick{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:4px 14px;color:#fff;background:var(--c);font-family:'Mitr';font-size:18px;margin:6px 0}
+.result{border-radius:22px;padding:22px 16px;text-align:center;color:#fff}
+.result.ok{background:linear-gradient(160deg,#10A36D,#0B7A52)}
+.result.bad{background:linear-gradient(160deg,#E0583A,#B53A20)}
+.result.none{background:linear-gradient(160deg,#7B7394,#5B5474)}
+.result .big{font-family:'Mitr';font-size:34px;font-weight:600;line-height:1.2}
+.result .pts{font-family:'Mitr';font-size:26px}
+.result p{margin:6px 0 0;opacity:.95}
+.infocard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:15px}
+.infocard.note2{border-left:4px solid var(--gold)}
+.rankrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rankbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.rankbox b{display:block;font-family:'Mitr';font-size:30px;line-height:1.2;color:var(--accent)}
+.rankbox span{font-size:13px;color:var(--muted)}
+.plb{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.plb li{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.plb li.me{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.plb .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plb .rk{font-family:'Mitr';width:22px;text-align:center}
+.pop{animation:popin .4s ease-out}
+
+.foot{text-align:center;color:var(--muted);font-size:13px;padding:6px 16px 30px}
+.foot button{font:inherit;font-size:13px}
+
+/* responsive */
+@media (max-width:1180px){
+  .qwrap{grid-template-columns:minmax(0,1fr) 190px}
+  .ring{width:150px;height:150px}
+  .final-teams{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .tabs{display:flex}
+  .split{grid-template-columns:minmax(0,1fr)}
+  body.tab-host #panePhone,body.tab-phone #paneHost{display:none}
+  .pane-label{display:none}
+  .phone{width:100%;max-width:440px;border-radius:26px;padding:6px}
+  .screen{height:auto;min-height:calc(100dvh - 190px);border-radius:22px}
+  .notch{display:none}
+  .stage{min-height:calc(100dvh - 190px)}
+}
+@media (max-width:720px){
+  .head h1{font-size:20px}
+  .head{padding:10px 0 8px}
+  .head p{display:none}
+  .head .tools .btn{min-height:40px;padding:6px 12px}
+  .demobar{font-size:12px}
+  .demobar a{margin-left:0}
+  .head .tools{margin-left:0}
+  .st-body{padding:16px 14px}
+  .st-top{padding:12px 14px}
+  .console{padding:10px 14px}
+  .switch{margin-left:0}
+  .lobby,.boardv{grid-template-columns:minmax(0,1fr)}
+  .teamgrid-h{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  .tbox{padding:10px;min-height:0}
+  .qwrap{grid-template-columns:minmax(0,1fr);gap:14px}
+  .qside{order:-1;flex-direction:row;flex-wrap:wrap;align-items:center}
+  .qside .ring{width:108px;height:108px}
+  .ring-num{font-size:36px}
+  .qside .stat{flex:1}
+  .qside .minilb{display:none}
+  .qtext{font-size:22px;margin-bottom:12px}
+  .opts.tf .otxt{font-size:22px}
+  .opt .otxt{font-size:16px}
+  .intro h2{font-size:36px}
+  .intro .emo{font-size:60px}
+  .qr{width:120px;height:120px}
+  .room b{font-size:32px}
+  .final h2{font-size:24px}
+  .pod .who{font-size:14px}
+  .ph-body{padding:16px 12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body class="tab-phone">
+<div class="sticky">
+  <div class="demobar" role="note"><div class="wrap"><span class="tag">DEMO</span><span>เดโม · เล่นกับบอทจำลอง ไม่เชื่อมต่อระบบจริง</span><a href="../../#live-quiz">← กลับไปหน้าผลงาน</a></div></div>
+</div>
+
+<main class="wrap">
+  <div class="head">
+    <div>
+      <h1>🎤 Live Quiz <span>· เกมโชว์สดบนมือถือ</span></h1>
+      <p>คุณคือผู้เล่น 1 คน แข่งกับบอท 11 ตัว — 🤔 จริงหรือมั่ว 3 ข้อ + 🤖 AI Quiz 3 ข้อ · คุมเกมผ่านคอนโซล Host ได้ด้วย</p>
+    </div>
+    <div class="tools">
+      <button class="btn" id="sndBtn" type="button" aria-pressed="false">🔇 เสียง: ปิด</button>
+      <button class="btn btn-primary" id="resetBtn" type="button">↺ เริ่มเกมใหม่</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="เลือกหน้าจอ">
+    <button role="tab" id="tabHost" aria-controls="paneHost" aria-selected="false" type="button">📺 จอใหญ่ (Host)</button>
+    <button role="tab" id="tabPhone" aria-controls="panePhone" aria-selected="true" type="button">📱 มือถือผู้เล่น</button>
+  </div>
+
+  <div class="split">
+    <section id="paneHost" role="tabpanel" aria-labelledby="tabHost">
+      <p class="pane-label">📺 <b>จอ Host / จอใหญ่</b> — ขึ้นโปรเจกเตอร์ให้ทั้งห้องดู</p>
+      <div class="stage">
+        <div class="st-top" id="stTop"></div>
+        <div class="st-body" id="stBody"></div>
+        <div class="console" role="group" aria-label="คอนโซล Host">
+          <span class="cl-label">🎛 คอนโซล Host</span>
+          <button class="hbtn" id="hostBtn" type="button">▶ เริ่มเกม</button>
+          <span class="cl-auto" id="autoNote" aria-live="off"></span>
+          <label class="switch"><input type="checkbox" id="autoT" checked> Host อัตโนมัติ</label>
+        </div>
+      </div>
+    </section>
+    <section id="panePhone" role="tabpanel" aria-labelledby="tabPhone">
+      <p class="pane-label">📱 <b>มือถือผู้เล่น</b> — เล่นตรงนี้ได้เลย</p>
+      <div class="phone">
+        <div class="screen">
+          <div class="notch" aria-hidden="true"><i></i></div>
+          <div id="phTop"></div>
+          <div class="ph-body" id="phBody"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="sr" aria-live="polite" id="live"></div>
+</main>
+<footer class="foot">Live Quiz · เดโมสำหรับพอร์ตโฟลิโอ · ผู้เล่นอื่นเป็นบอทจำลองในเบราว์เซอร์ของคุณ ไม่มีข้อมูลส่งออกไปไหน · <button class="btn" id="resetBtn2" type="button">↺ เริ่มเกมใหม่</button></footer>
+
+<script>
+(() => {
+'use strict';
+const SPEED = Math.min(20, Math.max(1, Number(new URLSearchParams(location.search).get('speed')) || 1));
+const clock = () => performance.now() * SPEED;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const qfmt = t => esc(t).replace(/\{(.+?)\}/g, '<span class="nw">$1</span>');
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const sec = ms => (ms / 1000).toFixed(1) + ' วิ';
+const rnd = (a, b) => a + Math.random() * (b - a);
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+const TEAMS = [
+  {id:0, name:'ทีมหมึก', emo:'🐙', color:'#8B5CF6'},
+  {id:1, name:'ทีมฉลาม', emo:'🦈', color:'#2F80ED'},
+  {id:2, name:'ทีมเต่า', emo:'🐢', color:'#10A36D'},
+  {id:3, name:'ทีมปู',   emo:'🦀', color:'#E8622C'},
+];
+const BOTS = [['ต้น',0],['แพร',1],['บอส',2],['มายด์',3],['เจ',0],['ฝน',1],['กัปตัน',2],['น้ำหวาน',3],['ภูมิ',0],['ออม',1],['ไอซ์',2]];
+const TF_COLORS = ['#0B8A5C', '#CE4326'];
+const CH_COLORS = ['#1F7FC4', '#D2462A', '#9A6B00', '#8446D6'];
+const LET = ['A', 'B', 'C', 'D'];
+const MODES = {
+  tf: {name:'จริงหรือมั่ว', emo:'🤔', round:1, rule:'อ่านข้อความแล้วตัดสินว่า “จริง” หรือ “มั่ว” — ตอบถูกได้ 500 คะแนนเท่ากันทุกคน'},
+  ai: {name:'AI Quiz', emo:'🤖', round:2, rule:'เลือกคำตอบ A–D · ⚡ Speed bonus: ตอบถูกได้ 500–1,000 คะแนน ยิ่งเร็วยิ่งได้มาก'},
+};
+const QUESTIONS = [
+  {mode:'tf', text:'ปลาหมึกยักษ์ (octopus) มีหัวใจ 3 ดวง', opts:['จริง','มั่ว'], ans:0, time:12, ease:1,
+   note:'2 ดวงสูบเลือดผ่านเหงือก อีก 1 ดวงสูบเลือดไปทั่วร่างกาย'},
+  {mode:'tf', text:'กำแพงเมืองจีนมองเห็นได้ด้วยตาเปล่าจากดวงจันทร์', opts:['จริง','มั่ว'], ans:1, time:12, ease:.75,
+   note:'กำแพงแคบเกินไป — จากดวงจันทร์มองไม่เห็นเลย แม้จากวงโคจรโลกก็เห็นยากมาก'},
+  {mode:'tf', text:'น้ำผึ้งแท้ที่ปิดสนิทเก็บได้นานนับพันปีโดยไม่บูด', opts:['จริง','มั่ว'], ans:0, time:12, ease:.9,
+   note:'นักโบราณคดีเคยพบน้ำผึ้งในสุสานอียิปต์โบราณที่ยังไม่เสีย'},
+  {mode:'ai', text:'“LLM” ที่อยู่เบื้องหลัง{แชทบอท AI} ย่อมาจากอะไร', opts:['Large Language Model','Low Latency Machine','Linear Learning Method','Logic Layer Module'], ans:0, time:15, ease:1,
+   note:'โมเดลภาษาขนาดใหญ่ ที่เรียนรู้รูปแบบภาษาจากข้อความจำนวนมหาศาล'},
+  {mode:'ai', text:'ข้อใด “ไม่ควร” พิมพ์ลงใน{แชทบอท AI} สาธารณะ', opts:['ขอให้สรุปบทความข่าว','ขอไอเดียตั้งชื่อกิจกรรม','รหัสผ่านและข้อมูลส่วนตัวลูกค้า','ถามสูตรทำต้มยำกุ้ง'], ans:2, time:15, ease:1.05,
+   note:'ข้อมูลลับและข้อมูลส่วนบุคคล ห้ามใส่ในเครื่องมือที่องค์กรไม่ได้อนุญาต'},
+  {mode:'ai', text:'เมื่อ AI ตอบข้อมูลผิด แต่พูดอย่างมั่นใจ เราเรียกว่าอะไร', opts:['Overfitting','Hallucination','Debugging','Caching'], ans:1, time:15, ease:.9,
+   note:'จึงควรตรวจสอบข้อเท็จจริงสำคัญก่อนนำคำตอบของ AI ไปใช้เสมอ'},
+];
+const colorsOf = q => q.mode === 'tf' ? TF_COLORS : CH_COLORS;
+const team = id => TEAMS[id];
+const initial = n => { const c = [...n.replace(/^[เแโใไ]+/, '')]; return c[0] || [...n][0] || '?'; };
+
+let S = null;
+let lastName = '';
+
+function newGame() {
+  S = { phase:'lobby', qi:-1, players:[], meId:null, auto: S ? S.auto : true, t0:0, T:0, until:0,
+        answers:{}, botQ:[], joinQ:[], lastTickSec:-1, draftName:lastName, err:'' };
+  let t = clock() + 500 * SPEED;
+  shuffle(BOTS.map((b, i) => ({name:b[0], team:b[1], idx:i}))).forEach(b => {
+    t += rnd(350, 900) * SPEED; S.joinQ.push({at:t, ...b});
+  });
+  $('#autoT').checked = S.auto;
+  renderAll();
+}
+const me = () => S.players.find(p => p.id === S.meId) || null;
+function addBot(b) {
+  S.players.push({id:'b' + b.idx, name:b.name, team:b.team, bot:true, skill:rnd(.55, .92), spd:Math.random(),
+                  score:0, tms:0, last:null, prevRank:0, rank:0});
+}
+function ranked() {
+  return S.players.slice().sort((a, b) => b.score - a.score || a.tms - b.tms || a.name.localeCompare(b.name, 'th'));
+}
+function teamStats() {
+  return TEAMS.map(t => {
+    const m = S.players.filter(p => p.team === t.id);
+    const avg = m.length ? Math.round(m.reduce((s, p) => s + p.score, 0) / m.length) : 0;
+    const tms = m.length ? m.reduce((s, p) => s + p.tms, 0) / m.length : 0;
+    return {...t, members:m, avg, tms};
+  }).sort((a, b) => b.avg - a.avg || a.tms - b.tms);
+}
+
+/* ---------- flow ---------- */
+function setUntil(ms) { S.until = S.auto ? clock() + ms * SPEED : 0; }
+function advance() {
+  switch (S.phase) {
+    case 'lobby': return startGame();
+    case 'intro': return openQ();
+    case 'question': return lock();
+    case 'locked': return reveal();
+    case 'reveal': return board();
+    case 'board': return next();
+    case 'final': return newGame();
+  }
+}
+function startGame() {
+  if (!me()) return;
+  while (S.joinQ.length) addBot(S.joinQ.shift());
+  S.qi = 0; intro();
+}
+function intro() { S.phase = 'intro'; setUntil(3400); sfx('start'); renderAll(); say('รอบที่ ' + MODES[QUESTIONS[S.qi].mode].round + ' ' + MODES[QUESTIONS[S.qi].mode].name); }
+function openQ() {
+  const q = QUESTIONS[S.qi];
+  S.phase = 'question'; S.t0 = clock(); S.T = q.time * 1000; S.answers = {}; S.until = 0; S.lastTickSec = -1;
+  S.botQ = S.players.filter(p => p.bot).map(p => {
+    if (Math.random() < .05) return null;
+    const frac = Math.min(.92, .1 + (1 - p.spd) * .45 + Math.random() * .3);
+    const ok = Math.random() < Math.min(.97, p.skill * q.ease);
+    let a = q.ans;
+    if (!ok) { const others = q.opts.map((_, i) => i).filter(i => i !== q.ans); a = others[Math.floor(Math.random() * others.length)]; }
+    return {id:p.id, a, at:S.t0 + frac * S.T};
+  }).filter(Boolean).sort((x, y) => x.at - y.at);
+  renderAll(); say('ข้อ ' + (S.qi + 1) + ': ' + q.text.replace(/[{}]/g, ''));
+}
+function lock() { S.phase = 'locked'; S.botQ = []; setUntil(1100); renderAll(); }
+function reveal() {
+  const q = QUESTIONS[S.qi];
+  ranked().forEach((p, i) => p.prevRank = p.last === null && S.qi === 0 ? 0 : i + 1);
+  S.players.forEach(p => {
+    const a = S.answers[p.id];
+    if (!a) { p.last = {a:null, pts:0, correct:false}; return; }
+    const ok = a.a === q.ans;
+    const pts = ok ? (q.mode === 'ai' ? Math.round(1000 - 500 * Math.min(a.ms, S.T) / S.T) : 500) : 0;
+    p.score += pts; if (ok) p.tms += a.ms;
+    p.last = {a:a.a, ms:a.ms, pts, correct:ok};
+  });
+  ranked().forEach((p, i) => p.rank = i + 1);
+  S.phase = 'reveal'; setUntil(5600);
+  const m = me();
+  if (m) sfx(m.last.correct ? 'ok' : 'bad');
+  renderAll();
+  if (m) say(m.last.correct ? `ถูกต้อง ได้ ${m.last.pts} คะแนน` : m.last.a === null ? 'ไม่ได้ตอบข้อนี้' : `ผิด เฉลยคือ ${q.opts[q.ans]}`);
+}
+function board() { S.phase = 'board'; setUntil(5200); renderAll(); }
+function next() {
+  const prev = QUESTIONS[S.qi];
+  S.qi++;
+  if (S.qi >= QUESTIONS.length) { S.phase = 'final'; S.until = 0; sfx('win'); renderAll(); const m = me(); if (m) say(`จบเกม คุณได้อันดับ ${m.rank} จาก ${S.players.length}`); return; }
+  if (QUESTIONS[S.qi].mode !== prev.mode) intro(); else openQ();
+}
+function answer(i) {
+  const m = me();
+  if (!m || S.phase !== 'question' || S.answers[m.id]) return;
+  S.answers[m.id] = {a:i, ms:clock() - S.t0};
+  sfx('tap'); renderPhone(); updateLive();
+  say('ล็อกคำตอบแล้ว');
+}
+
+/* ---------- tick ---------- */
+function tick() {
+  const n = clock();
+  if (S.phase === 'lobby' && S.joinQ.length && S.joinQ[0].at <= n) {
+    while (S.joinQ.length && S.joinQ[0].at <= n) addBot(S.joinQ.shift());
+    renderHost(); updateLive();
+  }
+  if (S.phase === 'question') {
+    while (S.botQ.length && S.botQ[0].at <= n) { const b = S.botQ.shift(); S.answers[b.id] = {a:b.a, ms:b.at - S.t0}; }
+    const allIn = S.players.length && S.players.every(p => S.answers[p.id]);
+    if (n >= S.t0 + S.T || allIn) { lock(); return; }
+    const left = Math.ceil((S.t0 + S.T - n) / 1000);
+    if (left !== S.lastTickSec) { S.lastTickSec = left; if (left <= 3 && me() && !S.answers[S.meId]) sfx('tick'); }
+  }
+  if (S.until && n >= S.until) { S.until = 0; advance(); return; }
+  updateLive();
+}
+
+/* ---------- render: host ---------- */
+function avatar(p, extra = '') {
+  return `<span class="av" style="--tc:${team(p.team).color}" aria-hidden="true">${esc(initial(p.name))}</span>`;
+}
+function qrSVG() {
+  const N = 21; let seed = 4821; const r = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  let cells = '';
+  const finder = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#1A1230"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3" fill="#1A1230"/>`;
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const inF = (x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12);
+    if (!inF && r() > .52) cells += `<rect x="${x}" y="${y}" width="1" height="1" fill="#1A1230"/>`;
+  }
+  return `<svg class="qr" viewBox="0 0 21 21" shape-rendering="crispEdges" role="img" aria-label="QR ตัวอย่าง (ไม่ใช่ลิงก์จริง)">${cells}${finder(0,0)}${finder(14,0)}${finder(0,14)}</svg>`;
+}
+function renderHost() {
+  const q = QUESTIONS[S.qi];
+  const inQ = q && ['intro','question','locked','reveal','board'].includes(S.phase);
+  $('#stTop').innerHTML = `<span class="st-brand">🎤 Live <i>Quiz</i></span>
+    ${inQ ? `<span class="st-chip ${q.mode}">${MODES[q.mode].emo} รอบ ${MODES[q.mode].round} · ${MODES[q.mode].name}</span>` : ''}
+    ${S.phase === 'final' ? '<span class="st-chip">🏁 จบเกม</span>' : ''}
+    <span class="st-meta tnum">${S.qi >= 0 && S.phase !== 'final' ? `ข้อ ${S.qi + 1}/${QUESTIONS.length} · ` : ''}👥 ${S.players.length} คน</span>`;
+  const body = $('#stBody');
+  if (S.phase === 'lobby') body.innerHTML = hostLobby();
+  else if (S.phase === 'intro') body.innerHTML = hostIntro(q);
+  else if (['question','locked','reveal'].includes(S.phase)) body.innerHTML = hostQuestion(q);
+  else if (S.phase === 'board') body.innerHTML = hostBoard();
+  else body.innerHTML = hostFinal();
+  const labels = {lobby:'▶ เริ่มเกม', intro:'▶ เปิดคำถาม', question:'⏹ ปิดรับคำตอบ', locked:'🔍 เฉลยคำตอบ', reveal:'📊 ดูอันดับ',
+                  board: S.qi < QUESTIONS.length - 1 ? '⏭ ข้อถัดไป' : '🏆 ประกาศผล', final:'↺ เริ่มเกมใหม่'};
+  const hb = $('#hostBtn');
+  hb.textContent = labels[S.phase];
+  hb.disabled = S.phase === 'lobby' && !me();
+  hb.title = hb.disabled ? 'ใส่ชื่อและเลือกทีมในมือถือก่อน' : '';
+  const fb = $('#finalRestart'); if (fb) fb.onclick = newGame;
+}
+function hostLobby() {
+  const m = me();
+  const teams = TEAMS.map(t => {
+    const mem = S.players.filter(p => p.team === t.id);
+    return `<div class="tbox" style="--tc:${t.color}"><h3>${t.emo} ${esc(t.name)} <small>${mem.length} คน</small></h3>
+      <div class="members">${mem.map(p => `<span class="mchip${p.id === S.meId ? ' me' : ''}">${avatar(p)}${esc(p.name)}${p.id === S.meId ? ' (คุณ)' : ''}</span>`).join('')}</div></div>`;
+  }).join('');
+  return `<div class="lobby">
+    <div class="joincard">
+      ${qrSVG()}
+      <div class="room">รหัสห้อง<b class="tnum">4821</b></div>
+      <ul class="rules">
+        <li>🤔 รอบ 1 จริงหรือมั่ว · 3 ข้อ · ถูก +500</li>
+        <li>🤖 รอบ 2 AI Quiz · 3 ข้อ · ⚡ 500–1,000 ตามความเร็ว</li>
+        <li>👥 คะแนนทีม = ค่าเฉลี่ยต่อคน (ทีมคนไม่เท่ากันก็แฟร์)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="lob-h"><h2>ผู้เล่นในห้อง</h2><span class="tnum">${S.players.length} / 12</span></div>
+      <div class="teamgrid-h">${teams}</div>
+      <p style="color:var(--stage-mut);margin:14px 0 0;font-size:15px">${m ? '✅ คุณเข้าห้องแล้ว — กด <b style="color:var(--gold)">▶ เริ่มเกม</b> ที่คอนโซลด้านล่าง หรือในมือถือ' : '<span class="waiting-dots">รอคุณใส่ชื่อและเลือกทีมในมือถือ</span>'}</p>
+    </div>
+  </div>`;
+}
+function hostIntro(q) {
+  const md = MODES[q.mode];
+  return `<div class="intro"><div class="kicker">รอบที่ ${md.round}</div><div class="emo" aria-hidden="true">${md.emo}</div>
+    <h2>${md.name}</h2><p>${md.rule}</p><p style="color:var(--stage-mut);font-size:15px">${q.mode === 'tf' ? '3 ข้อ · ข้อละ 12 วินาที' : '3 ข้อ · ข้อละ 15 วินาที'}</p></div>`;
+}
+function optsHTML(q, where) {
+  const cols = colorsOf(q), rev = S.phase === 'reveal';
+  return `<div class="opts ${q.mode}">${q.opts.map((o, i) => {
+    const cls = rev ? (i === q.ans ? ' correct' : ' dim') : '';
+    return `<div class="opt${cls}" style="--c:${cols[i]}"><div class="fill" id="hf${i}"></div><div class="row">
+      <span class="ltr" aria-hidden="true">${q.mode === 'tf' ? (i === 0 ? '✓' : '✗') : LET[i]}</span>
+      <span class="otxt">${q.mode === 'tf' ? '' : `<span class="sr">${LET[i]}. </span>`}${esc(o)}</span>
+      ${rev && i === q.ans ? '<span class="tick" aria-label="คำตอบที่ถูก">✅</span>' : ''}
+      <span class="ocount tnum" id="hc${i}" aria-label="จำนวนคนตอบ">0</span></div></div>`;
+  }).join('')}</div>`;
+}
+function miniLB() {
+  const r = ranked().slice(0, 3);
+  return `<div class="minilb"><h3>🏅 ผู้นำตอนนี้</h3><ol>${r.map((p, i) => `<li class="${p.id === S.meId ? 'me' : ''}"><span>${['🥇','🥈','🥉'][i]}</span>${avatar(p)}<span class="nm">${esc(p.name)}</span><span class="tnum">${fmt(p.score)}</span></li>`).join('')}</ol></div>`;
+}
+function hostQuestion(q) {
+  let side;
+  if (S.phase === 'question') {
+    side = `<div class="ring" id="hRing" aria-hidden="true"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" id="hArc" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="0" transform="rotate(-90 60 60)"/></svg><div class="ring-num tnum"><div id="hNum">${q.time}<small>วินาที</small></div></div></div>
+      <div class="stat"><b class="tnum" id="hAns">0/${S.players.length}</b><span>ตอบแล้ว</span></div>`;
+  } else if (S.phase === 'locked') {
+    side = `<div class="locked-flag">⏱ หมดเวลา!</div><div class="stat"><b class="tnum" id="hAns">0/${S.players.length}</b><span>ตอบแล้ว</span></div>`;
+  } else {
+    const right = S.players.filter(p => p.last && p.last.correct);
+    const fast = right.slice().sort((a, b) => a.last.ms - b.last.ms)[0];
+    side = `<div class="stat"><b class="tnum">${right.length}/${S.players.length}</b><span>ตอบถูก</span></div>
+      ${fast ? `<div class="stat"><b style="font-size:20px">⚡ ${esc(fast.name)}</b><span>เร็วสุด ${sec(fast.last.ms)}</span></div>` : ''}`;
+  }
+  return `<div class="qwrap"><div>
+      <div class="qno">ข้อ ${S.qi + 1} / ${QUESTIONS.length}${q.mode === 'ai' ? ' · ⚡ speed bonus' : ''}</div>
+      <h2 class="qtext">${qfmt(q.text)}</h2>
+      ${optsHTML(q)}
+      ${S.phase === 'reveal' ? `<p class="note">💡 ${esc(q.note)}</p>` : ''}
+    </div><aside class="qside">${side}${S.qi > 0 || S.phase === 'reveal' ? miniLB() : ''}</aside></div>`;
+}
+function mv(p) {
+  if (!p.prevRank || p.prevRank === p.rank) return '';
+  return p.prevRank > p.rank ? `<span class="mv" style="color:#3AC48E">▲${p.prevRank - p.rank}</span>` : `<span class="mv" style="color:#FF8163">▼${p.rank - p.prevRank}</span>`;
+}
+function hostBoard() {
+  const ts = teamStats(), max = Math.max(1, ...ts.map(t => t.avg));
+  const r = ranked(); const top = r.slice(0, 8);
+  const m = me(); const meOut = m && !top.includes(m);
+  const row = (p, i) => `<li class="${p.id === S.meId ? 'me' : ''}" style="animation-delay:${i * 50}ms"><span class="rk tnum">${p.rank}</span>${avatar(p)}<span class="nm">${esc(p.name)}${p.id === S.meId ? ' (คุณ)' : ''}${mv(p)}</span><span class="dl tnum">${p.last && p.last.pts ? '+' + fmt(p.last.pts) : ''}</span><span class="sc tnum">${fmt(p.score)}</span></li>`;
+  return `<div class="boardv">
+    <section aria-label="คะแนนทีม"><h2>👥 คะแนนทีม <small style="font-size:14px;color:var(--stage-mut)">(เฉลี่ยต่อคน)</small></h2>
+      ${ts.map((t, i) => `<div class="tbar${m && m.team === t.id ? ' mine' : ''}" style="--tc:${t.color}"><div class="lab"><span>${['🥇','🥈','🥉','4.'][i]}</span>${t.emo} ${esc(t.name)} <small style="color:var(--stage-mut)">${t.members.length} คน</small><b class="tnum">${fmt(t.avg)}</b></div><div class="track"><i style="width:${(t.avg / max * 100).toFixed(1)}%"></i></div></div>`).join('')}
+    </section>
+    <section aria-label="อันดับผู้เล่น"><h2>🏅 อันดับผู้เล่น</h2>
+      <ol class="lb">${top.map(row).join('')}${meOut ? `<li class="gap" aria-hidden="true">⋯</li>${row(m, 9)}` : ''}</ol>
+    </section></div>`;
+}
+function hostFinal() {
+  const r = ranked(), ts = teamStats();
+  const order = [1, 0, 2].map(i => r[i]).filter(Boolean);
+  return `<div class="final"><h2>🏆 ประกาศผล!</h2>
+    <div class="podium">${order.map(p => { const k = r.indexOf(p) + 1; return `<div class="pod p${k}"><span class="av" style="--tc:${team(p.team).color}" aria-hidden="true">${esc(initial(p.name))}</span><div class="who${p.id === S.meId ? ' me' : ''}">${esc(p.name)}${p.id === S.meId ? ' (คุณ)' : ''}</div><div class="blk" style="animation-delay:${(3 - k) * 150}ms"><span class="medal">${['🥇','🥈','🥉'][k - 1]}</span><span class="pts tnum">${fmt(p.score)}</span></div></div>`; }).join('')}</div>
+    <div class="final-teams">${ts.map((t, i) => `<div class="ft${i === 0 ? ' win' : ''}" style="--tc:${t.color}"><div class="r">${['🥇','🥈','🥉','4'][i]}</div><div class="n">${t.emo} ${esc(t.name)}</div><b class="tnum">${fmt(t.avg)}</b></div>`).join('')}</div>
+    <div class="center"><button class="hbtn" id="finalRestart" type="button">↺ เริ่มเกมใหม่</button></div></div>`;
+}
+
+/* ---------- render: phone ---------- */
+function renderPhone() {
+  const act = document.activeElement, focusId = act && act.id && $('#phBody').contains(act) ? act.id : null;
+  const m = me();
+  $('#phTop').innerHTML = m ? `<div class="ph-top">${avatar(m)}<div style="min-width:0"><div class="nm">${esc(m.name)}</div><span class="tc" style="--tc:${team(m.team).color}">${team(m.team).emo} ${esc(team(m.team).name)}</span></div><div class="sc tnum">${fmt(m.score)}<small>คะแนน${m.rank ? ' · อันดับ ' + m.rank : ''}</small></div></div>` : '';
+  const b = $('#phBody');
+  b.innerHTML = phoneBody(m);
+  const inp = $('#nick');
+  if (inp) {
+    inp.value = S.draftName;
+    inp.addEventListener('input', () => { S.draftName = inp.value; });
+    $('#joinForm').addEventListener('submit', e => { e.preventDefault(); join(); });
+  }
+  b.querySelectorAll('[data-team]').forEach(el => el.onclick = () => pickTeam(Number(el.dataset.team)));
+  b.querySelectorAll('[data-ans]').forEach(el => el.onclick = () => answer(Number(el.dataset.ans)));
+  const st = $('#phStart'); if (st) st.onclick = startGame;
+  const rs = $('#phRestart'); if (rs) rs.onclick = newGame;
+  if (focusId && $('#' + focusId)) $('#' + focusId).focus();
+  document.getElementById('tabPhone').classList.toggle('ping', S.phase === 'question' && !!m && !S.answers[m.id]);
+}
+function phoneBody(m) {
+  if (!S.meId) {
+    return `<div class="center"><div class="big-emo" aria-hidden="true">🎮</div><h2 style="margin-top:8px">เข้าร่วมเกม</h2><p class="mut">ห้อง <b class="tnum">4821</b> · ใส่ชื่อเล่น แล้วเลือกทีม</p></div>
+      <form id="joinForm" class="field" novalidate><label for="nick">ชื่อเล่นของคุณ</label>
+        <input id="nick" name="nick" maxlength="14" autocomplete="off" placeholder="เช่น โจ้" aria-describedby="nickErr">
+        <p class="err" id="nickErr" role="alert">${esc(S.err)}</p>
+        <button class="bigbtn" type="submit" id="joinBtn">พร้อมเล่น!</button></form>
+      ${S.phase !== 'lobby' ? '<p class="hint">เกมเริ่มไปแล้ว — เข้าตอนนี้เริ่มเก็บคะแนนได้ทันที</p>' : '<p class="hint">ผู้เล่นคนอื่นในห้องนี้เป็นบอทจำลอง 11 ตัว</p>'}`;
+  }
+  if (!m) {
+    return `<div class="center"><h2>เลือกทีมของคุณ</h2><p class="mut">สวัสดี <b>${esc(S.draftName.trim())}</b> 👋 คะแนนทีมคิดจากค่าเฉลี่ยของสมาชิก</p></div>
+      <div class="teampick">${TEAMS.map(t => { const n = S.players.filter(p => p.team === t.id).length; return `<button type="button" data-team="${t.id}" style="--tc:${t.color}" aria-label="${t.name} มี ${n} คน"><span class="e" aria-hidden="true">${t.emo}</span>${esc(t.name)}<small>${n} คน</small></button>`; }).join('')}</div>`;
+  }
+  const q = QUESTIONS[S.qi];
+  switch (S.phase) {
+    case 'lobby':
+      return `<div class="center pop"><div class="big-emo" aria-hidden="true">🙌</div><h2 style="margin-top:8px">เข้าห้องแล้ว!</h2><p class="mut">ดูชื่อตัวเองบนจอใหญ่ได้เลย<br>ในห้องตอนนี้ <b class="tnum" id="pCount">${S.players.length}</b> คน</p></div>
+        <div class="infocard">🤔 <b>รอบ 1 จริงหรือมั่ว</b> — 3 ข้อ ถูกได้ 500<br>🤖 <b>รอบ 2 AI Quiz</b> — 3 ข้อ ⚡ ยิ่งเร็วยิ่งได้มาก (500–1,000)</div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px"><p class="hint">ปกติ Host เป็นคนกดเริ่ม — ในเดโมนี้สั่งแทน Host ได้เลย</p>
+        <button class="bigbtn" type="button" id="phStart">▶ เริ่มเกม (สั่งแทน Host)</button></div>`;
+    case 'intro': {
+      const md = MODES[q.mode];
+      return `<div class="center pop" style="margin:auto 0"><p class="mut" style="font-family:Mitr">รอบที่ ${md.round}</p><div class="big-emo" aria-hidden="true">${md.emo}</div><h2 style="font-size:30px">${md.name}</h2><p class="mut" style="margin-top:8px">${md.rule}</p><p class="hint" style="margin-top:14px">เตรียมตัว… คำถามกำลังมา</p></div>`;
+    }
+    case 'question': {
+      const a = S.answers[m.id], cols = colorsOf(q);
+      const head = `<div class="pq-no"><span>ข้อ ${S.qi + 1}/${QUESTIONS.length}</span><span class="tnum" id="pNum">${q.time} วิ</span></div>`;
+      if (a) return `${head}<div class="lockcard pop"><div class="big-emo" aria-hidden="true">🔒</div><h2 style="margin-top:6px">ล็อกคำตอบแล้ว</h2>
+          <div class="pick" style="--c:${cols[a.a]}">${q.mode === 'tf' ? '' : LET[a.a] + ' · '}${esc(q.opts[a.a])}</div>
+          <p class="mut">ใช้เวลา ${sec(a.ms)} — รอเพื่อนๆ ตอบ (<span class="tnum" id="pWait">0/${S.players.length}</span>)</p></div>
+          <p class="hint">ดูกราฟคำตอบของทั้งห้องบนจอใหญ่</p>`;
+      return `${head}<div class="cbar" id="pBar" aria-hidden="true"><i></i></div><p class="pq-text">${qfmt(q.text)}</p>
+        ${q.mode === 'ai' ? '<p class="hint">⚡ ยิ่งตอบเร็วยิ่งได้คะแนนมาก</p>' : ''}
+        <div class="ans${q.mode === 'ai' ? ' stack' : ''}" role="group" aria-label="ตัวเลือกคำตอบ">${q.opts.map((o, i) => q.mode === 'tf'
+          ? `<button class="ansbtn" type="button" data-ans="${i}" style="--c:${cols[i]}">${esc(o)}<small>${i === 0 ? 'เชื่อว่าจริง' : 'ไม่จริงหรอก'}</small></button>`
+          : `<button class="ansbtn" type="button" data-ans="${i}" style="--c:${cols[i]}"><span class="l" aria-hidden="true">${LET[i]}</span><span><span class="sr">${LET[i]}. </span>${esc(o)}</span></button>`).join('')}</div>`;
+    }
+    case 'locked': {
+      const a = S.answers[m.id];
+      return `<div class="center pop" style="margin:auto 0"><div class="big-emo" aria-hidden="true">🫣</div><h2 style="margin-top:8px">${a ? 'ปิดรับคำตอบ — รอเฉลย!' : 'หมดเวลา!'}</h2><p class="mut">${a ? 'ลุ้นกันหน่อย…' : 'ข้อนี้คุณไม่ได้ตอบ'}</p></div>`;
+    }
+    case 'reveal': {
+      const L = m.last || {a:null, pts:0};
+      const cls = L.a === null ? 'none' : L.correct ? 'ok' : 'bad';
+      const big = L.a === null ? '⏰ ไม่ได้ตอบ' : L.correct ? '✅ ถูกต้อง!' : '❌ ผิดจ้า';
+      const detail = L.correct ? `<div class="pts tnum">+${fmt(L.pts)}</div><p>ตอบใน ${sec(L.ms)}${q.mode === 'ai' ? ' · ⚡ speed bonus' : ''}</p>`
+        : `<p>เฉลย: <b>${q.mode === 'tf' ? '' : LET[q.ans] + '. '}${esc(q.opts[q.ans])}</b></p>`;
+      return `<div class="result ${cls} pop" role="status"><div class="big">${big}</div>${detail}</div>
+        <div class="infocard note2">💡 ${esc(q.note)}</div>
+        <div class="rankrow"><div class="rankbox"><b class="tnum">#${m.rank}</b><span>อันดับของคุณ ${mv(m).replace(/#3AC48E/, '#0B8A5C').replace(/#FF8163/, '#CE4326')}</span></div><div class="rankbox"><b class="tnum">${fmt(m.score)}</b><span>คะแนนรวม</span></div></div>`;
+    }
+    case 'board': {
+      const ts = teamStats(), tr = ts.findIndex(t => t.id === m.team) + 1, r = ranked();
+      return `<div class="rankrow"><div class="rankbox"><b class="tnum">#${m.rank}</b><span>จาก ${S.players.length} คน</span></div><div class="rankbox"><b class="tnum">#${tr}</b><span>${team(m.team).emo} ${esc(team(m.team).name)}</span></div></div>
+        <h2 style="font-size:18px">🏅 Top 5</h2>
+        <ol class="plb">${r.slice(0, 5).map(p => `<li class="${p.id === S.meId ? 'me' : ''}"><span class="rk">${p.rank}</span>${avatar(p)}<span class="nm">${esc(p.name)}</span><span class="tnum">${fmt(p.score)}</span></li>`).join('')}</ol>
+        <p class="hint">${S.qi < QUESTIONS.length - 1 ? 'เตรียมตัวข้อถัดไป…' : 'รอประกาศผล…'}</p>`;
+    }
+    case 'final': {
+      const ts = teamStats(), tr = ts.findIndex(t => t.id === m.team) + 1;
+      const emo = m.rank === 1 ? '🏆' : m.rank <= 3 ? '🎉' : '👏';
+      const right = S.players.length;
+      return `<div class="center pop"><div class="big-emo" aria-hidden="true">${emo}</div><h2 style="margin-top:8px">${m.rank === 1 ? 'แชมป์! สุดยอด' : m.rank <= 3 ? 'ติดโพเดียม!' : 'จบเกมแล้ว'}</h2>
+        <p class="mut">คุณได้อันดับ <b>${m.rank}</b> จาก ${right} คน</p></div>
+        <div class="rankrow"><div class="rankbox"><b class="tnum">${fmt(m.score)}</b><span>คะแนนรวม</span></div><div class="rankbox"><b class="tnum">#${tr}</b><span>${team(m.team).emo} ${esc(team(m.team).name)}</span></div></div>
+        <div class="infocard">ตอบถูก <b>${countCorrect(m)}</b> จาก ${QUESTIONS.length} ข้อ${tr === 1 ? ' · ทีมคุณชนะ! 🎊' : ''}</div>
+        <button class="bigbtn" type="button" id="phRestart" style="margin-top:auto">↺ เริ่มเกมใหม่</button>`;
+    }
+  }
+  return '';
+}
+function countCorrect(m) { return m.correctN || 0; }
+function join() {
+  const name = S.draftName.trim();
+  if (!name) { S.err = 'กรุณาใส่ชื่อเล่นก่อน'; renderPhone(); $('#nick').focus(); return; }
+  S.err = ''; lastName = name; S.meId = 'me'; renderPhone();
+  const first = document.querySelector('[data-team]'); if (first) first.focus();
+}
+function pickTeam(t) {
+  S.players.push({id:'me', name:S.draftName.trim(), team:t, bot:false, score:0, tms:0, last:null, prevRank:0, rank:0});
+  sfx('tap'); renderAll(); say('เข้าห้องแล้ว อยู่' + team(t).name);
+}
+
+/* ---------- live updates ---------- */
+function updateLive() {
+  const n = clock();
+  if (S.phase === 'lobby') { const c = $('#pCount'); if (c) c.textContent = S.players.length; }
+  if (S.phase === 'question' || S.phase === 'locked' || S.phase === 'reveal') {
+    const q = QUESTIONS[S.qi], counts = q.opts.map(() => 0);
+    Object.values(S.answers).forEach(a => counts[a.a]++);
+    const tot = Math.max(1, S.players.length);
+    counts.forEach((c, i) => { const f = $('#hf' + i), t = $('#hc' + i); if (f) f.style.width = (c / tot * 100) + '%'; if (t) t.textContent = c; });
+    const done = Object.keys(S.answers).length;
+    const ha = $('#hAns'); if (ha) ha.textContent = `${done}/${S.players.length}`;
+    const pw = $('#pWait'); if (pw) pw.textContent = `${done}/${S.players.length}`;
+  }
+  if (S.phase === 'question') {
+    const left = Math.max(0, S.t0 + S.T - n), frac = left / S.T, s = Math.ceil(left / 1000);
+    const arc = $('#hArc'); if (arc) arc.setAttribute('stroke-dashoffset', (326.73 * (1 - frac)).toFixed(1));
+    const ring = $('#hRing'); if (ring) { ring.classList.toggle('warn', s <= 5 && s > 3); ring.classList.toggle('hot', s <= 3); }
+    const hn = $('#hNum'); if (hn) hn.firstChild.textContent = s;
+    const pb = $('#pBar'); if (pb) { pb.firstChild.style.width = (frac * 100) + '%'; pb.classList.toggle('hot', s <= 3); }
+    const pn = $('#pNum'); if (pn) pn.textContent = s + ' วิ';
+  }
+  const an = $('#autoNote');
+  an.textContent = S.until ? `อัตโนมัติใน ${Math.max(1, Math.ceil((S.until - n) / 1000 / SPEED))} วิ` : (S.phase === 'question' ? 'ปิดรับเองเมื่อหมดเวลา' : '');
+}
+function renderAll() {
+  if (S.phase === 'reveal') S.players.forEach(p => { if (p.last && p.last.correct && p._counted !== S.qi) { p.correctN = (p.correctN || 0) + 1; p._counted = S.qi; } });
+  renderHost(); renderPhone(); updateLive();
+}
+function say(t) { const l = $('#live'); l.textContent = ''; setTimeout(() => l.textContent = t, 30); }
+
+/* ---------- sound (WebAudio, muted by default) ---------- */
+let AC = null, soundOn = false;
+function sfx(kind) {
+  if (!soundOn || !AC) return;
+  const seq = {tap:[[660,.06]], tick:[[880,.05]], start:[[523,.1],[659,.1],[784,.16]], ok:[[659,.1],[988,.2]], bad:[[220,.25]], win:[[523,.12],[659,.12],[784,.12],[1047,.3]]}[kind] || [];
+  let t = AC.currentTime;
+  seq.forEach(([f, d]) => {
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = kind === 'bad' ? 'sawtooth' : 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.12, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + .02); t += d * .9;
+  });
+}
+$('#sndBtn').onclick = () => {
+  soundOn = !soundOn;
+  if (soundOn && !AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { soundOn = false; } }
+  $('#sndBtn').textContent = soundOn ? '🔊 เสียง: เปิด' : '🔇 เสียง: ปิด';
+  $('#sndBtn').setAttribute('aria-pressed', String(soundOn));
+  sfx('tap');
+};
+
+/* ---------- wiring ---------- */
+$('#hostBtn').onclick = () => { S.until = 0; advance(); };
+$('#autoT').onchange = e => {
+  S.auto = e.target.checked;
+  if (!S.auto) S.until = 0;
+  else if (!S.until && ['intro','locked','reveal','board'].includes(S.phase)) S.until = clock() + 1500 * SPEED;
+  updateLive();
+};
+$('#resetBtn').onclick = newGame;
+$('#resetBtn2').onclick = newGame;
+function setTab(which) {
+  document.body.classList.toggle('tab-host', which === 'host');
+  document.body.classList.toggle('tab-phone', which === 'phone');
+  $('#tabHost').setAttribute('aria-selected', String(which === 'host'));
+  $('#tabPhone').setAttribute('aria-selected', String(which === 'phone'));
+}
+$('#tabHost').onclick = () => setTab('host');
+$('#tabPhone').onclick = () => setTab('phone');
+document.querySelector('.tabs').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const toHost = document.activeElement.id === 'tabPhone';
+  setTab(toHost ? 'host' : 'phone'); $(toHost ? '#tabHost' : '#tabPhone').focus();
+});
+
+newGame();
+setInterval(tick, 100);
+window.__lq = { get state() { return S; } };
+})();
+</script>
+</body>
+</html>

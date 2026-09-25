@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Resizer · เดโม</title>
+<meta name="description" content="เดโม Visual Resizer — แปลง Key Visual ภาพเดียวเป็นสื่อ 20+ ขนาด พร้อมวางโลโก้แบรนด์ (จำลองการขยายภาพด้วย AI ในเบราว์เซอร์)">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&family=Kanit:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1220;--card:#1a1f33;--card2:#141930;--line:#2c3350;--txt:#e8ecf5;--muted:#9aa3bf;--accent:#5b8cff;--accent-d:#3f6fe6;--ok:#36c98a;--warn:#f5b945;--err:#ff6b6b;--focus:#9cc0ff}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Sarabun","Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.5;background:var(--bg);color:var(--txt);overflow-x:hidden}
+a{color:var(--focus)}
+button,input,select{font:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.hide{display:none!important}
+
+/* demo banner */
+.demobar{position:sticky;top:0;z-index:40;background:#0a0c16;border-bottom:1px solid var(--line);color:#dbe4ff;font-size:13px}
+.demobar .wrap{display:flex;align-items:center;gap:6px 10px;min-height:34px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px}
+.demobar .tag{background:#f5b301;color:#1d1a0f;font-weight:700;border-radius:4px;padding:0 6px;font-size:12px}
+.demobar a{color:#9cc0ff;margin-left:auto;white-space:nowrap;text-decoration:none}
+.demobar a:hover{text-decoration:underline}
+
+header.top{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#151a2e,#0f1220)}
+header.top .wrap{padding-top:18px;padding-bottom:16px}
+header.top h1{margin:0;font-size:21px;line-height:1.3}
+header.top h1 .v{color:var(--accent);font-size:15px;font-weight:600;margin-left:4px}
+header.top p{margin:4px 0 0;color:var(--muted);font-size:14px}
+main.wrap{padding-top:20px;padding-bottom:48px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;min-width:0}
+.card h2{margin:0 0 4px;font-size:17px}
+.card h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;margin-right:8px;vertical-align:1px}
+.card .sub{margin:0 0 14px;color:var(--muted);font-size:13px}
+.muted{color:var(--muted)}
+
+/* KV picker */
+.kvrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kv{position:relative;display:flex;flex-direction:column;gap:6px;background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;color:var(--txt);text-align:left;min-width:0}
+.kv:hover{border-color:#44507a}
+.kv[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,140,255,.25)}
+.kv .pv{height:120px;border-radius:8px;background:#0b0e1a;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.kv .pv canvas,.kv .pv img{max-width:100%;max-height:100%;display:block}
+.kv .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kv .d{font-size:12px;color:var(--muted)}
+.kv .chk{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;border-radius:999px;font-size:11px;padding:1px 8px;display:none}
+.kv[aria-pressed="true"] .chk{display:block}
+.kv.up{border-style:dashed}
+.kv.up .pv{flex-direction:column;gap:4px;color:var(--muted);font-size:13px;text-align:center;padding:8px}
+.kv.up .pv b{font-size:26px;color:var(--txt);font-weight:400;line-height:1}
+.kv.drag{border-color:var(--accent);background:#1b2445}
+
+.opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 16px;margin-top:16px}
+.field label,.field .lbl{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.field input[type=text],.field select{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:#11152a;color:var(--txt);min-width:0}
+.seg{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;gap:6px;border:0;padding:0;margin:0;min-width:0}
+.seg legend{font-size:13px;color:var(--muted);margin-bottom:6px;padding:0}
+.seg label{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#11152a;cursor:pointer;font-size:13px;white-space:nowrap}
+.seg input{accent-color:var(--accent);margin:0}
+.seg label:has(input:checked){border-color:var(--accent);background:#1b2445}
+.seg label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+/* size groups */
+.sizebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sizebar .count{margin-right:auto;font-size:14px}
+.sizebar .count b{color:var(--accent);font-size:17px}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.grp{border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:10px 12px 8px;margin:0;min-width:0}
+.grp legend{display:contents}
+.grp .gh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.grp .gh .gname{font-weight:700;font-size:14px}
+.grp .gh .gcount{font-size:12px;color:var(--muted)}
+.grp .gh button{margin-left:auto}
+.sz{display:flex;align-items:center;gap:8px;padding:5px 4px;border-radius:6px;cursor:pointer;font-size:13px;min-width:0}
+.sz:hover{background:#1b2140}
+.sz input{accent-color:var(--accent);width:16px;height:16px;margin:0;flex:none}
+.sz .ic{flex:none;width:22px;height:18px;display:flex;align-items:center;justify-content:center}
+.sz .ic i{display:block;background:#3b4775;border-radius:1px}
+.sz .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sz .px{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sz .real{font-size:10px;color:#9cc0ff;background:#243a6b;border-radius:10px;padding:0 5px;flex:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);color:#fff;border:1px solid var(--accent);padding:11px 22px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--accent-d)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--txt);padding:6px 12px;font-size:13px;font-weight:600}
+.btn.ghost:hover{border-color:#4a5687;background:#1b2140}
+.btn.sm{padding:3px 9px;font-size:12px}
+.btn.danger{color:var(--err);border-color:#6b3040}
+.runrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.runrow .hint{margin:0}
+
+/* progress + results */
+.progress{margin:4px 0 14px}
+.bar{height:10px;background:#11152a;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#8fb0ff);transition:width .25s}
+.ptext{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+.reshead{display:flex;align-items:flex-start;gap:8px 12px;flex-wrap:wrap;margin-bottom:10px}
+.reshead .grow{flex:1;min-width:200px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.tile{background:#11152a;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.tile .thumb{height:170px;padding:10px;display:flex;align-items:center;justify-content:center;border:0;width:100%;cursor:zoom-in;color:inherit;
+  background:#0b0e1a repeating-conic-gradient(#10142a 0 25%,#0b0e1a 0 50%) 0 0/16px 16px}
+.tile .thumb:disabled{cursor:default}
+.tile .thumb img{max-width:100%;max-height:100%;display:block;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.tile .thumb svg{width:100%;height:100%;display:block}
+.tile .thumb svg rect{fill:#1f2745;stroke:#3a4570;stroke-dasharray:6 5;vector-effect:non-scaling-stroke}
+.tile.running .thumb svg rect{fill:#23305c;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{fill:#2e3f7a}}
+.tile .meta{padding:9px 11px 11px;display:flex;flex-direction:column;gap:3px;flex:1}
+.tile .name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .dim{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tile .note{font-size:11px;color:var(--muted);line-height:1.35}
+.tile .row{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:6px;flex-wrap:wrap}
+.st{font-size:11px;padding:2px 8px;border-radius:20px;display:inline-block}
+.st.pending{background:#2c3350;color:var(--muted)}.st.running{background:#243a6b;color:#9cc0ff}
+.st.done{background:#1c4d3a;color:var(--ok)}.st.cancelled{background:#3a3320;color:var(--warn)}
+.tile .row .btn{margin-left:auto}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:14px}
+
+/* how it works */
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.how li{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted)}
+.how li b{display:block;color:var(--txt);font-size:14px;margin-bottom:2px}
+
+/* gate */
+#gate{position:fixed;inset:0;background:rgba(10,12,22,.92);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px}
+#gate .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;width:100%;max-width:340px;text-align:center}
+#gate h2{margin:0 0 6px;font-size:18px}
+#gate p{margin:0 0 16px;color:var(--muted);font-size:13px}
+#gate input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#11152a;color:var(--txt);font-size:15px;text-align:center;letter-spacing:2px}
+#gate .btn{width:100%;margin-top:12px}
+#gate small{display:block;margin-top:10px;color:var(--muted);font-size:12px}
+
+/* lightbox */
+dialog#lb{border:0;padding:0;background:transparent;color:var(--txt);max-width:none;max-height:none;width:100%;height:100%}
+dialog#lb::backdrop{background:rgba(3,5,12,.9)}
+.lbin{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:56px 16px 18px}
+.lbin img{max-width:min(94vw,1400px);max-height:calc(100vh - 170px);border-radius:6px;box-shadow:0 8px 40px rgba(0,0,0,.6);background:#0b0e1a}
+.lbcap{text-align:center;font-size:14px}
+.lbcap .dim{color:var(--muted);font-size:13px}
+.lbbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.lbclose{position:absolute;top:12px;right:14px}
+
+footer{color:var(--muted);font-size:12px;text-align:center;padding:0 16px 30px}
+
+@media (max-width:900px){.kvrow{grid-template-columns:repeat(2,minmax(0,1fr))}.opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){
+  header.top h1{font-size:18px}
+  .card{padding:14px}
+  .how{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .kv .pv{height:96px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .tile .thumb{height:130px;padding:8px}
+  .tile .row .btn{margin-left:0}
+  .groups{grid-template-columns:1fr}
+  .demobar .wrap{font-size:12px}
+  .runrow .btn:not(.ghost){width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="demobar" role="note"><div class="wrap"><span class="tag">DEMO</span><span>เดโม · ประมวลผลในเบราว์เซอร์ (จำลองการขยายภาพด้วย AI)</span><a href="../../#visual-resizer">← กลับไปหน้าผลงาน</a></div></div>
+
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <form class="box" id="gateForm">
+    <h2 id="gateTitle">🔒 ยืนยันตัวตน</h2>
+    <p>ระบบจริงเปิดให้เฉพาะทีมด้วยรหัสผ่าน — ในเดโมใส่รหัสไว้ให้แล้ว</p>
+    <label class="sr" for="gateCode">รหัสผ่าน</label>
+    <input type="password" id="gateCode" value="demo2026" autocomplete="off" readonly>
+    <button class="btn" type="submit" id="gateBtn">เข้าสู่เดโม</button>
+    <small>ไม่มีการส่งข้อมูลหรือรูปภาพออกจากเครื่องคุณ</small>
+  </form>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <h1>🖼️ Visual Resizer <span class="v">ระบบแปลงสัดส่วนภาพอัตโนมัติ</span></h1>
+    <p>อัปโหลด Key Visual ภาพเดียว → เลือกขนาดสื่อ → ได้ภาพครบทุกช่องทาง พร้อมวางโลโก้แบรนด์ตำแหน่งเดิมทุกไฟล์</p>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <ol class="how" aria-label="ระบบจริงทำงานอย่างไร">
+    <li><b>1 · ภาพต้นแบบ (KV)</b>ระบบเลือกต้นแบบที่สัดส่วนใกล้ขนาดเป้าหมายที่สุดให้เอง</li>
+    <li><b>2 · ขยายภาพด้วย AI</b>ของจริงใช้ Gemini ต่อฉากส่วนที่ขาด — เดโมนี้จำลองด้วย canvas (สะท้อนขอบ + เบลอ + ไล่เฉด)</li>
+    <li><b>3 · วาง CI Brand</b>วางโลโก้ตาม template ต่อขนาด แล้วดาวน์โหลดทีเดียวทั้งชุด</li>
+  </ol>
+  <div style="height:18px"></div>
+
+  <section class="card" aria-labelledby="h1s">
+    <h2 id="h1s"><span class="n" aria-hidden="true">1</span>เลือกภาพต้นแบบ (Key Visual)</h2>
+    <p class="sub">ลองกับโปสเตอร์ตัวอย่าง หรืออัปโหลดรูปของคุณเอง (ประมวลผลในเครื่อง ไม่อัปโหลดขึ้นเซิร์ฟเวอร์)</p>
+    <div class="kvrow" id="kvrow" role="group" aria-label="ภาพต้นแบบ"></div>
+    <input type="file" id="file" accept="image/*" class="sr" tabindex="-1" aria-hidden="true">
+
+    <div class="opts">
+      <div class="field">
+        <label for="campaign">ชื่อแคมเปญ (ใช้ตั้งชื่อไฟล์)</label>
+        <input type="text" id="campaign" value="SummerSale2026" maxlength="40" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="mode">โหมดการเติมภาพ</label>
+        <select id="mode">
+          <option value="extend" selected>AI Extend — ต่อขอบ (จำลอง)</option>
+          <option value="crop">Crop — ครอบตัด (ไม่ใช้ AI)</option>
+        </select>
+      </div>
+      <fieldset class="seg" id="cornerSet">
+        <legend>ตำแหน่งโลโก้ (CI)</legend>
+        <label><input type="radio" name="corner" value="tl">↖ ซ้ายบน</label>
+        <label><input type="radio" name="corner" value="tr" checked>↗ ขวาบน</label>
+        <label><input type="radio" name="corner" value="bl">↙ ซ้ายล่าง</label>
+        <label><input type="radio" name="corner" value="br">↘ ขวาล่าง</label>
+      </fieldset>
+      <fieldset class="seg">
+        <legend>สีโลโก้</legend>
+        <label><input type="radio" name="ciColor" value="light" checked>ขาว</label>
+        <label><input type="radio" name="ciColor" value="dark">ดำ</label>
+        <label><input type="radio" name="ciColor" value="none">ไม่วาง</label>
+      </fieldset>
+    </div>
+    <p class="hint">โลโก้ในเดโมเป็นป้าย “BRAND” สมมติ — ระบบจริงใช้ไฟล์ CI ของบริษัทและจัดตำแหน่งแยกตามแต่ละขนาดได้</p>
+  </section>
+
+  <section class="card" aria-labelledby="h2s">
+    <h2 id="h2s"><span class="n" aria-hidden="true">2</span>เลือกขนาดที่จะสร้าง</h2>
+    <p class="sub">ขนาดที่มีป้าย <span class="sz" style="display:inline;padding:0"><span class="real">ระบบจริง</span></span> คือ preset ชุดเดียวกับที่ทีมใช้งานจริง</p>
+    <div class="sizebar">
+      <div class="count" aria-live="polite">เลือกแล้ว <b id="selCount">0</b> / <span id="allCount">0</span> ขนาด</div>
+      <button class="btn ghost" type="button" id="selRec">แนะนำ 8 ขนาด</button>
+      <button class="btn ghost" type="button" id="selAll">เลือกทั้งหมด</button>
+      <button class="btn ghost" type="button" id="selNone">ไม่เลือกเลย</button>
+    </div>
+    <div class="groups" id="groups"></div>
+    <div class="runrow">
+      <button class="btn" type="button" id="runBtn">▶ เริ่มสร้างภาพ</button>
+      <p class="hint" id="runHint"></p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h3s" id="resCard">
+    <div class="reshead">
+      <div class="grow">
+        <h2 id="h3s"><span class="n" aria-hidden="true">3</span>ผลลัพธ์</h2>
+        <p class="sub" style="margin:0" id="resSub">กด “เริ่มสร้างภาพ” แล้วภาพแต่ละขนาดจะทยอยขึ้นที่นี่</p>
+      </div>
+      <button class="btn ghost danger hide" type="button" id="cancelBtn">✕ ยกเลิก</button>
+      <button class="btn ghost" type="button" id="dlAll" disabled>⬇ ดาวน์โหลดทั้งหมด</button>
+    </div>
+    <div class="progress hide" id="progress">
+      <div class="bar" role="progressbar" aria-label="ความคืบหน้า" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbar"><div id="pfill"></div></div>
+      <div class="ptext"><span id="pmsg" aria-live="polite">—</span><span id="pcount"></span></div>
+    </div>
+    <div id="grid" class="grid" aria-live="off"></div>
+    <div class="empty" id="empty">ยังไม่มีภาพ — เลือกภาพต้นแบบและขนาด แล้วกดเริ่มสร้าง</div>
+  </section>
+</main>
+
+<footer>เดโมสำหรับพอร์ตโฟลิโอ · ภาพตัวอย่างสร้างด้วยโค้ด · ไม่มีการเรียก AI หรือเซิร์ฟเวอร์จริง</footer>
+
+<dialog id="lb" aria-labelledby="lbName">
+  <div class="lbin" id="lbin">
+    <button class="btn ghost lbclose" type="button" id="lbClose" aria-label="ปิดภาพตัวอย่าง">✕ ปิด</button>
+    <img id="lbImg" alt="">
+    <div class="lbcap"><div id="lbName" style="font-weight:700"></div><div class="dim" id="lbDim"></div></div>
+    <div class="lbbar">
+      <button class="btn ghost" type="button" id="lbPrev" aria-label="ภาพก่อนหน้า">← ก่อนหน้า</button>
+      <button class="btn" type="button" id="lbDl" style="padding:6px 14px;font-size:13px">⬇ ดาวน์โหลด PNG</button>
+      <button class="btn ghost" type="button" id="lbNext" aria-label="ภาพถัดไป">ถัดไป →</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; };
+
+/* ---------------- size presets ----------------
+   real:true = ชื่อ/ขนาดเดียวกับ SIZES ในระบบจริง (app/config.py) */
+const GROUPS = [
+  {id:'fb',    name:'Facebook'},
+  {id:'ig',    name:'IG Story / Reels'},
+  {id:'line',  name:'LINE OA'},
+  {id:'web',   name:'Web banner'},
+  {id:'led',   name:'Billboard / LED'},
+  {id:'print', name:'สิ่งพิมพ์ (Print)'},
+];
+const SIZES = [
+  {g:'fb', name:'Facebook_Post_Square', w:1920, h:1920, real:true, rec:true},
+  {g:'fb', name:'Facebook_Cover_Page', w:1920, h:1080, real:true, rec:true},
+  {g:'fb', name:'Facebook_Feed_Portrait', w:1080, h:1350},
+  {g:'ig', name:'IG_Story', w:1080, h:1920, rec:true},
+  {g:'ig', name:'IG_Post_Square', w:1080, h:1080},
+  {g:'line', name:'LINE_Rich_Message', w:1040, h:1040, rec:true},
+  {g:'line', name:'LINE_Rich_Menu', w:2500, h:1686},
+  {g:'web', name:'Web_Home', w:1275, h:455, real:true, rec:true},
+  {g:'web', name:'Web_Home_Mobile', w:490, h:300, real:true},
+  {g:'web', name:'Web_Home_Sub', w:630, h:455, real:true},
+  {g:'web', name:'Web_Events', w:1050, h:650, real:true},
+  {g:'web', name:'Web_Events_Mobile', w:460, h:650, real:true},
+  {g:'web', name:'Web_Events_Sub', w:350, h:160, real:true},
+  {g:'web', name:'Web_Events_Calendar', w:680, h:400, real:true},
+  {g:'web', name:'Web_Image_Mobile', w:750, h:1040, real:true},
+  {g:'web', name:'Web_Hero_Banner', w:1920, h:800, real:true, rec:true},
+  {g:'led', name:'Outdoor_LED', w:288, h:480, real:true},
+  {g:'led', name:'Indoor_LED', w:640, h:880, real:true},
+  {g:'led', name:'LED_Indoor_Large', w:1080, h:1920, real:true, rec:true},
+  {g:'led', name:'Indoor_LED_Sub', w:624, h:780, real:true},
+  {g:'led', name:'5x8_LED', w:1920, h:1200, real:true},
+  {g:'print', name:'Print_A4_Poster_300dpi', w:2480, h:3508, rec:true},
+  {g:'print', name:'Print_Rollup_Banner', w:800, h:2000},
+];
+SIZES.forEach((s, i) => s.id = 's' + i);
+
+/* ---------------- sample KVs (procedural) ---------------- */
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function fitText(x, txt, maxW, size, weight, family){
+  let s = size; x.font = `${weight} ${s}px ${family}`;
+  while (x.measureText(txt).width > maxW && s > 10){ s -= 2; x.font = `${weight} ${s}px ${family}`; }
+  return s;
+}
+const TITLE_FONT = '"Kanit","Sarabun",system-ui,sans-serif';
+
+function kvSummer(){
+  const W = 1080, H = 1350, c = mk(W, H), x = c.getContext('2d');
+  let g = x.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#2b1055'); g.addColorStop(.45, '#d53369'); g.addColorStop(.72, '#ff9a44'); g.addColorStop(1, '#ffd26f');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  // sun
+  const sy = H * .62;
+  g = x.createRadialGradient(W/2, sy, 20, W/2, sy, 320);
+  g.addColorStop(0, 'rgba(255,245,200,1)'); g.addColorStop(.55, 'rgba(255,210,110,.95)'); g.addColorStop(1, 'rgba(255,160,80,0)');
+  x.fillStyle = g; x.beginPath(); x.arc(W/2, sy, 320, 0, Math.PI*2); x.fill();
+  // sun stripes
+  x.fillStyle = '#e8566a';
+  for (let i = 0; i < 6; i++){ const yy = sy + 30 + i*28; x.fillRect(W/2 - 260, yy, 520, 6 + i*2); }
+  // sea waves
+  for (let k = 0; k < 4; k++){
+    x.fillStyle = ['#1f6f8b','#185c78','#124a63','#0c3a4f'][k];
+    const base = H*.78 + k*70;
+    x.beginPath(); x.moveTo(0, H);
+    for (let px = 0; px <= W; px += 20) x.lineTo(px, base + Math.sin(px/90 + k*1.7)*16);
+    x.lineTo(W, H); x.closePath(); x.fill();
+  }
+  // stars
+  const r = rng(7); x.fillStyle = 'rgba(255,255,255,.8)';
+  for (let i = 0; i < 70; i++){ const s = r()*2.4 + .6; x.beginPath(); x.arc(r()*W, r()*H*.35, s, 0, 7); x.fill(); }
+  // title
+  x.textAlign = 'center'; x.fillStyle = '#fff';
+  x.shadowColor = 'rgba(40,0,60,.45)'; x.shadowBlur = 24; x.shadowOffsetY = 6;
+  fitText(x, 'SUMMER', W*.86, 210, 800, TITLE_FONT); x.fillText('SUMMER', W/2, 330);
+  fitText(x, 'SALE', W*.86, 250, 800, TITLE_FONT); x.fillStyle = '#ffe27a'; x.fillText('SALE', W/2, 560);
+  x.shadowBlur = 0; x.shadowOffsetY = 0;
+  x.fillStyle = '#fff'; x.font = `500 56px ${TITLE_FONT}`; x.fillText('ลดสูงสุด 50%', W/2, 650);
+  x.font = `500 34px ${TITLE_FONT}`; x.fillStyle = 'rgba(255,255,255,.9)'; x.fillText('1 – 31 กรกฎาคม', W/2, H - 70);
+  return c;
+}
+function kvPoster(){
+  const W = 1600, H = 900, c = mk(W, H), x = c.getContext('2d');
+  let g = x.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, '#0b3d4a'); g.addColorStop(.5, '#0f5f73'); g.addColorStop(1, '#1a2a6c');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  // rings
+  x.lineWidth = 3;
+  for (let i = 0; i < 14; i++){ x.strokeStyle = `rgba(120,230,220,${.28 - i*.018})`; x.beginPath(); x.arc(W*.78, H*.5, 60 + i*42, 0, Math.PI*2); x.stroke(); }
+  // blob
+  g = x.createRadialGradient(W*.78, H*.5, 10, W*.78, H*.5, 260);
+  g.addColorStop(0, '#7df9d6'); g.addColorStop(1, 'rgba(46,196,182,0)');
+  x.fillStyle = g; x.beginPath(); x.arc(W*.78, H*.5, 260, 0, 7); x.fill();
+  // diagonal stripes
+  x.save(); x.globalAlpha = .12; x.fillStyle = '#fff';
+  for (let i = -H; i < W; i += 70){ x.beginPath(); x.moveTo(i, H); x.lineTo(i + 24, H); x.lineTo(i + 24 + H*.6, 0); x.lineTo(i + H*.6, 0); x.fill(); }
+  x.restore();
+  // text block
+  x.textAlign = 'left'; x.fillStyle = '#7df9d6'; x.font = `500 34px ${TITLE_FONT}`;
+  x.fillText('VISUAL RESIZER DEMO', 110, 250);
+  x.fillStyle = '#fff'; x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 20;
+  fitText(x, 'ตัวอย่าง', 820, 150, 800, TITLE_FONT); x.fillText('ตัวอย่าง', 104, 420);
+  fitText(x, 'โปสเตอร์', 820, 150, 800, TITLE_FONT); x.fillText('โปสเตอร์', 104, 580);
+  x.shadowBlur = 0;
+  x.fillStyle = 'rgba(255,255,255,.85)'; x.font = `500 36px ${TITLE_FONT}`;
+  x.fillText('ภาพเดียว → ครบทุกช่องทาง', 110, 680);
+  x.fillStyle = '#ffd166'; x.fillRect(110, 720, 190, 6);
+  return c;
+}
+function kvOpening(){
+  const W = 1200, H = 1200, c = mk(W, H), x = c.getContext('2d');
+  x.fillStyle = '#0f2b1d'; x.fillRect(0, 0, W, H);
+  const blobs = [[.2,.2,520,'#1db954'],[.85,.25,460,'#c6f432'],[.3,.9,560,'#0e9f6e'],[.9,.85,420,'#f9d423']];
+  for (const [bx, by, br, col] of blobs){
+    const g = x.createRadialGradient(bx*W, by*H, 10, bx*W, by*H, br);
+    g.addColorStop(0, col); g.addColorStop(1, 'rgba(15,43,29,0)');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+  }
+  // confetti
+  const r = rng(42), cols = ['#fff','#f9d423','#ff4e50','#c6f432','#7df9d6'];
+  for (let i = 0; i < 90; i++){
+    x.save(); x.translate(r()*W, r()*H); x.rotate(r()*Math.PI); x.fillStyle = cols[i % cols.length]; x.globalAlpha = .85;
+    x.fillRect(-9, -4, 18, 8); x.restore();
+  }
+  // badge circle
+  x.fillStyle = 'rgba(10,30,20,.55)'; x.beginPath(); x.arc(W/2, H/2, 400, 0, 7); x.fill();
+  x.strokeStyle = '#f9d423'; x.lineWidth = 8; x.stroke();
+  x.textAlign = 'center'; x.fillStyle = '#fff';
+  fitText(x, 'GRAND', 640, 190, 800, TITLE_FONT); x.fillText('GRAND', W/2, 530);
+  x.fillStyle = '#f9d423'; fitText(x, 'OPENING', 640, 150, 800, TITLE_FONT); x.fillText('OPENING', W/2, 680);
+  x.fillStyle = '#fff'; x.font = `500 44px ${TITLE_FONT}`; x.fillText('เปิดร้านใหม่ ชั้น 2', W/2, 770);
+  return c;
+}
+const SAMPLES = [
+  {id:'summer', title:'SUMMER SALE', fn:kvSummer, camp:'SummerSale2026'},
+  {id:'poster', title:'ตัวอย่างโปสเตอร์', fn:kvPoster, camp:'SamplePoster'},
+  {id:'opening', title:'GRAND OPENING', fn:kvOpening, camp:'GrandOpening'},
+];
+
+/* ---------------- simulated outpainting ---------------- */
+// ภาพเบลอแบบถูก: ย่อลงเล็กมากแล้วขยายกลับ (ไม่พึ่ง ctx.filter ให้ทำงานได้ทุกเบราว์เซอร์)
+function blurCanvas(src, W, H, tiny){
+  const f = tiny / Math.max(W, H);
+  const a = mk(W*f, H*f), ax = a.getContext('2d');
+  ax.imageSmoothingQuality = 'high'; ax.drawImage(src, 0, 0, a.width, a.height);
+  const b = mk(a.width*4, a.height*4), bx = b.getContext('2d');
+  bx.imageSmoothingQuality = 'high'; bx.drawImage(a, 0, 0, b.width, b.height);
+  const out = mk(W, H), ox = out.getContext('2d');
+  ox.imageSmoothingQuality = 'high'; ox.drawImage(b, 0, 0, W, H);
+  return out;
+}
+let NOISE = null;
+function noisePattern(ctx){
+  if (!NOISE){
+    NOISE = mk(96, 96); const nx = NOISE.getContext('2d'), d = nx.createImageData(96, 96), r = rng(3);
+    for (let i = 0; i < d.data.length; i += 4){ const v = r()*255; d.data[i] = d.data[i+1] = d.data[i+2] = v; d.data[i+3] = 255; }
+    nx.putImageData(d, 0, 0);
+  }
+  return ctx.createPattern(NOISE, 'repeat');
+}
+function renderSize(src, W, H, opt){
+  const out = mk(W, H), x = out.getContext('2d');
+  x.imageSmoothingQuality = 'high';
+  const sw = src.width, sh = src.height;
+  const cover = Math.max(W/sw, H/sh);
+  if (opt.mode === 'crop'){
+    x.drawImage(src, (W - sw*cover)/2, (H - sh*cover)/2, sw*cover, sh*cover);
+  } else {
+    const s = Math.min(W/sw, H/sh), dw = sw*s, dh = sh*s, dx = (W - dw)/2, dy = (H - dh)/2;
+    const gapX = dx > 0.5, gapY = dy > 0.5;
+    // (1) สีพื้นรวม: ภาพ cover เบลอหนัก
+    const base = mk(W, H); base.getContext('2d').drawImage(src, (W - sw*cover)/2, (H - sh*cover)/2, sw*cover, sh*cover);
+    x.drawImage(blurCanvas(base, W, H, 20), 0, 0);
+    if (gapX || gapY){
+      // (2) ต่อขอบ: สะท้อนแถบขอบภาพออกไป แล้วเบลอปานกลาง ไล่ความทึบจางออกจากภาพ
+      const mir = mk(W, H), m = mir.getContext('2d');
+      m.drawImage(src, dx, dy, dw, dh);
+      // ขอบไกล: ยืดแถบขอบบางๆ (2%) ให้เต็มช่องว่าง / ขอบใกล้: สะท้อนแถบขอบ 6–8% (ไม่สะท้อนตัวหนังสือกลางภาพ)
+      if (gapX){
+        const e = Math.max(2, sw*.02), need = Math.min(sw*.06, dx / s);
+        m.drawImage(src, 0, 0, e, sh, 0, dy, dx, dh);
+        m.drawImage(src, sw - e, 0, e, sh, dx + dw, dy, W - dx - dw, dh);
+        m.save(); m.translate(dx, 0); m.scale(-1, 1); m.drawImage(src, 0, 0, need, sh, 0, dy, need*s, dh); m.restore();
+        m.save(); m.translate(dx + dw, 0); m.scale(-1, 1); m.drawImage(src, sw - need, 0, need, sh, -need*s, dy, need*s, dh); m.restore();
+      }
+      if (gapY){
+        const e = Math.max(2, sh*.02), need = Math.min(sh*.08, dy / s);
+        m.drawImage(src, 0, 0, sw, e, dx, 0, dw, dy);
+        m.drawImage(src, 0, sh - e, sw, e, dx, dy + dh, dw, H - dy - dh);
+        m.save(); m.translate(0, dy); m.scale(1, -1); m.drawImage(src, 0, 0, sw, need, dx, 0, dw, need*s); m.restore();
+        m.save(); m.translate(0, dy + dh); m.scale(1, -1); m.drawImage(src, 0, sh - need, sw, need, dx, -need*s, dw, need*s); m.restore();
+      }
+      const soft = blurCanvas(mir, W, H, Math.max(60, Math.min(160, Math.max(W, H) / 10)));
+      const sx = soft.getContext('2d');
+      sx.globalCompositeOperation = 'destination-in';
+      let g;
+      if (gapX){
+        g = sx.createLinearGradient(0, 0, W, 0);
+        g.addColorStop(0, 'rgba(0,0,0,.15)'); g.addColorStop(dx/W, 'rgba(0,0,0,.95)');
+        g.addColorStop(1 - dx/W, 'rgba(0,0,0,.95)'); g.addColorStop(1, 'rgba(0,0,0,.15)');
+      } else {
+        g = sx.createLinearGradient(0, 0, 0, H);
+        g.addColorStop(0, 'rgba(0,0,0,.15)'); g.addColorStop(dy/H, 'rgba(0,0,0,.95)');
+        g.addColorStop(1 - dy/H, 'rgba(0,0,0,.95)'); g.addColorStop(1, 'rgba(0,0,0,.15)');
+      }
+      sx.fillStyle = g; sx.fillRect(0, 0, W, H);
+      x.drawImage(soft, 0, 0);
+      // (3) เกรนบางๆ ลบรอยเบลอให้ดูเป็นเนื้อภาพ
+      x.save(); x.globalAlpha = .05; x.globalCompositeOperation = 'overlay'; x.fillStyle = noisePattern(x); x.fillRect(0, 0, W, H); x.restore();
+    }
+    // (4) ภาพคมตรงกลาง ขอบด้านที่ต่อ ไล่จางเข้าหาพื้น
+    const sharp = mk(dw, dh), sp = sharp.getContext('2d');
+    sp.imageSmoothingQuality = 'high'; sp.drawImage(src, 0, 0, dw, dh);
+    const fe = Math.min(dw, dh) * .07;
+    sp.globalCompositeOperation = 'destination-in';
+    if (gapX){
+      const g = sp.createLinearGradient(0, 0, dw, 0);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(fe/dw, '#000'); g.addColorStop(1 - fe/dw, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      sp.fillStyle = g; sp.fillRect(0, 0, dw, dh);
+    }
+    if (gapY){
+      const g = sp.createLinearGradient(0, 0, 0, dh);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(fe/dh, '#000'); g.addColorStop(1 - fe/dh, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      sp.fillStyle = g; sp.fillRect(0, 0, dw, dh);
+    }
+    x.drawImage(sharp, dx, dy);
+  }
+  if (opt.ci !== 'none') drawBrand(x, W, H, opt.corner, opt.ci);
+  return out;
+}
+function drawBrand(x, W, H, corner, color){
+  const m = Math.min(W, H);
+  const ph = Math.max(16, Math.round(Math.min(m * .085, Math.max(W, H) * .05)));
+  const fs = Math.round(ph * .5);
+  x.save();
+  x.font = `800 ${fs}px ${TITLE_FONT}`;
+  const label = 'BRAND';
+  const tw = x.measureText(label).width + fs * .12 * (label.length - 1);
+  const dot = ph * .42, pad = ph * .38;
+  const pw = pad + dot + ph*.22 + tw + pad;
+  const mg = Math.max(8, Math.round(m * .045));
+  const px = corner[1] === 'l' ? mg : W - mg - pw;
+  const py = corner[0] === 't' ? mg : H - mg - ph;
+  const light = color === 'light';
+  x.shadowColor = 'rgba(0,0,0,.28)'; x.shadowBlur = ph * .3; x.shadowOffsetY = ph * .06;
+  x.fillStyle = light ? 'rgba(255,255,255,.94)' : 'rgba(17,20,32,.92)';
+  x.beginPath();
+  if (x.roundRect) x.roundRect(px, py, pw, ph, ph/2); else x.rect(px, py, pw, ph);
+  x.fill();
+  x.shadowColor = 'transparent';
+  x.fillStyle = '#5b8cff';
+  x.beginPath(); x.arc(px + pad + dot/2, py + ph/2, dot/2, 0, 7); x.fill();
+  x.fillStyle = light ? '#111420' : '#fff';
+  x.textBaseline = 'middle'; x.textAlign = 'left';
+  let cx = px + pad + dot + ph*.22;
+  for (const ch of label){ x.fillText(ch, cx, py + ph/2 + fs*.04); cx += x.measureText(ch).width + fs*.12; }
+  x.restore();
+}
+function noteFor(s, src){
+  const r = s.w / s.h, sr = src.width / src.height;
+  if (Math.abs(r - sr) / sr < .02) return 'สัดส่วนเดียวกับต้นแบบ — ย่อขนาดอย่างเดียว';
+  if (state.mode === 'crop') return 'ครอบตัดจากต้นแบบ (ไม่ใช้ AI)';
+  return r > sr ? 'ขยายฉากซ้าย/ขวา' : 'ขยายฉากบน/ล่าง';
+}
+
+/* ---------------- state + UI ---------------- */
+const state = { src:null, srcName:'', samples:[], upload:null, results:[], running:false, cancel:false, mode:'extend' };
+const selected = new Set(SIZES.filter(s => s.rec).map(s => s.id));
+
+function iconFor(s){
+  const k = 16 / Math.max(s.w, s.h);
+  return `<i style="width:${Math.max(3, Math.round(s.w*k))}px;height:${Math.max(3, Math.round(s.h*k))}px"></i>`;
+}
+function renderGroups(){
+  $('#groups').innerHTML = GROUPS.map(g => {
+    const list = SIZES.filter(s => s.g === g.id);
+    return `<fieldset class="grp" data-g="${g.id}">
+      <legend><span class="sr">${esc(g.name)}</span></legend>
+      <div class="gh"><span class="gname" aria-hidden="true">${esc(g.name)}</span><span class="gcount" data-gc="${g.id}"></span>
+        <button class="btn ghost sm" type="button" data-gtoggle="${g.id}" aria-label="สลับเลือกทั้งกลุ่ม ${esc(g.name)}">ทั้งกลุ่ม</button></div>
+      ${list.map(s => `<label class="sz" for="${s.id}">
+        <input type="checkbox" id="${s.id}" value="${s.id}" ${selected.has(s.id) ? 'checked' : ''}>
+        <span class="ic" aria-hidden="true">${iconFor(s)}</span>
+        <span class="nm">${esc(s.name)}</span>${s.real ? '<span class="real">ระบบจริง</span>' : ''}
+        <span class="px">${s.w}×${s.h}</span></label>`).join('')}
+    </fieldset>`;
+  }).join('');
+  $('#allCount').textContent = SIZES.length;
+  syncCounts();
+}
+function syncCounts(){
+  $('#selCount').textContent = selected.size;
+  for (const g of GROUPS){
+    const list = SIZES.filter(s => s.g === g.id), n = list.filter(s => selected.has(s.id)).length;
+    const el = document.querySelector(`[data-gc="${g.id}"]`); if (el) el.textContent = `${n}/${list.length}`;
+  }
+  updateRun();
+}
+function updateRun(){
+  const ok = !!state.src && selected.size > 0 && !state.running;
+  $('#runBtn').disabled = !ok;
+  $('#runHint').textContent = state.running ? 'กำลังประมวลผล…'
+    : !state.src ? 'เลือกภาพต้นแบบก่อน'
+    : !selected.size ? 'เลือกอย่างน้อย 1 ขนาด'
+    : `จะสร้าง ${selected.size} ภาพจาก “${state.srcName}” (${state.src.width}×${state.src.height})`;
+}
+function setChecks(){
+  for (const s of SIZES){ const cb = document.getElementById(s.id); if (cb) cb.checked = selected.has(s.id); }
+  syncCounts();
+}
+$('#groups').addEventListener('change', e => {
+  const cb = e.target; if (cb.type !== 'checkbox') return;
+  cb.checked ? selected.add(cb.value) : selected.delete(cb.value); syncCounts();
+});
+$('#groups').addEventListener('click', e => {
+  const b = e.target.closest('[data-gtoggle]'); if (!b) return;
+  const list = SIZES.filter(s => s.g === b.dataset.gtoggle), all = list.every(s => selected.has(s.id));
+  list.forEach(s => all ? selected.delete(s.id) : selected.add(s.id)); setChecks();
+});
+$('#selAll').onclick = () => { SIZES.forEach(s => selected.add(s.id)); setChecks(); };
+$('#selNone').onclick = () => { selected.clear(); setChecks(); };
+$('#selRec').onclick = () => { selected.clear(); SIZES.filter(s => s.rec).forEach(s => selected.add(s.id)); setChecks(); };
+
+/* KV cards */
+function renderKV(){
+  const row = $('#kvrow'); row.innerHTML = '';
+  state.samples.forEach((smp, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'kv'; b.dataset.kv = smp.id;
+    b.setAttribute('aria-pressed', state.srcName === smp.title ? 'true' : 'false');
+    b.innerHTML = `<span class="pv"></span><span class="t">ตัวอย่าง ${i+1} · ${esc(smp.title)}</span><span class="d">${smp.canvas.width}×${smp.canvas.height}px</span><span class="chk" aria-hidden="true">✓ ใช้อยู่</span>`;
+    const th = mk(smp.canvas.width * 120 / smp.canvas.height, 120); th.getContext('2d').drawImage(smp.canvas, 0, 0, th.width, th.height);
+    th.setAttribute('role', 'presentation');
+    b.querySelector('.pv').appendChild(th);
+    b.onclick = () => { selectSource(smp.canvas, smp.title); $('#campaign').value = smp.camp; };
+    row.appendChild(b);
+  });
+  const up = document.createElement('button');
+  up.type = 'button'; up.className = 'kv up'; up.id = 'upBtn';
+  up.setAttribute('aria-pressed', state.upload && state.srcName === state.upload.name ? 'true' : 'false');
+  if (state.upload){
+    up.innerHTML = `<span class="pv"></span><span class="t">${esc(state.upload.name)}</span><span class="d">${state.upload.canvas.width}×${state.upload.canvas.height}px · คลิกเพื่อเปลี่ยนรูป</span><span class="chk" aria-hidden="true">✓ ใช้อยู่</span>`;
+    const c = state.upload.canvas, th = mk(c.width * 120 / c.height, 120); th.getContext('2d').drawImage(c, 0, 0, th.width, th.height);
+    up.querySelector('.pv').appendChild(th);
+  } else {
+    up.innerHTML = `<span class="pv"><b aria-hidden="true">＋</b>อัปโหลดรูปของคุณ<br><span style="font-size:12px">คลิก หรือ ลากไฟล์มาวาง</span></span><span class="t">รูปของคุณเอง</span><span class="d">JPG / PNG / WebP</span>`;
+  }
+  up.onclick = () => $('#file').click();
+  ['dragenter','dragover'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.remove('drag'); }));
+  up.addEventListener('drop', e => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) loadFile(f); });
+  row.appendChild(up);
+}
+function selectSource(canvas, name){
+  state.src = canvas; state.srcName = name;
+  document.querySelectorAll('.kv').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  const btn = [...document.querySelectorAll('.kv')].find(b => (b.dataset.kv && state.samples.find(s => s.id === b.dataset.kv).title === name) || (!b.dataset.kv && state.upload && state.upload.name === name));
+  if (btn) btn.setAttribute('aria-pressed', 'true');
+  updateRun();
+}
+async function loadFile(f){
+  if (!f.type.startsWith('image/')){ alert('กรุณาเลือกไฟล์รูปภาพ'); return; }
+  const url = URL.createObjectURL(f);
+  try {
+    const img = new Image(); img.decoding = 'async'; img.src = url; await img.decode();
+    const MAX = 2400, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = mk(img.naturalWidth * k, img.naturalHeight * k); const cx = c.getContext('2d');
+    cx.imageSmoothingQuality = 'high'; cx.drawImage(img, 0, 0, c.width, c.height);
+    const name = f.name.length > 40 ? f.name.slice(0, 37) + '…' : f.name;
+    state.upload = {canvas:c, name};
+    renderKV(); selectSource(c, name);
+    const base = f.name.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9_-]+/g, '');
+    if (base) $('#campaign').value = base.slice(0, 40);
+  } catch (err){
+    alert('เปิดไฟล์รูปนี้ไม่ได้ ลองไฟล์อื่น');
+  } finally { URL.revokeObjectURL(url); }
+}
+$('#file').addEventListener('change', e => { const f = e.target.files[0]; if (f) loadFile(f); e.target.value = ''; });
+$('#mode').addEventListener('change', e => state.mode = e.target.value);
+
+/* ---------------- generate ---------------- */
+function opts(){
+  return { mode:$('#mode').value, corner:document.querySelector('input[name=corner]:checked').value, ci:document.querySelector('input[name=ciColor]:checked').value };
+}
+function campaign(){ return ($('#campaign').value || 'Campaign').replace(/[^A-Za-z0-9_-]+/g, '') || 'Campaign'; }
+function tileHTML(s, i){
+  return `<article class="tile" id="t-${s.id}" aria-label="${esc(s.name)} ${s.w}×${s.h}">
+    <button class="thumb" type="button" disabled data-open="${i}" aria-label="ดูภาพ ${esc(s.name)} ขนาดใหญ่">
+      <svg viewBox="0 0 ${s.w} ${s.h}" aria-hidden="true"><rect x="0" y="0" width="${s.w}" height="${s.h}" rx="${Math.min(s.w, s.h)*.03}"/></svg>
+    </button>
+    <div class="meta"><div class="name" title="${esc(s.name)}">${esc(s.name)}</div>
+      <div class="dim">${s.w}×${s.h}px</div>
+      <div class="note">${esc(noteFor(s, state.src))}</div>
+      <div class="row"><span class="st pending">รอคิว</span></div></div>
+  </article>`;
+}
+function setStatus(s, cls, txt){
+  const t = document.getElementById('t-' + s.id); if (!t) return;
+  t.className = 'tile ' + cls;
+  const st = t.querySelector('.st'); st.className = 'st ' + cls; st.textContent = txt;
+}
+function setProgress(done, total, msg){
+  const pct = total ? Math.round(done / total * 100) : 0;
+  $('#pfill').style.width = pct + '%'; $('#pbar').setAttribute('aria-valuenow', pct);
+  $('#pcount').textContent = `${done}/${total} ภาพ · ${pct}%`;
+  if (msg) $('#pmsg').textContent = msg;
+}
+function toBlob(c){ return new Promise(r => c.toBlob(r, 'image/png')); }
+function clearResults(){
+  state.results.forEach(r => r && r.url && URL.revokeObjectURL(r.url));
+  state.results = [];
+}
+async function run(){
+  if (state.running || !state.src || !selected.size) return;
+  state.running = true; state.cancel = false; updateRun();
+  clearResults();
+  const list = SIZES.filter(s => selected.has(s.id)), o = opts(), src = state.src, camp = campaign();
+  state.mode = o.mode;
+  $('#empty').classList.add('hide'); $('#progress').classList.remove('hide');
+  $('#cancelBtn').classList.remove('hide'); $('#dlAll').disabled = true;
+  $('#grid').innerHTML = list.map(tileHTML).join('');
+  $('#resSub').textContent = `${camp} · ต้นแบบ ${src.width}×${src.height}px · โหมด ${o.mode === 'crop' ? 'Crop' : 'AI Extend (จำลอง)'}`;
+  $('#resCard').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  setProgress(0, list.length, 'เตรียมงาน…');
+  let done = 0;
+  for (let i = 0; i < list.length; i++){
+    const s = list[i];
+    if (state.cancel){ setStatus(s, 'cancelled', 'ยกเลิก'); continue; }
+    setStatus(s, 'running', 'วิเคราะห์องค์ประกอบ…');
+    setProgress(done, list.length, `${s.name} · วิเคราะห์องค์ประกอบ…`);
+    await sleep(160);
+    const extend = o.mode !== 'crop' && Math.abs(s.w/s.h - src.width/src.height) / (src.width/src.height) >= .02;
+    setStatus(s, 'running', extend ? 'กำลังขยายภาพ…' : o.mode === 'crop' ? 'กำลังครอบตัด…' : 'กำลังย่อขนาด…');
+    setProgress(done, list.length, `${s.name} · ${extend ? 'กำลังขยายภาพ… (จำลอง AI outpainting)' : 'กำลังปรับขนาด…'}`);
+    await sleep(extend ? 380 : 180);
+    const c = renderSize(src, s.w, s.h, o);
+    if (o.ci !== 'none'){ setStatus(s, 'running', 'วาง CI Brand…'); await sleep(120); }
+    const blob = await toBlob(c);
+    const url = URL.createObjectURL(blob);
+    const file = `${camp}_${s.name}_${s.w}x${s.h}.png`;
+    state.results[i] = {s, url, file};
+    const t = document.getElementById('t-' + s.id), th = t.querySelector('.thumb');
+    th.innerHTML = `<img src="${url}" alt="${esc(s.name)} ${s.w}×${s.h} พิกเซล">`; th.disabled = false;
+    t.querySelector('.row').innerHTML = `<span class="st done">เสร็จ</span><button class="btn ghost sm" type="button" data-dl="${i}" aria-label="ดาวน์โหลด ${esc(s.name)}">⬇ PNG</button>`;
+    t.className = 'tile done';
+    done++;
+    setProgress(done, list.length);
+  }
+  state.running = false;
+  $('#cancelBtn').classList.add('hide');
+  $('#dlAll').disabled = !state.results.filter(Boolean).length;
+  $('#pmsg').textContent = state.cancel ? `ยกเลิกแล้ว — สร้างเสร็จ ${done} ภาพ` : `✓ เสร็จแล้ว ${done} ภาพ — คลิกภาพเพื่อดูขนาดใหญ่`;
+  updateRun();
+}
+$('#runBtn').onclick = run;
+$('#cancelBtn').onclick = () => { state.cancel = true; };
+
+/* downloads */
+function download(r){
+  const a = document.createElement('a'); a.href = r.url; a.download = r.file;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+$('#grid').addEventListener('click', e => {
+  const d = e.target.closest('[data-dl]'); if (d){ download(state.results[+d.dataset.dl]); return; }
+  const o = e.target.closest('[data-open]'); if (o && !o.disabled) openLb(+o.dataset.open);
+});
+$('#dlAll').onclick = async () => {
+  const rs = state.results.filter(Boolean), b = $('#dlAll');
+  b.disabled = true;
+  for (let i = 0; i < rs.length; i++){ b.textContent = `⬇ กำลังดาวน์โหลด ${i+1}/${rs.length}`; download(rs[i]); await sleep(350); }
+  b.textContent = '⬇ ดาวน์โหลดทั้งหมด'; b.disabled = false;
+};
+
+/* lightbox */
+const lb = $('#lb'); let lbIdx = -1, lbReturn = null;
+function lbList(){ return state.results.map((r, i) => r ? i : -1).filter(i => i >= 0); }
+function showLb(i){
+  const r = state.results[i]; if (!r) return; lbIdx = i;
+  $('#lbImg').src = r.url; $('#lbImg').alt = `${r.s.name} ${r.s.w}×${r.s.h} พิกเซล`;
+  $('#lbName').textContent = r.s.name; $('#lbDim').textContent = `${r.s.w}×${r.s.h}px · ${r.file}`;
+  const l = lbList(), p = l.indexOf(i);
+  $('#lbPrev').disabled = p <= 0; $('#lbNext').disabled = p >= l.length - 1;
+}
+function openLb(i){ lbReturn = document.activeElement; showLb(i); if (!lb.open) lb.showModal(); $('#lbClose').focus(); }
+function step(d){ const l = lbList(), p = l.indexOf(lbIdx) + d; if (p >= 0 && p < l.length) showLb(l[p]); }
+$('#lbClose').onclick = () => lb.close();
+$('#lbPrev').onclick = () => step(-1);
+$('#lbNext').onclick = () => step(1);
+$('#lbDl').onclick = () => download(state.results[lbIdx]);
+lb.addEventListener('click', e => { if (e.target === lb || e.target.id === 'lbin') lb.close(); });
+lb.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+lb.addEventListener('close', () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+/* gate */
+$('#gateForm').addEventListener('submit', e => {
+  e.preventDefault(); $('#gate').remove(); $('#main').focus && document.querySelector('.kv') && document.querySelector('.kv').focus();
+});
+$('#gateBtn').focus();
+
+/* init */
+async function init(){
+  try { await Promise.all([document.fonts.load(`800 100px Kanit`), document.fonts.load(`500 40px Kanit`), document.fonts.load('500 40px Kanit', 'ลดสูงสุด')]); } catch (_){}
+  state.samples = SAMPLES.map(s => ({...s, canvas:s.fn()}));
+  renderKV();
+  selectSource(state.samples[0].canvas, state.samples[0].title);
+  renderGroups();
+}
+renderGroups();
+init();
+})();
+</script>
+</body>
+</html>
