@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y-Tracking เดโม</title>
+<meta name="description" content="เดโมระบบสะสมคะแนนผลงานพนักงาน Y-Tracking — ข้อมูลตัวอย่างทั้งหมด">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #ff6b35; --brand-ink: #c2410c; --navy: #003681; --bg: #f5f6f8; --card: #fff;
+  --border: #e3e5e8; --text: #2b2f33; --muted: #5f6570;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: 'Noto Sans Thai', -apple-system, 'Sukhumvit Set', Arial, sans-serif;
+  font-size: 15px; line-height: 1.55; overflow-x: hidden;
+}
+a { color: var(--navy); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: #fff; padding: 8px 12px; z-index: 300; }
+.skip:focus { left: 8px; top: 8px; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ---- header (demo banner + topbar) ---- */
+.hdr { position: sticky; top: 0; z-index: 100; }
+.demo-banner {
+  background: #fff4d6; color: #6b4a00; border-bottom: 1px solid #f1d98f;
+  font-size: 13px; padding: 6px 16px; display: flex; gap: 10px; align-items: center;
+  justify-content: space-between; flex-wrap: wrap;
+}
+.demo-banner strong { font-weight: 700; }
+.demo-banner a { color: #6b4a00; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.demo-banner a:hover { text-decoration: underline; }
+.topbar { background: var(--navy); color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.topbar-inner {
+  max-width: 1280px; margin: 0 auto; padding: 8px 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.brand { color: #fff; font-weight: 800; text-decoration: none; font-size: 17px; white-space: nowrap; }
+.topbar nav { display: flex; gap: 2px; flex-wrap: wrap; flex: 1; }
+.topbar nav a {
+  color: #dbe4f5; text-decoration: none; padding: 5px 10px; border-radius: 8px; font-size: 14px; white-space: nowrap;
+}
+.topbar nav a:hover { background: rgba(255,255,255,.14); color: #fff; }
+.topbar nav a[aria-current="page"] { background: rgba(255,255,255,.2); color: #fff; font-weight: 700; }
+.menu-badge {
+  display: inline-block; min-width: 18px; text-align: center; padding: 0 5px;
+  border-radius: 999px; background: var(--brand); color: #fff;
+  font-size: 11px; font-weight: 700; line-height: 17px; vertical-align: 1px;
+}
+.role-switch { display: inline-flex; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; overflow: hidden; }
+.role-switch button {
+  background: transparent; color: #dbe4f5; border: 0; font: inherit; font-size: 13px;
+  padding: 4px 12px; cursor: pointer; white-space: nowrap;
+}
+.role-switch button[aria-pressed="true"] { background: #fff; color: var(--navy); font-weight: 700; }
+.userbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #dbe4f5; }
+.userbox b { color: #fff; }
+
+.container { max-width: 1280px; margin: 20px auto; padding: 0 16px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(15,30,60,.04); min-width: 0;
+}
+h1 { font-size: 21px; margin: 0 0 12px; }
+h2 { font-size: 17px; margin: 0 0 10px; }
+h1 small, h2 small { color: var(--muted); font-weight: 600; font-size: 13px; }
+.hint { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.h-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.h-row h1, .h-row h2 { margin: 0; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.grid2.wide { grid-template-columns: minmax(0, 1fr) 290px; }
+.rank-tbl th, .rank-tbl td { padding: 7px 6px; }
+.flash { border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+.flash.ok { background: #e8f7ee; border: 1px solid #b8e5c8; color: #1c6b3c; }
+.flash.warn { background: #fff4e5; border: 1px solid #ffd9a8; color: #8a5300; }
+.flash.info { background: #f2f6ff; border: 1px solid #d5e2fb; color: #1f3d73; }
+
+label, .lbl { display: block; font-weight: 600; margin: 12px 0 4px; }
+input[type=text], input[type=url], select, textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid #cfd3d9; border-radius: 8px; font: inherit; background: #fff; color: var(--text);
+}
+textarea { min-height: 90px; resize: vertical; }
+.btn {
+  display: inline-block; background: var(--brand-ink); color: #fff; border: 0; cursor: pointer;
+  padding: 9px 22px; border-radius: 9px; font: inherit; font-weight: 700; text-decoration: none;
+}
+.btn:hover { filter: brightness(1.07); }
+.btn.secondary { background: #fff; color: var(--navy); border: 1px solid var(--navy); }
+.btn.small { padding: 4px 12px; font-size: 13px; }
+.btn.success { background: #1c7a44; }
+.btn.danger { background: #b03a2e; }
+.btn.ghost { background: #eef1f5; color: var(--text); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* pills */
+.opt-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 4px; border: 0; padding: 0; }
+.opt-group legend { font-weight: 600; padding: 0; margin: 12px 0 6px; }
+.opt { margin: 0; font-weight: 400; position: relative; }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opt span {
+  display: inline-block; padding: 7px 14px; border: 1.5px solid var(--border);
+  border-radius: 999px; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; user-select: none;
+}
+.opt input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.opt input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
+.criteria { background: #f2f6ff; border: 1px solid #d5e2fb; border-radius: 10px; padding: 9px 13px; margin-top: 8px; font-size: 13.5px; }
+
+/* score tiles */
+.score-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.score-tile { border: 1px solid #cfe0f5; border-radius: 12px; padding: 10px 12px; background: #eef5ff; min-width: 0; }
+.score-tile .t-name { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: .2px; }
+.score-tile .t-point { font-size: 24px; font-weight: 800; color: var(--navy); line-height: 1.25; }
+.score-tile .t-rank { font-size: 12px; font-weight: 700; margin-top: 2px; }
+.score-tile.total { background: linear-gradient(135deg, var(--navy), #1a5fb4); border-color: var(--navy); }
+.score-tile.total .t-name { color: #cfe0f7; }
+.score-tile.total .t-point { color: #fff; }
+.score-tile.total .t-rank { color: #ffd2bf; }
+.progress { height: 6px; border-radius: 99px; background: #d6e3f5; margin-top: 7px; overflow: hidden; }
+.progress > i { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), #3f78d1); border-radius: 99px; transition: width .5s; }
+.t-next { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.score-tile.flashy { animation: pop 1.2s ease; }
+@keyframes pop { 0% { box-shadow: 0 0 0 0 rgba(255,107,53,.7); } 60% { box-shadow: 0 0 0 8px rgba(255,107,53,0); } }
+
+.rankchip { display: inline-block; min-width: 32px; text-align: center; padding: 1px 7px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.rankchip.rank-2 { background: #fdecea; color: #b03a2e; }
+.rankchip.rank-1 { background: #fff4e5; color: #8a5300; }
+.rankchip.rank0  { background: #eef1f5; color: #4d545d; }
+.rankchip.rank1  { background: #e8f7ee; color: #1c6b3c; }
+.rankchip.rank2  { background: #e3f0ff; color: #0b4fa0; }
+
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.badge.pending { background: #fff4e5; color: #8a5300; }
+.badge.passed { background: #e8f7ee; color: #1c6b3c; }
+.badge.not_passed { background: #fdecea; color: #b03a2e; }
+.badge.waiting_review { background: #eef; color: #3949ab; }
+.badge.waiting_recheck { background: #f3e8fd; color: #6a2d9c; }
+.badge.open { background: #e8f7ee; color: #1c6b3c; }
+.topic-tag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--navy); background: #eef5ff; border: 1px solid #cfe0f5; border-radius: 6px; padding: 0 6px; white-space: nowrap; }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.data { width: 100%; border-collapse: collapse; background: #fff; }
+table.data th, table.data td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+table.data th { white-space: nowrap; color: var(--muted); font-size: 13px; }
+table.data tbody tr:nth-child(even) { background: #f4f7fb; }
+table.data tbody tr.me { background: #fff1e9; }
+td.num, th.num { text-align: right; }
+td.center, th.center { text-align: center; }
+.nowrap { white-space: nowrap; }
+.muted { color: var(--muted); }
+.sm { font-size: 13px; }
+
+/* entry list (cards) */
+.entries { list-style: none; margin: 0; padding: 0; }
+.entry { border-bottom: 1px solid var(--border); padding: 11px 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+.entry:last-child { border-bottom: 0; }
+.entry .e-title { font-weight: 700; word-break: break-word; }
+.entry .e-meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.entry .e-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.entry .e-pt { font-weight: 800; color: var(--navy); font-size: 13px; }
+.entry .e-comment { grid-column: 1 / -1; font-size: 13px; background: #f7f8fa; border-radius: 8px; padding: 5px 10px; color: #444; }
+.yt { display: flex; gap: 10px; align-items: center; background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; margin-top: 6px; font-size: 13px; }
+.yt .yt-thumb { flex: none; width: 58px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, #d93025, #ff6b6b); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+.yt b { display: block; }
+.filterbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.chipbtn { font: inherit; font-size: 13px; padding: 3px 11px; border-radius: 999px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--text); }
+.chipbtn[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* queue */
+.qitem { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+.qitem .q-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.qitem .q-who { font-weight: 700; }
+.qitem .q-body { margin: 6px 0; word-break: break-word; }
+.qitem .q-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.qitem .q-actions input { flex: 1 1 220px; min-width: 0; padding: 6px 10px; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #dbe4f5; color: var(--navy); font-weight: 700; font-size: 13px; flex: none; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.tabs button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 9px; border: 1px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; font-weight: 600; }
+.tabs button[aria-selected="true"] { background: var(--navy); color: #fff; }
+.empty { text-align: center; color: var(--muted); padding: 22px 10px; }
+
+/* rising bars */
+.rise { list-style: none; margin: 0; padding: 0; }
+.rise li { display: grid; grid-template-columns: 26px minmax(0, 1fr) 44px; gap: 8px; align-items: center; padding: 6px 0; }
+.rise .rnk { font-weight: 800; color: var(--muted); text-align: center; }
+.rise .nm { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar { height: 10px; border-radius: 4px; background: linear-gradient(90deg, var(--brand), #ffa26f); margin-top: 3px; }
+.rise .v { font-weight: 800; text-align: right; color: var(--brand-ink); }
+
+/* green cards */
+.gc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.gcard { border: 1px solid #b8e5c8; background: linear-gradient(160deg, #f0fbf4, #fff 60%); border-radius: 14px; padding: 16px; position: relative; }
+.gcard .leaf { position: absolute; right: 14px; top: 10px; font-size: 26px; }
+.gcard .to { font-weight: 800; font-size: 16px; }
+.gcard .from { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.gc-chip { display: inline-block; padding: 1px 9px; margin: 4px 3px 0 0; border-radius: 999px; background: #e1f4e8; color: #1c6b3c; font-size: 12px; font-weight: 600; }
+
+/* AI panel */
+.ai-q { display: flex; flex-direction: column; gap: 6px; }
+.ai-q button { text-align: left; font: inherit; font-size: 14px; background: #f2f6ff; border: 1px solid #d5e2fb; border-radius: 10px; padding: 7px 12px; cursor: pointer; color: #1f3d73; }
+.ai-q button[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+.ai-client { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.ai-out { margin-top: 12px; border-radius: 12px; background: #0f1b33; color: #e6ecf7; padding: 12px 14px; font-size: 13.5px; min-height: 64px; }
+.ai-out code { display: block; color: #9fc2ff; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; margin-bottom: 8px; white-space: pre-wrap; word-break: break-all; }
+.ai-out .you { color: #ffd2bf; font-weight: 700; margin-bottom: 4px; }
+.ai-out p { margin: 4px 0; }
+.sim-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #8a5300; background: #fff4e5; border: 1px solid #ffd9a8; border-radius: 6px; padding: 0 6px; vertical-align: 2px; }
+
+.foot { max-width: 1280px; margin: 0 auto 30px; padding: 0 16px; color: var(--muted); font-size: 12.5px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+.toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(20px); background: #1d2939; color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: .25s; z-index: 200; max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 1000px) {
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .score-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .container { margin: 12px auto; }
+  .card { padding: 13px 14px; border-radius: 12px; margin-bottom: 14px; }
+  h1 { font-size: 18px; }
+  h2 { font-size: 15.5px; }
+  .topbar-inner { gap: 6px 10px; padding: 7px 12px; }
+  .brand { font-size: 16px; }
+  .topbar nav { order: 5; flex-basis: 100%; }
+  .topbar nav a { padding: 4px 8px; font-size: 13.5px; }
+  .userbox .who { display: none; }
+  .role-switch { margin-left: auto; }
+  .score-grid { gap: 6px; }
+  .score-tile { padding: 7px 8px; border-radius: 9px; }
+  .score-tile .t-name { font-size: 9.5px; letter-spacing: 0; }
+  .score-tile .t-point { font-size: 18px; }
+  .score-tile .t-rank { font-size: 10.5px; }
+  .t-next { font-size: 10px; }
+  .demo-banner { padding: 5px 12px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">ข้ามไปเนื้อหา</a>
+<div class="hdr">
+  <div class="demo-banner" role="note">
+    <span><strong>เดโม</strong> · ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง</span>
+    <a href="../../#y-tracking-webapp-mcp">← กลับไปหน้าผลงาน</a>
+  </div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/">🎯 Y-Tracking</a>
+      <nav id="main-nav" aria-label="เมนูหลัก"></nav>
+      <div class="role-switch" role="group" aria-label="สลับบทบาท">
+        <button type="button" data-role="emp">พนักงาน</button>
+        <button type="button" data-role="expert">Y-Expert (ผู้ตรวจ)</button>
+      </div>
+      <div class="userbox"><span class="avatar" id="me-avatar" aria-hidden="true"></span><span class="who" id="me-name"></span></div>
+    </div>
+  </header>
+</div>
+<main class="container" id="main" tabindex="-1"></main>
+<footer class="foot">
+  <span>Y-Tracking · เดโมสำหรับพอร์ตโฟลิโอ — ชื่อ หน่วยงาน และคะแนนทั้งหมดเป็นข้อมูลสมมติ</span>
+  <button type="button" class="btn small ghost" id="reset-btn">↺ รีเซ็ตข้อมูลเดโม</button>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ================= constants ================= */
+var TOPICS = [
+  { code: 'NEW_IDEA', name: 'NEW IDEA', th: 'ไอเดียใหม่', desc: 'เสนอไอเดียใหม่ — ต้องผ่านการอนุมัติจากผู้บริหาร', bands: [4, 8, 12] },
+  { code: 'NEW_DEVELOPMENT', name: 'NEW DEVELOPMENT', th: 'พัฒนาตัวเอง', desc: 'อ่านหนังสือ/บทความ ดูคลิปความรู้ อบรม สอนเพื่อน', bands: [40, 60, 80] },
+  { code: 'NEW_CONNECTIONS', name: 'NEW CONNECTIONS', th: 'รู้จักคนใหม่', desc: 'รู้จักคนใหม่ สร้างเครือข่ายทั้งในและนอกองค์กร', bands: [4, 8, 12] },
+  { code: 'NEW_EXPERIENCE', name: 'NEW EXPERIENCE', th: 'ประสบการณ์ใหม่', desc: 'ไปที่ใหม่ ลองสิ่งที่ไม่เคยทำ', bands: [24, 36, 48] },
+  { code: 'CONTRIBUTE', name: 'CONTRIBUTE', th: 'ร่วมกิจกรรมองค์กร', desc: 'เข้าร่วม/เป็นผู้นำกิจกรรมขององค์กร', bands: [16, 20, 24] }
+];
+var TMAP = {}; TOPICS.forEach(function (t) { TMAP[t.code] = t; });
+var STATUS = {
+  pending: 'รอ Y-Expert ตรวจ', waiting_recheck: 'รอ Super-Expert', waiting_review: 'รอผู้บริหาร',
+  passed: 'ผ่าน', not_passed: 'ไม่ผ่าน'
+};
+var TODAY = new Date(2026, 8, 25);        /* 25 ก.ย. 2569 (ปีประเมิน 2569 = พ.ย.68–ต.ค.69) */
+var QSTART = new Date(2026, 7, 1);        /* ไตรมาสปัจจุบัน ส.ค.–ต.ค. */
+var ME = 'D1001';
+var EXPERT = { id: 'X9001', name: 'เอกชัย ธรรมดี', nick: 'เอก' };
+var KEY = 'ytracking-demo-v1';
+
+var EMPS = [
+  ['D1001', 'ณัฐธิดา ศรีสุข', 'มิ้นท์', 'ฝ่ายการตลาด'],
+  ['D1002', 'ภูวดล แก้วมณี', 'ภู', 'ฝ่ายการตลาด'],
+  ['D1003', 'กมลชนก ทองดี', 'แพรว', 'ฝ่ายการตลาด'],
+  ['D1004', 'ธนกร วงศ์ไทย', 'ต้น', 'ฝ่ายไอที'],
+  ['D1005', 'ปิยะพร สายสุวรรณ', 'ปิ่น', 'ฝ่ายไอที'],
+  ['D1006', 'อนุชา บุญมา', 'นุ', 'ฝ่ายไอที'],
+  ['D1007', 'สุภาวดี จันทร์เพ็ญ', 'ส้ม', 'ฝ่ายบัญชี'],
+  ['D1008', 'วรเชษฐ์ ใจงาม', 'เชษฐ์', 'ฝ่ายบัญชี'],
+  ['D1009', 'ชลธิชา พรหมมา', 'ชล', 'ฝ่ายบัญชี'],
+  ['D1010', 'ศุภชัย รุ่งเรือง', 'ชัย', 'ฝ่ายบุคคล'],
+  ['D1011', 'พิมพ์ชนก มีสุข', 'พิม', 'ฝ่ายบุคคล'],
+  ['D1012', 'กิตติพัฒน์ ดวงแก้ว', 'กิต', 'ฝ่ายปฏิบัติการ'],
+  ['D1013', 'จิราพร เพชรงาม', 'จิ๊บ', 'ฝ่ายปฏิบัติการ'],
+  ['D1014', 'ธีรวัฒน์ สมบูรณ์', 'ธี', 'ฝ่ายปฏิบัติการ'],
+  ['D1015', 'อรอุมา ศักดิ์ดี', 'อร', 'ฝ่ายปฏิบัติการ']
+].map(function (r) { return { id: r[0], name: r[1], nick: r[2], dept: r[3] }; });
+var EMAP = {}; EMPS.forEach(function (e) { EMAP[e.id] = e; });
+
+/* เป้าคะแนนสะสมทั้งปี (รวมคะแนนยกมาจากเดือนก่อนหน้า) — คงที่ ไม่เก็บใน storage */
+var TARGET = {
+  D1001: [3, 58, 7, 23, 19],
+  D1002: [9, 44, 10, 30, 21], D1003: [4, 71, 5, 26, 17], D1004: [13, 83, 8, 40, 20],
+  D1005: [5, 62, 13, 36, 20], D1006: [1, 25, 3, 15, 9],  D1007: [6, 49, 9, 37, 24],
+  D1008: [2, 38, 4, 12, 16],  D1009: [8, 66, 12, 49, 21], D1010: [4, 57, 14, 33, 26],
+  D1011: [3, 41, 8, 24, 22],  D1012: [10, 35, 5, 28, 16], D1013: [9, 80, 11, 45, 20],
+  D1014: [2, 30, 2, 20, 11],  D1015: [5, 52, 7, 36, 23]
+};
+/* คะแนนที่ได้ช่วงไตรมาสนี้จากรายการเก่า (ยกมา) */
+var QBASE = { D1001: 6, D1002: 9, D1003: 4, D1004: 14, D1005: 11, D1006: 2, D1007: 8, D1008: 3, D1009: 12, D1010: 10, D1011: 5, D1012: 7, D1013: 13, D1014: 1, D1015: 9 };
+
+/* ================= seed entries ================= */
+function d(m, day) { return new Date(2026, m - 1, day).toISOString().slice(0, 10); }
+var SEED = [
+  /* id, emp, topic, pt, title, detail, date, status, comment, yt */
+  ['D1001', 'NEW_DEVELOPMENT', 2, 'ดูคลิป "เขียน Prompt ให้ AI ทำงานแทน" ครบ 1 ชม.', 'สรุปเทคนิคการเขียน prompt แบบมีบริบท + ตัวอย่างใช้กับงานสรุปรายงานประจำสัปดาห์', d(9, 22), 'pending', '', { t: 'Prompt Engineering ฉบับคนทำงาน (สาธิตภาษาไทย)', c: 'ช่องความรู้ตัวอย่าง', s: 3720 }],
+  ['D1001', 'NEW_CONNECTIONS', 1, 'รู้จักทีมไอทีฝ่ายซัพพอร์ต 3 คน', 'แลกเปลี่ยนเรื่องระบบแจ้งซ่อม ได้ช่องทางติดต่อตรงสำหรับงานอีเวนต์', d(9, 23), 'pending', '', null],
+  ['D1001', 'NEW_IDEA', 2, 'จุดสแกน QR รับของที่ระลึกหน้างานอีเวนต์', 'ลดคิวหน้าบูธ ลูกค้าสแกนลงทะเบียนเองแล้วรับของได้เลย', d(9, 10), 'waiting_review', '', null],
+  ['D1001', 'CONTRIBUTE', 1, 'อาสาจัดบูธวันเปิดงานประจำปี', 'ช่วยจัดบูธฝ่าย + ดูแลเกมตอบคำถาม', d(8, 28), 'passed', 'ผ่านครับ ภาพกิจกรรมครบ', null],
+  ['D1001', 'NEW_EXPERIENCE', 2, 'ไลฟ์ขายของครั้งแรกบนแพลตฟอร์มออนไลน์', 'ทดลองเป็นพิธีกรไลฟ์ 45 นาที มีผู้ชมพร้อมกันสูงสุด 180 คน', d(8, 15), 'passed', 'เยี่ยมมาก', null],
+  ['D1001', 'NEW_DEVELOPMENT', 1, 'อ่านบทความ Content Calendar 2 ชิ้น', 'สรุปแนวทางวางแผนคอนเทนต์รายไตรมาส', d(7, 30), 'not_passed', 'ขอลิงก์บทความ/สรุปเพิ่มเติมครับ', null],
+  ['D1001', 'NEW_DEVELOPMENT', 2, 'อ่านหนังสือการตลาดเชิงข้อมูล 120 หน้า', 'สรุป 5 บทเรียนหลักแชร์ในกลุ่มทีม', d(7, 12), 'passed', '', null],
+  ['D1002', 'NEW_IDEA', 2, 'แพ็กเกจโปรโมชันร่วมกับร้านค้าในพื้นที่', 'บัตรสะสมแต้มข้ามร้าน เพิ่มการกลับมาซื้อซ้ำ', d(9, 18), 'waiting_review', '', null],
+  ['D1002', 'NEW_EXPERIENCE', 1, 'ลองถ่ายวิดีโอสั้นด้วยมือถือครั้งแรก', 'ทำคลิปรีวิวสินค้า 30 วินาที', d(9, 21), 'pending', '', null],
+  ['D1002', 'CONTRIBUTE', 2, 'ผู้นำกิจกรรมปลูกต้นไม้ของฝ่าย', 'ประสานงานอาสา 20 คน', d(8, 20), 'passed', '', null],
+  ['D1003', 'NEW_DEVELOPMENT', 2, 'อบรมออนไลน์ Data Visualization ครบ 3 ชม.', 'ได้ใบประกาศ + ทำแดชบอร์ดยอดขายต้นแบบ', d(9, 19), 'pending', '', null],
+  ['D1003', 'NEW_CONNECTIONS', 1, 'รู้จักพาร์ตเนอร์เอเจนซี่ใหม่ 1 คน', 'คุยเรื่องงานถ่ายภาพสินค้า', d(8, 9), 'passed', '', null],
+  ['D1004', 'NEW_DEVELOPMENT', 2, 'สอนเพื่อนใช้สเปรดชีตขั้นสูง 6 คน 60 นาที', 'สอนสูตร lookup + pivot ให้ทีมบัญชี', d(9, 12), 'passed', 'ขอบคุณที่แบ่งปันครับ', null],
+  ['D1004', 'NEW_IDEA', 2, 'บอทแจ้งเตือนงานค้างผ่านแชตกลุ่ม', 'ดึงรายการค้างอัตโนมัติทุกเช้า ลดการตามงาน', d(8, 25), 'passed', 'ผู้บริหารอนุมัติแล้ว', null],
+  ['D1004', 'NEW_EXPERIENCE', 1, 'เข้าร่วมงานสัมมนาเทคโนโลยีครั้งแรก', 'ฟังหัวข้อ AI ในองค์กร', d(9, 20), 'waiting_recheck', 'Y-Expert ส่งตรวจซ้ำ: ขอดูหลักฐานการเข้าร่วม', null],
+  ['D1005', 'NEW_CONNECTIONS', 2, 'ตั้งกลุ่มแลกเปลี่ยนความรู้ Excel 12 คน', 'รวมคนจาก 4 ฝ่าย นัดคุยทุกศุกร์', d(9, 5), 'passed', '', null],
+  ['D1005', 'NEW_DEVELOPMENT', 1, 'ดูคลิปพื้นฐานความปลอดภัยไซเบอร์', 'สรุปเช็กลิสต์ตั้งรหัสผ่าน', d(9, 24), 'pending', '', { t: 'Cyber Hygiene 101 สำหรับพนักงานออฟฟิศ', c: 'ช่องความรู้ตัวอย่าง', s: 3905 }],
+  ['D1006', 'NEW_EXPERIENCE', 1, 'ลองทำอาหารให้ทีมกินครั้งแรก', 'ทำข้าวผัดให้ทีม 8 คนช่วงเลี้ยงวันเกิด', d(8, 30), 'not_passed', 'ไม่เข้าเกณฑ์ประสบการณ์ใหม่ด้านงาน', null],
+  ['D1006', 'CONTRIBUTE', 1, 'ร่วมกิจกรรมบริจาคโลหิต', 'บริจาคครั้งแรกกับหน่วยเคลื่อนที่', d(9, 2), 'passed', '', null],
+  ['D1007', 'CONTRIBUTE', 2, 'พิธีกรงานสัมมนาประจำไตรมาส', 'ดำเนินรายการครึ่งวัน', d(8, 22), 'passed', '', null],
+  ['D1007', 'NEW_DEVELOPMENT', 2, 'อ่านหนังสือการเงินส่วนบุคคล 150 หน้า', 'สรุปแชร์ทีม 1 หน้า', d(9, 21), 'pending', '', null],
+  ['D1008', 'NEW_CONNECTIONS', 1, 'รู้จักเพื่อนต่างสำนัก 2 คน', 'คุยเรื่องระบบเบิกจ่าย', d(9, 1), 'passed', '', null],
+  ['D1008', 'NEW_IDEA', 1, 'แบบฟอร์มขอเอกสารออนไลน์', 'ลดกระดาษ ติดตามสถานะได้', d(8, 12), 'not_passed', 'มีระบบลักษณะนี้อยู่แล้ว', null],
+  ['D1009', 'NEW_EXPERIENCE', 2, 'ออกบูธต่างจังหวัดครั้งแรก', 'ดูแลบูธ 2 วัน', d(8, 17), 'passed', '', null],
+  ['D1009', 'NEW_DEVELOPMENT', 2, 'อบรมภาษีธุรกิจครบ 3 ชม.', 'ได้ใบประกาศนียบัตร', d(9, 15), 'waiting_recheck', 'ส่ง Super-Expert ยืนยันคะแนน 2', null],
+  ['D1010', 'CONTRIBUTE', 2, 'จัดกิจกรรมกีฬาสีภายใน', 'หัวหน้าทีมสีฟ้า', d(8, 5), 'passed', '', null],
+  ['D1010', 'NEW_CONNECTIONS', 2, 'สร้างเครือข่ายฝ่ายบุคคลข้ามบริษัท 10 คน', 'กลุ่มแลกเปลี่ยนแนวปฏิบัติ', d(9, 8), 'passed', '', null],
+  ['D1011', 'NEW_EXPERIENCE', 1, 'สัมภาษณ์ผู้สมัครงานเป็นครั้งแรก', 'ร่วมเป็นกรรมการสัมภาษณ์', d(9, 22), 'pending', '', null],
+  ['D1011', 'NEW_DEVELOPMENT', 1, 'ดูพอดแคสต์การสื่อสารในทีม 60 นาที', 'สรุปเทคนิคการให้ฟีดแบ็ก', d(8, 26), 'passed', '', { t: 'ฟีดแบ็กอย่างไรไม่ให้ทีมเสียใจ', c: 'พอดแคสต์ตัวอย่าง', s: 3660 }],
+  ['D1012', 'NEW_IDEA', 2, 'ป้ายบอกทางแบบสแกนเพื่อนำทาง', 'ลดคำถามจากลูกค้าเรื่องหาทาง', d(9, 3), 'passed', 'อนุมัติทดลอง 1 จุด', null],
+  ['D1012', 'CONTRIBUTE', 1, 'อาสาช่วยงานทำบุญประจำปี', 'ดูแลจุดลงทะเบียน', d(8, 18), 'passed', '', null],
+  ['D1013', 'NEW_DEVELOPMENT', 2, 'สอนเพื่อนใช้ระบบคลังสินค้าใหม่ 8 คน', 'ทำคู่มือสั้น + สาธิต', d(9, 16), 'passed', '', null],
+  ['D1013', 'NEW_EXPERIENCE', 2, 'ขับรถยกผ่านการอบรมครั้งแรก', 'ได้ใบอนุญาตภายใน', d(8, 8), 'passed', '', null],
+  ['D1013', 'NEW_CONNECTIONS', 1, 'รู้จักซัพพลายเออร์ใหม่ 1 ราย', 'ต่อรองเงื่อนไขส่งของ', d(9, 23), 'pending', '', null],
+  ['D1014', 'CONTRIBUTE', 1, 'ร่วมกิจกรรม Big Cleaning Day', 'ทำความสะอาดโกดัง', d(8, 29), 'passed', '', null],
+  ['D1014', 'NEW_DEVELOPMENT', 1, 'อ่านบทความความปลอดภัยในงาน 2 ชิ้น', 'สรุปข้อควรระวัง', d(9, 11), 'not_passed', 'บทความสั้นกว่าเกณฑ์ครับ', null],
+  ['D1015', 'NEW_IDEA', 1, 'ตารางเวรออนไลน์แทนกระดาน', 'ทุกคนดูเวรจากมือถือได้', d(9, 14), 'waiting_review', '', null],
+  ['D1015', 'NEW_EXPERIENCE', 1, 'ดูแลลูกค้าต่างชาติครั้งแรก', 'อธิบายบริการเป็นภาษาอังกฤษ', d(8, 27), 'passed', '', null],
+  ['D1015', 'CONTRIBUTE', 2, 'ผู้นำกิจกรรมจิตอาสาชุมชน', 'ประสานงาน 15 คน', d(8, 3), 'passed', '', null],
+  ['D1003', 'CONTRIBUTE', 1, 'ร่วมงานวันเด็กขององค์กร', 'ดูแลซุ้มเกม', d(7, 20), 'passed', '', null]
+];
+
+var GREEN = [
+  { to: 'D1004', from: 'ผู้จัดการฝ่ายบัญชี', cats: ['ช่วยเหลือเพื่อนร่วมงาน', 'แบ่งปันความรู้'], msg: 'สละเวลาสอนสูตรสเปรดชีตจนทีมปิดงบได้เร็วขึ้นหนึ่งวัน', date: d(9, 13) },
+  { to: 'D1013', from: 'หัวหน้าคลังสินค้า', cats: ['ความรับผิดชอบ'], msg: 'ทำคู่มือระบบคลังใหม่เองโดยไม่มีใครสั่ง เพื่อนใหม่เรียนรู้ได้ทันที', date: d(9, 17) },
+  { to: 'D1001', from: 'ทีมกิจกรรมองค์กร', cats: ['ทำงานเป็นทีม', 'บริการด้วยใจ'], msg: 'ช่วยดูแลบูธจนปิดงานแม้ไม่ใช่งานในหน้าที่ บรรยากาศดีมาก', date: d(8, 29) },
+  { to: 'D1010', from: 'ผู้อำนวยการฝ่าย', cats: ['ผู้นำ'], msg: 'จัดกีฬาสีได้เรียบร้อย ทุกฝ่ายมีส่วนร่วม', date: d(8, 7) },
+  { to: 'D1005', from: 'ฝ่ายบุคคล', cats: ['แบ่งปันความรู้'], msg: 'ตั้งกลุ่มแลกเปลี่ยนความรู้ข้ามฝ่าย สร้างวัฒนธรรมเรียนรู้', date: d(9, 6) }
+];
+
+/* ================= state ================= */
+var state;
+function freshState() {
+  var entries = SEED.map(function (r, i) {
+    return { id: i + 1, emp: r[0], topic: r[1], point: r[2], title: r[3], detail: r[4], date: r[5],
+      status: r[6], comment: r[7], yt: r[8], checker: r[6] === 'passed' || r[6] === 'not_passed' ? 'Y-Expert' : '' };
+  });
+  return { v: 1, role: 'emp', entries: entries, nextId: entries.length + 1, checksByMe: 0, qClosed: false };
+}
+function load() {
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var s = JSON.parse(raw); if (s && s.v === 1 && Array.isArray(s.entries)) return s; }
+  } catch (e) { /* storage ไม่พร้อม — ใช้ค่าเริ่มต้น */ }
+  return freshState();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+state = load();
+
+/* ================= scoring ================= */
+var BASE = {};
+(function computeBase() {
+  var seedPassed = {};
+  freshState().entries.forEach(function (e) {
+    if (e.status !== 'passed') return;
+    var k = e.emp + '|' + e.topic; seedPassed[k] = (seedPassed[k] || 0) + e.point;
+  });
+  EMPS.forEach(function (emp) {
+    BASE[emp.id] = {};
+    TOPICS.forEach(function (t, i) {
+      BASE[emp.id][t.code] = Math.max(0, TARGET[emp.id][i] - (seedPassed[emp.id + '|' + t.code] || 0));
+    });
+  });
+})();
+function rankOf(code, pts) {
+  var b = TMAP[code].bands;
+  if (pts <= 0) return -2;
+  if (pts < b[0]) return -1;
+  if (pts < b[1]) return 0;
+  if (pts < b[2]) return 1;
+  return 2;
+}
+function nextBand(code, pts) {
+  var b = TMAP[code].bands, steps = [1, b[0], b[1], b[2]];
+  for (var i = 0; i < steps.length; i++) if (pts < steps[i]) return { need: steps[i], prev: i ? steps[i - 1] : 0 };
+  return null;
+}
+function scoresOf(empId) {
+  var out = {};
+  TOPICS.forEach(function (t) { out[t.code] = BASE[empId][t.code]; });
+  state.entries.forEach(function (e) { if (e.emp === empId && e.status === 'passed') out[e.topic] += e.point; });
+  var sumRank = 0, sumPts = 0, ranks = {};
+  TOPICS.forEach(function (t) { ranks[t.code] = rankOf(t.code, out[t.code]); sumRank += ranks[t.code]; sumPts += out[t.code]; });
+  return { pts: out, ranks: ranks, sumRank: sumRank, sumPts: sumPts };
+}
+function quarterGain(empId) {
+  var g = QBASE[empId] || 0;
+  state.entries.forEach(function (e) {
+    if (e.emp === empId && e.status === 'passed' && e._new) g += e.point;
+  });
+  return g;
+}
+
+/* ================= helpers ================= */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var TH_M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+function fdate(iso) { var p = iso.split('-'); return +p[2] + ' ' + TH_M[+p[1] - 1] + ' ' + String(+p[0] + 543).slice(2); }
+function sgn(n) { return (n > 0 ? '+' : '') + n; }
+function rchip(r) { return '<span class="rankchip rank' + r + '" aria-label="RANK ' + sgn(r) + '">' + sgn(r) + '</span>'; }
+function badge(s) { return '<span class="badge ' + s + '">' + STATUS[s] + '</span>'; }
+function initial(emp) { return esc(emp.nick.charAt(0)); }
+function fmtDur(s) { var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(ss).padStart(2, '0'); }
+function ytBox(yt) {
+  return '<div class="yt"><span class="yt-thumb" aria-hidden="true">▶</span><div><b>' + esc(yt.t) + '</b><span class="muted">' + esc(yt.c) + ' · ความยาว ' + fmtDur(yt.s) + '</span></div></div>';
+}
+var toastT;
+function toast(msg) {
+  var el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('show'); }, 3200);
+}
+function counts() {
+  var c = { pending: 0, waiting_recheck: 0, waiting_review: 0 };
+  state.entries.forEach(function (e) { if (c[e.status] != null) c[e.status]++; });
+  return c;
+}
+
+/* ================= routing ================= */
+var flashMsg = null, lastChange = null;
+var ROUTES = {
+  emp: [['me', 'หน้าของฉัน'], ['submit', 'บันทึกผลงาน'], ['rank', 'อันดับ'], ['green', 'ใบเขียว']],
+  expert: [['queue', 'คิวตรวจ'], ['rank', 'อันดับ'], ['green', 'ใบเขียว']]
+};
+function currentRoute() {
+  var h = (location.hash || '').replace(/^#\/?/, '');
+  var list = ROUTES[state.role].map(function (r) { return r[0]; });
+  return list.indexOf(h) >= 0 ? h : list[0];
+}
+function renderChrome(route) {
+  var c = counts();
+  document.getElementById('main-nav').innerHTML = ROUTES[state.role].map(function (r) {
+    var b = r[0] === 'queue' ? (c.pending + c.waiting_recheck + c.waiting_review) : 0;
+    return '<a href="#/' + r[0] + '"' + (r[0] === route ? ' aria-current="page"' : '') + '>' + r[1] +
+      (b ? ' <span class="menu-badge" aria-label="' + b + ' รายการ">' + b + '</span>' : '') + '</a>';
+  }).join('');
+  document.querySelectorAll('.role-switch button').forEach(function (b) {
+    b.setAttribute('aria-pressed', b.getAttribute('data-role') === state.role ? 'true' : 'false');
+  });
+  var me = state.role === 'emp' ? EMAP[ME] : EXPERT;
+  document.getElementById('me-avatar').textContent = me.nick.charAt(0);
+  document.getElementById('me-name').innerHTML = '<b>' + esc(me.name) + ' (' + esc(me.nick) + ')</b> · ' + (state.role === 'emp' ? 'พนักงาน' : 'Y-Expert');
+}
+function render(focus) {
+  var route = currentRoute();
+  renderChrome(route);
+  var main = document.getElementById('main');
+  var view = { me: viewMe, submit: viewSubmit, queue: viewQueue, rank: viewRank, green: viewGreen }[route];
+  main.innerHTML = view();
+  bind[route] && bind[route]();
+  var titles = { me: 'หน้าของฉัน', submit: 'บันทึกผลงาน', queue: 'คิวตรวจ', rank: 'อันดับ', green: 'ใบเขียว' };
+  document.title = titles[route] + ' · Y-Tracking เดโม';
+  if (focus) { var h = main.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); } window.scrollTo(0, 0); }
+}
+window.addEventListener('hashchange', function () { render(true); });
+
+/* ================= views ================= */
+function flashHtml() {
+  if (!flashMsg) return '';
+  var h = '<div class="flash ' + flashMsg.kind + '" role="status">' + flashMsg.html + '</div>';
+  flashMsg = null; return h;
+}
+function scoreTiles(empId, highlight) {
+  var s = scoresOf(empId);
+  var html = '<div class="score-grid">';
+  html += '<div class="score-tile total"><div class="t-name">รวม Y-TRACKING</div><div class="t-point">' + sgn(s.sumRank) +
+    '</div><div class="t-rank">Σ RANK 5 หมวด · ' + s.sumPts + ' คะแนน</div></div>';
+  TOPICS.forEach(function (t) {
+    var p = s.pts[t.code], r = s.ranks[t.code], nb = nextBand(t.code, p);
+    var pct = nb ? Math.round((p - nb.prev) / Math.max(1, nb.need - nb.prev) * 100) : 100;
+    html += '<div class="score-tile' + (highlight === t.code ? ' flashy' : '') + '" data-topic="' + t.code + '">' +
+      '<div class="t-name">' + t.name + '</div><div class="t-point">' + p + '</div>' +
+      '<div class="t-rank">RANK ' + rchip(r) + '</div>' +
+      '<div class="progress" role="progressbar" aria-label="ความคืบหน้าสู่ RANK ถัดไป หมวด ' + t.name + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="t-next">' + (nb ? 'อีก ' + (nb.need - p) + ' คะแนน → ' + sgn(r + 1) : 'RANK สูงสุดแล้ว') + '</div></div>';
+  });
+  return html + '</div>';
+}
+var myFilter = 'all';
+function viewMe() {
+  var emp = EMAP[ME];
+  var mine = state.entries.filter(function (e) { return e.emp === ME; }).sort(function (a, b) { return b.date < a.date ? -1 : b.date > a.date ? 1 : b.id - a.id; });
+  var shown = mine.filter(function (e) { return myFilter === 'all' || (myFilter === 'open' ? ['pending', 'waiting_recheck', 'waiting_review'].indexOf(e.status) >= 0 : e.status === myFilter); });
+  var hl = lastChange && lastChange.emp === ME ? lastChange.topic : null; lastChange = null;
+  var html = flashHtml();
+  html += '<div class="card"><div class="h-row"><h1>คะแนนสะสมของฉัน <small>(' + esc(emp.dept) + ' · ปีประเมิน 2569: พ.ย.68 – ต.ค.69)</small></h1>' +
+    '<a class="btn small" href="#/submit">+ บันทึกผลงาน</a></div>' + scoreTiles(ME, hl) +
+    '<p class="hint">คะแนนนับเฉพาะรายการที่ “ผ่าน” · RANK −2 ถึง +2 ตัดตามคะแนนสะสมรายปีของแต่ละหมวด (เกณฑ์ต่างกันต่อหมวด) · รวมคะแนนยกมาจากเดือนก่อน</p></div>';
+  html += '<div class="grid2"><section class="card" aria-labelledby="my-list-h"><div class="h-row"><h2 id="my-list-h">รายการของฉัน</h2>' +
+    '<div class="filterbar" role="group" aria-label="กรองสถานะ">' +
+    [['all', 'ทั้งหมด'], ['open', 'รอตรวจ'], ['passed', 'ผ่าน'], ['not_passed', 'ไม่ผ่าน']].map(function (f) {
+      return '<button type="button" class="chipbtn" data-f="' + f[0] + '" aria-pressed="' + (myFilter === f[0]) + '">' + f[1] + '</button>';
+    }).join('') + '</div></div>';
+  html += shown.length ? '<ul class="entries">' + shown.map(entryLi).join('') + '</ul>' : '<p class="empty">ไม่มีรายการในสถานะนี้</p>';
+  html += '</section>' + aiPanel() + '</div>';
+  return html;
+}
+function entryLi(e) {
+  var t = TMAP[e.topic];
+  return '<li class="entry"><div><div class="e-title">' + esc(e.title) + '</div>' +
+    '<div class="e-meta"><span class="topic-tag">' + t.name + '</span><span>' + fdate(e.date) + '</span></div>' +
+    (e.yt ? ytBox(e.yt) : '') + '</div>' +
+    '<div class="e-side">' + badge(e.status) + '<span class="e-pt">' + e.point + ' คะแนน</span></div>' +
+    (e.comment ? '<div class="e-comment"><b>ความเห็นผู้ตรวจ:</b> ' + esc(e.comment) + '</div>' : '') + '</li>';
+}
+
+/* ---- AI (MCP) panel ---- */
+var aiSel = null, aiClient = 'Claude';
+var AIQ = [
+  { q: 'คะแนนของฉันปีนี้เป็นยังไงบ้าง หมวดไหนควรเร่ง?', tool: 'person_overview(emp_id="D1001")', a: function () {
+      var s = scoresOf(ME), low = TOPICS.slice().sort(function (a, b) { return s.ranks[a.code] - s.ranks[b.code]; })[0];
+      var nb = nextBand(low.code, s.pts[low.code]);
+      return '<p>ปีประเมิน 2569 คุณมิ้นท์มี <b>Σ RANK ' + sgn(s.sumRank) + '</b> (' + s.sumPts + ' คะแนน)</p><p>' +
+        TOPICS.map(function (t) { return t.name + ' ' + s.pts[t.code] + ' (' + sgn(s.ranks[t.code]) + ')'; }).join(' · ') + '</p>' +
+        '<p>หมวดที่ควรเร่งคือ <b>' + low.name + '</b> — ' + (nb ? 'อีก ' + (nb.need - s.pts[low.code]) + ' คะแนนจะขึ้น RANK ' + sgn(s.ranks[low.code] + 1) : 'ถึง RANK สูงสุดแล้ว') + '</p>';
+    } },
+  { q: 'ฝ่ายไหนคะแนนเฉลี่ยสูงสุดตอนนี้?', tool: 'team_summary(eval_year=2569)', a: function () {
+      var t = teamRows()[0], t2 = teamRows()[1];
+      return '<p>อันดับ 1 คือ <b>' + esc(t.dept) + '</b> เฉลี่ย Σ RANK ' + t.avg.toFixed(1) + ' ต่อคน (' + t.n + ' คน, รวม ' + t.pts + ' คะแนน)</p>' +
+        '<p>ตามมาด้วย ' + esc(t2.dept) + ' เฉลี่ย ' + t2.avg.toFixed(1) + ' — เทียบข้ามหมวดใช้ RANK ไม่ใช่คะแนนดิบ</p>';
+    } },
+  { q: 'ตอนนี้มีงานค้างตรวจกี่รายการ?', tool: 'pending_review()', a: function () {
+      var c = counts();
+      return '<p>ค้างทั้งหมด <b>' + (c.pending + c.waiting_recheck + c.waiting_review) + ' รายการ</b></p><p>รอ Y-Expert ' + c.pending +
+        ' · รอ Super-Expert ' + c.waiting_recheck + ' · NEW IDEA รอผู้บริหาร ' + c.waiting_review + '</p>';
+    } }
+];
+function aiPanel() {
+  var html = '<section class="card" aria-labelledby="ai-h"><h2 id="ai-h">🤖 ถาม AI ผ่าน MCP <span class="sim-tag">จำลอง</span></h2>' +
+    '<p class="hint" style="margin:0 0 10px">ระบบจริงเปิด MCP server ให้ AI assistant ดึงคะแนนแบบอ่านอย่างเดียว — ตัวอย่างนี้ไม่ได้เรียก AI จริง คำตอบประกอบจากข้อมูลเดโม</p>' +
+    '<div class="ai-client" role="group" aria-label="เลือก AI client">' + ['Claude', 'ChatGPT', 'Gemini'].map(function (c) {
+      return '<button type="button" class="chipbtn" data-client="' + c + '" aria-pressed="' + (aiClient === c) + '">' + c + '</button>';
+    }).join('') + '</div><div class="ai-q" role="group" aria-label="คำถามตัวอย่าง">' +
+    AIQ.map(function (q, i) { return '<button type="button" data-q="' + i + '" aria-pressed="' + (aiSel === i) + '">' + esc(q.q) + '</button>'; }).join('') +
+    '</div><div class="ai-out" aria-live="polite" id="ai-out">' + aiOut() + '</div></section>';
+  return html;
+}
+function aiOut() {
+  if (aiSel == null) return '<p class="muted" style="color:#9fb0cc">เลือกคำถามด้านบนเพื่อดูตัวอย่างคำตอบ</p>';
+  var q = AIQ[aiSel];
+  return '<div class="you">คุณ → ' + esc(aiClient) + ': ' + esc(q.q) + '</div><code>⚙ เรียก tool: ytracking.' + esc(q.tool) + '</code>' + q.a();
+}
+
+/* ---- submit ---- */
+var MOCK_YT = [
+  { t: 'สรุปหนังสือ Atomic Habits ใน 20 นาที (ตัวอย่าง)', c: 'ช่องสรุปหนังสือตัวอย่าง', s: 1265 },
+  { t: 'Excel Pivot Table ตั้งแต่ศูนย์ถึงใช้งานจริง', c: 'ช่องสอนออฟฟิศตัวอย่าง', s: 3842 },
+  { t: 'พื้นฐานการนำเสนองานให้ผู้บริหาร', c: 'ช่องพัฒนาทักษะตัวอย่าง', s: 2710 },
+  { t: 'AI สำหรับงานเอกสาร: เริ่มต้นใน 1 ชั่วโมง', c: 'ช่องความรู้ตัวอย่าง', s: 3605 }
+];
+function ytFromUrl(u) {
+  var m = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/i.exec(u || '');
+  if (!m) return null;
+  var h = 0; for (var i = 0; i < m[1].length; i++) h = (h * 31 + m[1].charCodeAt(i)) >>> 0;
+  return MOCK_YT[h % MOCK_YT.length];
+}
+function viewSubmit() {
+  return flashHtml() + '<div class="grid2"><section class="card" aria-labelledby="sub-h"><div class="h-row"><h1 id="sub-h">บันทึกผลงาน <span class="badge open">รอบ ก.ย. 69 (เปิดรับ)</span></h1></div>' +
+    '<form id="entry-form" novalidate>' +
+    '<fieldset class="opt-group" id="topic-opts"><legend>หมวด (TOPIC) <span aria-hidden="true" style="color:#b03a2e">*</span></legend>' +
+    TOPICS.map(function (t) { return '<label class="opt"><input type="radio" name="topic" value="' + t.code + '" required><span>' + t.name + '</span></label>'; }).join('') +
+    '</fieldset><div class="criteria" id="topic-desc" aria-live="polite">เลือกหมวดเพื่อดูเกณฑ์</div>' +
+    '<fieldset class="opt-group"><legend>คะแนน</legend>' +
+    '<label class="opt"><input type="radio" name="point" value="1" checked><span>1 คะแนน</span></label>' +
+    '<label class="opt"><input type="radio" name="point" value="2"><span>2 คะแนน</span></label></fieldset>' +
+    '<label for="f-title">หัวข้อผลงาน <span aria-hidden="true" style="color:#b03a2e">*</span></label>' +
+    '<input type="text" id="f-title" name="title" maxlength="120" required placeholder="เช่น อ่านหนังสือการตลาด 120 หน้า">' +
+    '<label for="f-detail">รายละเอียดผลงาน <span aria-hidden="true" style="color:#b03a2e">*</span></label>' +
+    '<textarea id="f-detail" name="detail" required placeholder="เล่าสั้นๆ ว่าทำอะไร ได้อะไร"></textarea>' +
+    '<label for="f-yt">ลิงก์ YouTube (ถ้ามี)</label>' +
+    '<input type="url" id="f-yt" name="yt" placeholder="https://www.youtube.com/watch?v=..." inputmode="url" aria-describedby="yt-hint">' +
+    '<p class="hint" id="yt-hint">วางลิงก์แล้วระบบดึงชื่อคลิป/ความยาวให้อัตโนมัติ (เดโม: ข้อมูลจำลอง ไม่ได้ติดต่อ YouTube)</p>' +
+    '<div id="yt-preview" aria-live="polite"></div>' +
+    '<p class="flash warn" id="form-err" role="alert" style="display:none;margin:12px 0 0"></p>' +
+    '<button class="btn" type="submit" style="margin-top:16px">ส่งผลงาน</button></form></section>' +
+    '<aside class="card" aria-labelledby="flow-h"><h2 id="flow-h">เส้นทางของผลงาน</h2>' +
+    '<ol class="sm" style="padding-left:20px;margin:0">' +
+    '<li><b>รอ Y-Expert ตรวจ</b> — ผู้ตรวจของฝ่ายดูหลักฐานแล้วกดผ่าน/ไม่ผ่าน</li>' +
+    '<li><b>รอ Super-Expert</b> — กรณีผู้ตรวจส่งตรวจซ้ำ (เช่นขอ 2 คะแนน)</li>' +
+    '<li><b>NEW IDEA</b> — ข้ามไปรอผู้บริหารอนุมัติโดยตรง</li>' +
+    '<li><b>ผ่าน</b> — คะแนนเข้าหมวด แล้ว RANK อัปเดตทันที</li></ol>' +
+    '<p class="hint" style="margin-top:10px">ลองส่งผลงาน แล้วสลับบทบาทเป็น <b>Y-Expert</b> ที่มุมขวาบนเพื่อตรวจ จากนั้นกลับมาดูคะแนนที่เปลี่ยน</p></aside></div>';
+}
+
+/* ---- queue ---- */
+var qTab = 'pending';
+function viewQueue() {
+  var c = counts();
+  var tabs = [['pending', 'รอ Y-Expert', c.pending], ['waiting_recheck', 'รอ Super-Expert', c.waiting_recheck], ['waiting_review', 'NEW IDEA รอผู้บริหาร', c.waiting_review]];
+  var list = state.entries.filter(function (e) { return e.status === qTab; }).sort(function (a, b) { return b.id - a.id; });
+  var html = flashHtml() + '<div class="grid2"><section class="card" aria-labelledby="q-h"><div class="h-row"><h1 id="q-h">คิวตรวจ Y-Expert</h1><span class="muted sm">ตรวจแล้วรอบนี้: ' + state.checksByMe + ' รายการ</span></div>' +
+    '<div class="tabs" role="tablist" aria-label="สถานะคิว">' + tabs.map(function (t) {
+      return '<button type="button" role="tab" id="tab-' + t[0] + '" aria-controls="qpanel" data-tab="' + t[0] + '" aria-selected="' + (qTab === t[0]) + '">' + t[1] + ' (' + t[2] + ')</button>';
+    }).join('') + '</div>' +
+    (qTab !== 'pending' ? '<p class="hint" style="margin:-4px 0 10px">ในเดโมนี้ผู้ตรวจกดแทน Super-Expert / ผู้บริหารได้ เพื่อให้เห็นวงจรครบ</p>' : '') +
+    '<div id="qpanel" role="tabpanel" aria-labelledby="tab-' + qTab + '">' +
+    (list.length ? list.map(qItem).join('') : '<p class="empty">ไม่มีรายการค้าง 🎉</p>') + '</div></section>';
+  html += bonusCard() + '</div>';
+  return html;
+}
+function qItem(e) {
+  var emp = EMAP[e.emp], t = TMAP[e.topic], s = scoresOf(e.emp), after = s.pts[e.topic] + e.point;
+  var rNow = s.ranks[e.topic], rAfter = rankOf(e.topic, after);
+  var passLbl = e.status === 'waiting_review' ? 'อนุมัติ' : 'ผ่าน';
+  var failLbl = e.status === 'waiting_review' ? 'ไม่อนุมัติ' : 'ไม่ผ่าน';
+  return '<article class="qitem" aria-label="' + esc(emp.nick) + ' — ' + esc(e.title) + '">' +
+    '<div class="q-head"><span class="avatar" aria-hidden="true">' + initial(emp) + '</span><span><span class="q-who">' + esc(emp.name) + ' (' + esc(emp.nick) + ')</span> <span class="muted sm">' + esc(emp.dept) + ' · ' + fdate(e.date) + '</span></span>' +
+    '<span class="topic-tag">' + t.name + '</span><span class="badge pending" style="background:#eef5ff;color:var(--navy)">' + e.point + ' คะแนน</span></div>' +
+    '<div class="q-body"><b>' + esc(e.title) + '</b><br><span class="sm">' + esc(e.detail) + '</span>' + (e.yt ? ytBox(e.yt) : '') +
+    (e.comment ? '<div class="sm muted" style="margin-top:4px">หมายเหตุ: ' + esc(e.comment) + '</div>' : '') + '</div>' +
+    '<div class="sm muted">ถ้า' + passLbl + ': ' + t.name + ' ' + s.pts[e.topic] + ' → <b>' + after + '</b> · RANK ' + rchip(rNow) + (rAfter !== rNow ? ' → ' + rchip(rAfter) + ' ⬆' : '') + '</div>' +
+    '<div class="q-actions"><label class="sr-only" for="c-' + e.id + '">ความเห็นผู้ตรวจ</label><input type="text" id="c-' + e.id + '" placeholder="ความเห็น (บังคับเมื่อไม่ผ่าน)">' +
+    '<button type="button" class="btn small success" data-act="pass" data-id="' + e.id + '">✓ ' + passLbl + '</button>' +
+    '<button type="button" class="btn small danger" data-act="fail" data-id="' + e.id + '">✗ ' + failLbl + '</button>' +
+    (e.status === 'pending' ? '<button type="button" class="btn small secondary" data-act="recheck" data-id="' + e.id + '">ส่งตรวจซ้ำ</button>' : '') +
+    '</div></article>';
+}
+var EXPERTS = [['เอกชัย (เอก) — คุณ', 18], ['วนิดา (นิด)', 27], ['สมชาย (ชาย)', 22], ['รัตนา (รัตน์)', 12]];
+function bonusCard() {
+  var rows = EXPERTS.map(function (x, i) { return [x[0], x[1] + (i === 0 ? state.checksByMe : 0)]; });
+  var html = '<aside class="card" aria-labelledby="bonus-h"><h2 id="bonus-h">โบนัสไตรมาส Y-Expert <span class="sim-tag">จำลอง</span></h2>' +
+    '<p class="hint" style="margin:0 0 8px">ไตรมาส ส.ค.–ต.ค. 69 · ตรวจครบ 20 รายการขึ้นไป = ได้โบนัส CONTRIBUTE +2</p>' +
+    '<div class="tbl-wrap"><table class="data"><thead><tr><th scope="col">ผู้ตรวจ</th><th scope="col" class="num">ตรวจแล้ว</th><th scope="col" class="center">สถานะ</th></tr></thead><tbody>' +
+    rows.map(function (r) { var ok = r[1] >= 20; return '<tr><td>' + esc(r[0]) + '</td><td class="num">' + r[1] + '</td><td class="center">' +
+      (state.qClosed ? (ok ? '<span class="badge passed">ได้โบนัส</span>' : '<span class="badge not_passed">ไม่ถึงเกณฑ์</span>') : (ok ? '<span class="badge passed">ถึงเกณฑ์</span>' : '<span class="muted sm">อีก ' + (20 - r[1]) + '</span>')) + '</td></tr>'; }).join('') +
+    '</tbody></table></div>' +
+    (state.qClosed ? '<p class="flash ok sm" style="margin:10px 0 0">ปิดรอบไตรมาสแล้ว (จำลอง) — ระบบจริงรันอัตโนมัติสิ้นไตรมาส</p>'
+      : '<button type="button" class="btn small secondary" id="close-q" style="margin-top:10px">ปิดรอบไตรมาส (จำลอง)</button>') + '</aside>';
+  return html;
+}
+
+/* ---- rank ---- */
+var rankMode = 'person';
+function teamRows() {
+  var m = {};
+  EMPS.forEach(function (e) {
+    var s = scoresOf(e.id), t = m[e.dept] || (m[e.dept] = { dept: e.dept, n: 0, rank: 0, pts: 0 });
+    t.n++; t.rank += s.sumRank; t.pts += s.sumPts;
+  });
+  return Object.keys(m).map(function (k) { var t = m[k]; t.avg = t.rank / t.n; return t; })
+    .sort(function (a, b) { return b.avg - a.avg || b.pts - a.pts; });
+}
+function viewRank() {
+  var rows = EMPS.map(function (e) { var s = scoresOf(e.id); return { e: e, s: s }; })
+    .sort(function (a, b) { return b.s.sumRank - a.s.sumRank || b.s.sumPts - a.s.sumPts; });
+  var gcCount = {}; GREEN.forEach(function (g) { gcCount[g.to] = (gcCount[g.to] || 0) + 1; });
+  var html = '<div class="grid2 wide"><section class="card" aria-labelledby="rk-h"><div class="h-row"><h1 id="rk-h">🏆 อันดับ Y-Tracking <small>ปีประเมิน 2569</small></h1>' +
+    '<div class="filterbar" role="group" aria-label="มุมมอง" style="margin:0">' +
+    '<button type="button" class="chipbtn" data-mode="person" aria-pressed="' + (rankMode === 'person') + '">รายบุคคล</button>' +
+    '<button type="button" class="chipbtn" data-mode="team" aria-pressed="' + (rankMode === 'team') + '">รายฝ่าย</button></div></div>';
+  if (rankMode === 'person') {
+    html += '<div class="tbl-wrap"><table class="data rank-tbl"><caption class="sr-only">อันดับรายบุคคล เรียงตามผลรวม RANK</caption><thead><tr><th scope="col" class="center">#</th><th scope="col">พนักงาน</th><th scope="col">ฝ่าย</th>' +
+      TOPICS.map(function (t) { return '<th scope="col" class="center" title="' + t.th + '">' + t.name.replace('NEW ', '') + '</th>'; }).join('') +
+      '<th scope="col" class="center">Σ RANK</th></tr></thead><tbody>' +
+      rows.map(function (r, i) {
+        return '<tr' + (r.e.id === ME ? ' class="me"' : '') + '><td class="center">' + (i + 1) + '</td><td class="nowrap">' + esc(r.e.name) + ' <span class="muted">(' + esc(r.e.nick) + ')</span>' +
+          (gcCount[r.e.id] ? ' <span title="ใบเขียว ' + gcCount[r.e.id] + ' ใบ" aria-label="มีใบเขียว">🍀</span>' : '') + '</td><td class="nowrap sm">' + esc(r.e.dept.replace('ฝ่าย', '')) + '</td>' +
+          TOPICS.map(function (t) { return '<td class="center nowrap">' + r.s.pts[t.code] + ' ' + rchip(r.s.ranks[t.code]) + '</td>'; }).join('') +
+          '<td class="center"><b>' + sgn(r.s.sumRank) + '</b></td></tr>';
+      }).join('') + '</tbody></table></div><p class="hint">แถวไฮไลต์ = คุณ (มิ้นท์) · เทียบข้ามหมวดด้วย RANK เพราะเกณฑ์คะแนนแต่ละหมวดต่างกัน</p>';
+  } else {
+    var tr = teamRows(), max = Math.max.apply(null, tr.map(function (t) { return t.avg; }).concat([1]));
+    html += '<div class="tbl-wrap"><table class="data"><caption class="sr-only">อันดับรายฝ่าย</caption><thead><tr><th scope="col" class="center">#</th><th scope="col">ฝ่าย</th><th scope="col" class="num">คน</th><th scope="col" class="num">คะแนนรวม</th><th scope="col">เฉลี่ย Σ RANK / คน</th></tr></thead><tbody>' +
+      tr.map(function (t, i) {
+        return '<tr' + (t.dept === EMAP[ME].dept ? ' class="me"' : '') + '><td class="center">' + (i + 1) + '</td><td class="nowrap">' + esc(t.dept) + '</td><td class="num">' + t.n + '</td><td class="num">' + t.pts + '</td>' +
+          '<td style="min-width:140px"><b>' + t.avg.toFixed(1) + '</b><div class="bar" style="width:' + Math.max(4, t.avg / max * 100) + '%;background:linear-gradient(90deg,var(--navy),#3f78d1)"></div></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  html += '</section>';
+  var rise = EMPS.map(function (e) { return { e: e, g: quarterGain(e.id) }; }).sort(function (a, b) { return b.g - a.g; }).slice(0, 6);
+  var rmax = rise[0].g || 1;
+  html += '<aside class="card" aria-labelledby="rise-h"><h2 id="rise-h">🌟 Rising Star <small>คะแนนเพิ่มมากสุด ส.ค.–ต.ค. 69</small></h2><ol class="rise">' +
+    rise.map(function (r, i) {
+      return '<li><span class="rnk">' + (i + 1) + '</span><div><div class="nm">' + esc(r.e.name) + ' <span class="muted">(' + esc(r.e.nick) + ')</span></div><div class="bar" style="width:' + Math.max(4, r.g / rmax * 100) + '%"></div></div><span class="v">+' + r.g + '</span></li>';
+    }).join('') + '</ol></aside></div>';
+  return html;
+}
+
+/* ---- green cards ---- */
+function viewGreen() {
+  return '<div class="card"><h1>🍀 ใบเขียว <small>ใบชมเชยจากหัวหน้าและเพื่อนร่วมงาน</small></h1>' +
+    '<p class="hint" style="margin:0 0 14px">ใบเขียวแสดงเป็น 🍀 บนการ์ดคะแนนและหน้าอันดับ — ใช้ประกอบการประเมิน ไม่นับเป็นคะแนน Y-Tracking</p>' +
+    '<div class="gc-grid">' + GREEN.map(function (g) {
+      var e = EMAP[g.to];
+      return '<article class="gcard"><span class="leaf" aria-hidden="true">🍀</span><div class="to">' + esc(e.name) + ' (' + esc(e.nick) + ')</div>' +
+        '<div class="muted sm">' + esc(e.dept) + '</div><div>' + g.cats.map(function (c) { return '<span class="gc-chip">' + esc(c) + '</span>'; }).join('') + '</div>' +
+        '<p style="margin:10px 0 0">“' + esc(g.msg) + '”</p><div class="from">จาก ' + esc(g.from) + ' · ' + fdate(g.date) + '</div></article>';
+    }).join('') + '</div></div>';
+}
+
+/* ================= bindings ================= */
+var bind = {
+  me: function () {
+    document.querySelectorAll('[data-f]').forEach(function (b) { b.onclick = function () { myFilter = b.getAttribute('data-f'); render(); focusSel('[data-f="' + myFilter + '"]'); }; });
+    bindAi();
+  },
+  submit: function () {
+    var form = document.getElementById('entry-form');
+    form.querySelectorAll('input[name=topic]').forEach(function (r) {
+      r.onchange = function () {
+        var t = TMAP[r.value];
+        document.getElementById('topic-desc').innerHTML = '<b>' + t.name + '</b> (' + t.th + ') — ' + esc(t.desc) +
+          '<br><span class="muted">เกณฑ์ RANK: ≥' + t.bands[0] + ' = 0 · ≥' + t.bands[1] + ' = +1 · ≥' + t.bands[2] + ' = +2' +
+          (t.code === 'NEW_IDEA' ? ' · ส่งแล้วไปรอผู้บริหารอนุมัติ' : '') + '</span>';
+      };
+    });
+    var yt = document.getElementById('f-yt');
+    yt.oninput = function () {
+      var v = yt.value.trim(), m = ytFromUrl(v), pv = document.getElementById('yt-preview');
+      if (!v) pv.innerHTML = '';
+      else if (m) {
+        pv.innerHTML = ytBox(m);
+        var title = document.getElementById('f-title');
+        if (!title.value) title.value = 'ดูคลิป "' + m.t + '" (' + Math.round(m.s / 60) + ' นาที)';
+        var dev = form.querySelector('input[value=NEW_DEVELOPMENT]'); if (!form.querySelector('input[name=topic]:checked')) { dev.checked = true; dev.onchange(); }
+      } else pv.innerHTML = '<p class="hint">ยังไม่ใช่ลิงก์ YouTube ที่รู้จัก — ระบบจะเก็บเป็นลิงก์ทั่วไป</p>';
+    };
+    form.onsubmit = function (ev) {
+      ev.preventDefault();
+      var topic = form.querySelector('input[name=topic]:checked');
+      var title = form.title.value.trim(), detail = form.detail.value.trim();
+      var err = document.getElementById('form-err'), msg = !topic ? 'กรุณาเลือกหมวด' : !title ? 'กรุณากรอกหัวข้อผลงาน' : !detail ? 'กรุณากรอกรายละเอียดผลงาน' : '';
+      if (msg) {
+        err.textContent = msg; err.style.display = 'block';
+        (!topic ? form.querySelector('input[name=topic]') : !title ? form.title : form.detail).focus(); return;
+      }
+      var code = topic.value, e = {
+        id: state.nextId++, emp: ME, topic: code, point: +form.querySelector('input[name=point]:checked').value,
+        title: title, detail: detail, date: TODAY.toISOString().slice(0, 10), status: code === 'NEW_IDEA' ? 'waiting_review' : 'pending',
+        comment: '', yt: ytFromUrl(form.yt.value.trim()), checker: '', _new: true
+      };
+      state.entries.push(e); save();
+      flashMsg = { kind: 'ok', html: '✅ ส่งผลงานเรียบร้อย — ' + (e.status === 'waiting_review' ? 'NEW IDEA รอผู้บริหารอนุมัติ' : 'รอ Y-Expert ตรวจ') +
+        ' · ลอง <button type="button" class="btn small secondary" data-goexpert>สลับเป็น Y-Expert</button> เพื่อตรวจรายการนี้' };
+      myFilter = 'all';
+      location.hash = '#/me';
+    };
+  },
+  rank: function () {
+    document.querySelectorAll('[data-mode]').forEach(function (b) { b.onclick = function () { rankMode = b.getAttribute('data-mode'); render(); focusSel('[data-mode="' + rankMode + '"]'); }; });
+  },
+  queue: function () {
+    document.querySelectorAll('[data-tab]').forEach(function (b) {
+      b.onclick = function () { qTab = b.getAttribute('data-tab'); render(); focusSel('[data-tab="' + qTab + '"]'); };
+      b.onkeydown = function (ev) {
+        if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+        var all = Array.prototype.slice.call(document.querySelectorAll('[data-tab]')), i = all.indexOf(b);
+        var n = all[(i + (ev.key === 'ArrowRight' ? 1 : all.length - 1)) % all.length]; n.click();
+      };
+    });
+    document.querySelectorAll('[data-act]').forEach(function (b) {
+      b.onclick = function () { decide(+b.getAttribute('data-id'), b.getAttribute('data-act')); };
+    });
+    var cq = document.getElementById('close-q');
+    if (cq) cq.onclick = function () { state.qClosed = true; save(); render(); toast('ปิดรอบไตรมาสแล้ว (จำลอง)'); };
+  }
+};
+function focusSel(sel) { var el = document.querySelector(sel); if (el) el.focus(); }
+function bindAi() {
+  document.querySelectorAll('[data-q]').forEach(function (b) {
+    b.onclick = function () { aiSel = +b.getAttribute('data-q'); refreshAi(); };
+  });
+  document.querySelectorAll('[data-client]').forEach(function (b) {
+    b.onclick = function () { aiClient = b.getAttribute('data-client'); refreshAi(); };
+  });
+}
+function refreshAi() {
+  document.querySelectorAll('[data-q]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.getAttribute('data-q') === aiSel)); });
+  document.querySelectorAll('[data-client]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-client') === aiClient)); });
+  document.getElementById('ai-out').innerHTML = aiOut();
+}
+function decide(id, act) {
+  var e = state.entries.filter(function (x) { return x.id === id; })[0]; if (!e) return;
+  var input = document.getElementById('c-' + id), comment = input ? input.value.trim() : '';
+  if (act === 'fail' && !comment) { input.focus(); input.setAttribute('aria-invalid', 'true'); toast('กรุณาใส่เหตุผลเมื่อไม่ผ่าน'); return; }
+  var emp = EMAP[e.emp], before = scoresOf(e.emp);
+  if (act === 'recheck') {
+    e.status = 'waiting_recheck'; e.comment = comment || 'Y-Expert ส่งตรวจซ้ำ';
+    flashMsg = { kind: 'info', html: 'ส่ง “' + esc(e.title) + '” ให้ Super-Expert ตรวจซ้ำแล้ว' };
+  } else if (act === 'pass') {
+    e.status = 'passed'; e.comment = comment; e.checker = EXPERT.nick; e._new = true;
+    var after = scoresOf(e.emp), t = TMAP[e.topic], rb = before.ranks[e.topic], ra = after.ranks[e.topic];
+    lastChange = { emp: e.emp, topic: e.topic };
+    flashMsg = { kind: 'ok', html: '✓ ผ่านแล้ว — คะแนน ' + esc(emp.nick) + ' หมวด ' + t.name + ' ' + before.pts[e.topic] + ' → <b>' + after.pts[e.topic] + '</b>' +
+      (ra !== rb ? ' · RANK ' + rchip(rb) + ' → ' + rchip(ra) + ' 🎉' : ' · RANK ' + rchip(ra)) + ' · Σ RANK ' + sgn(before.sumRank) + ' → <b>' + sgn(after.sumRank) + '</b>' +
+      (e.emp === ME ? ' · <button type="button" class="btn small secondary" data-goemp>ดูในหน้าของพนักงาน</button>' : '') };
+  } else {
+    e.status = 'not_passed'; e.comment = comment; e.checker = EXPERT.nick;
+    flashMsg = { kind: 'warn', html: '✗ บันทึก “ไม่ผ่าน” ให้ ' + esc(emp.nick) + ' พร้อมเหตุผลแล้ว' };
+  }
+  state.checksByMe++;
+  save(); render();
+  var q = document.querySelector('.qitem [data-act]'); (q || document.getElementById('q-h')).focus();
+}
+
+/* global clicks: role switch, flash shortcuts, reset */
+document.addEventListener('click', function (ev) {
+  var t = ev.target.closest('[data-role],[data-goexpert],[data-goemp]'); if (!t) return;
+  var role = t.hasAttribute('data-goexpert') ? 'expert' : t.hasAttribute('data-goemp') ? 'emp' : t.getAttribute('data-role');
+  if (role === state.role && t.hasAttribute('data-role')) return;
+  state.role = role; save();
+  if (role === 'expert') qTab = 'pending';
+  var target = role === 'expert' ? '#/queue' : '#/me';
+  if (location.hash === target) render(true); else location.hash = target;
+});
+document.getElementById('reset-btn').onclick = function () {
+  if (!confirm('รีเซ็ตข้อมูลเดโมกลับเป็นค่าเริ่มต้น?')) return;
+  try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+  state = freshState(); myFilter = 'all'; aiSel = null; qTab = 'pending'; flashMsg = null;
+  if (location.hash === '#/me') render(true); else location.hash = '#/me';
+  toast('รีเซ็ตข้อมูลเดโมแล้ว');
+};
+
+render(false);
+})();
+</script>
+</body>
+</html>

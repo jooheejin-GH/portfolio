@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เบิกของ SR · เดโม</title>
+<meta name="description" content="เดโมระบบเบิกของออนไลน์ (Store Requisition) — ข้อมูลตัวอย่างทั้งหมด ทำงานในเบราว์เซอร์ล้วน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16323a;--mut:#5f7a83;--line:#d9e8ec;--bg:#eef6f8;--card:#fff;--pri:#0e8fa3;--pri-dark:#0a6f80;--aqua:#e3f5f8;--aqua2:#c9ecf1;--ok:#1d8a4b;--warn:#c2410c;--dan:#b91c1c;--chip:#e3f5f8;
+--sdc:#1f5eff;--sdc-d:#1748c4;--sdc-bg:#e8efff;--sbk:#f97316;--sbk-d:#c2560a;--sbk-bg:#fff1e6}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Sarabun","Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;color:var(--ink);background:var(--bg);overflow-x:hidden}
+a{color:var(--pri);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+.sticky{position:sticky;top:0;z-index:30}
+.demobar{background:#10262c;color:#e6f6f9;font-size:13px}
+.demobar .wrap{display:flex;align-items:center;gap:10px;min-height:32px;flex-wrap:wrap;padding-top:3px;padding-bottom:3px}
+.demobar .tag{background:#f5b301;color:#1d1a0f;font-weight:700;border-radius:4px;padding:0 6px;font-size:12px}
+.demobar a{color:#8fe3f0;margin-left:auto;white-space:nowrap}
+.top{background:linear-gradient(90deg,#0e8fa3 0%,#14a9bf 60%,#2cc4d6 100%);color:#fff;box-shadow:0 2px 10px rgba(14,143,163,.25)}
+.top .wrap{display:flex;align-items:center;gap:6px 14px;min-height:54px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px}
+.brand{font-weight:700;font-size:18px;color:#fff;white-space:nowrap}.brand small{color:rgba(255,255,255,.85);font-weight:400;font-size:12px}.brand:hover{text-decoration:none}
+.nav{display:flex;gap:4px;flex-wrap:wrap}.nav a{padding:6px 10px;border-radius:8px;color:#fff;white-space:nowrap}.nav a:hover{background:rgba(255,255,255,.18);text-decoration:none}
+.nav a.on{background:rgba(255,255,255,.24);font-weight:600}
+.nav .badge{display:inline-block;min-width:18px;padding:0 6px;border-radius:999px;background:#fff;color:var(--pri-dark);font-size:12px;font-weight:700;line-height:18px;text-align:center;vertical-align:1px}
+.who{margin-left:auto;text-align:right;line-height:1.25;color:#fff;display:flex;align-items:center;gap:10px}
+.who-name{font-weight:600;display:block}.who-sub{color:rgba(255,255,255,.9);font-size:12px}
+.rolepick{display:flex;flex-direction:column;align-items:flex-start;font-size:11px;color:rgba(255,255,255,.9);text-align:left}
+.rolepick select{margin-top:2px;background:#fff;color:var(--ink);border:0;border-radius:8px;padding:5px 8px;font-weight:600;width:auto;min-width:170px;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+main{padding:16px 14px 40px}
+.foot{text-align:center;color:var(--mut);font-size:12px;padding:10px 20px 30px}
+.foot button{font:inherit;font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px;box-shadow:0 1px 3px rgba(14,143,163,.06);min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap}
+h2{margin:0 0 10px;font-size:20px;color:var(--pri-dark)}h3{margin:16px 0 8px;font-size:16px;color:var(--pri-dark)}
+.muted{color:var(--mut)}.warn{color:var(--warn)}.err{color:var(--dan)}.req{color:var(--dan)}
+.chip{display:inline-block;background:var(--chip);border-radius:999px;padding:1px 8px;font-size:12px}
+.chip.urgent{background:#fee2e2;color:#991b1b;font-weight:600}.chip.water{background:#e0f2fe;color:#075985;white-space:nowrap}.chip.return{background:#e8f7ee;color:#166534}
+.chip.warn{background:#fff4e0;color:#8a4b00}
+.msg{padding:10px 14px;border-radius:8px;margin-bottom:10px;background:var(--aqua);border:1px solid #a9dfe8}
+.errbox{background:#fdecec;border:1px solid #f3b4b4;border-radius:8px;padding:10px 14px;margin:10px 0}
+.memo-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;color:var(--ink)}
+.tile b{font-size:24px;color:var(--pri-dark)}.tile span{color:var(--mut);font-size:13px}.tile.hot{border-color:var(--pri);background:var(--aqua)}.tile:hover{text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.stbar{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.stbar .st{white-space:normal;min-width:0}
+.stbar a{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:#fff;font-size:13px}
+.stbar a:hover{text-decoration:none;border-color:var(--aqua2);background:#f7fcfd}.stbar a b{font-size:18px;color:var(--pri-dark)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th,.tbl td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:var(--aqua);font-weight:600;white-space:nowrap;color:var(--pri-dark)}.tbl .num{text-align:right;white-space:nowrap}
+.tbl.compact td,.tbl.compact th{padding:5px 6px;font-size:13px}
+.tbl td.nowrap,.nowrap{white-space:nowrap}
+.sortable th[data-k]{cursor:pointer;user-select:none}.sortable th.asc::after{content:" ▲";font-size:10px}.sortable th.desc::after{content:" ▼";font-size:10px}
+.rowlink tbody tr[data-id]{cursor:pointer}.rowlink tbody tr[data-id]:hover{background:#f0fafc}.rowlink tbody tr[data-id]:focus{outline:2px solid #7fd3e0;outline-offset:-2px}
+.st{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;background:#eef2f6;white-space:nowrap}
+.st-pending_supervisor,.st-pending_asst_manager,.st-pending_manager,.st-pending_finance{background:#fff4e0;color:#8a4b00}.st-approved{background:var(--aqua2);color:#0a6f80}
+.st-issued{background:#e8f7ee;color:#166534}.st-exported{background:#e5e7eb;color:#374151}.st-rejected,.st-cancelled{background:#fde8e8;color:#991b1b}.st-urgent_memo{background:#fee2e2;color:#991b1b}
+.br{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;line-height:18px;white-space:nowrap}
+.br-SDC{background:var(--sdc-bg);color:var(--sdc-d);border:1px solid #c7d7ff}.br-SBK{background:var(--sbk-bg);color:var(--sbk-d);border:1px solid #fdd3b3}
+.tab.br-SDC{border-color:#c7d7ff;color:var(--sdc-d)}.tab.br-SBK{border-color:#fdd3b3;color:var(--sbk-d)}
+.tab.on.br-SDC{background:var(--sdc);border-color:var(--sdc);color:#fff}.tab.on .chip{background:rgba(255,255,255,.25);color:#fff}.tab.on.br-SBK{background:var(--sbk);border-color:var(--sbk);color:#fff}
+input,select,button,textarea{font:inherit}
+input:not([type=checkbox]):not([type=radio]),select,textarea{border:1px solid #c6dde3;border-radius:8px;padding:7px 10px;width:100%;background:#fff;color:var(--ink);min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid #7fd3e0;outline-offset:0;border-color:var(--pri)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px;align-items:center}.filters select,.filters input{width:auto}.filters input[type=search]{flex:1 1 220px}
+label{display:block;font-size:13px;color:var(--mut)}label input,label select,label textarea{margin-top:4px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 14px}
+.info div small{display:block;color:var(--mut);font-size:12px}.info .span3{grid-column:1/-1}
+.btn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #cfd5dc;border-radius:8px;padding:8px 14px;color:var(--ink);cursor:pointer;white-space:nowrap;line-height:1.3}
+.btn:hover{background:#f3f4f6;text-decoration:none}.btn.primary{background:var(--pri);border-color:var(--pri);color:#fff}.btn.primary:hover{background:var(--pri-dark)}
+.btn.danger{background:var(--dan);border-color:var(--dan);color:#fff}.btn.ghost{background:transparent}
+.btn.sm{padding:4px 10px;font-size:13px}.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,.tab:focus-visible,.tile:focus-visible,a:focus-visible{outline:3px solid #7fd3e0;outline-offset:2px}
+button.x{border:none;background:transparent;color:var(--mut);font-size:18px;cursor:pointer;padding:0 6px}button.x:hover{color:var(--dan)}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.flow{margin:14px 0;padding:10px 12px;background:var(--aqua);border-radius:8px;font-size:14px;line-height:2}
+.step{padding:2px 8px;border-radius:6px;white-space:nowrap}.step.now{background:#fff4e0;font-weight:600}.step.done{color:#166534}.step.done::before{content:"✓ "}.step.dim{color:var(--mut)}
+.approvebox,.issuebox,.returnbox{margin-top:12px;padding:12px;border:1px dashed #cfd5dc;border-radius:8px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.approvebox .grp{display:flex;gap:6px;flex:1 1 300px;min-width:0}.approvebox .grp input{flex:1;min-width:0}
+.issuebox-text{flex:1 1 320px}.issuebox .receiver{flex:1 1 220px}.issuebox .issue-note{flex:1 1 200px;width:auto}
+.nexthint{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 0;padding:10px 14px;border:1px solid #f5d27a;background:#fffbeb;border-radius:10px;font-size:14px}
+.nexthint .btn{margin-left:auto}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:#fff;cursor:pointer}.tab:hover{text-decoration:none}
+.pager{display:flex;gap:12px;align-items:center;justify-content:center;padding:10px;color:var(--mut);font-size:13px}
+.who-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--aqua);border-radius:10px;padding:10px 14px;font-size:15px;margin-bottom:12px}
+.who-strip .lbl{color:var(--mut);font-size:12px}
+.reqgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px 14px;align-items:start}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c12{grid-column:1/-1}
+.picker{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;margin-top:14px}
+.picker>div{min-width:0}.itemlist{border:1px solid var(--line);border-radius:10px;max-height:420px;overflow-y:auto;background:#fff}
+.it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid #eef3f5;border-left:4px solid #1d8a4b;font-size:14px}
+.it:last-child{border-bottom:0}.it.no{border-left-color:#b91c1c;background:#fff8f8;color:#8a8a8a}.it .nm{flex:1;min-width:0}.it .nm small{display:block;color:var(--mut);font-size:12px}
+.it .code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--mut)}
+.stk{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;background:#e6f5ec;color:#166534;white-space:nowrap}.stk.no{background:#fde8e8;color:#991b1b}
+.it .btn{padding:4px 10px}
+.legend{font-size:12px;color:var(--mut);margin:4px 0 8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 8px;vertical-align:middle}
+.cart input.qty{width:84px;text-align:right;font-weight:600;padding:5px 8px}.cart input.qty.over{border-color:#b91c1c;background:#fff5f5;color:#991b1b}
+.tbl tfoot td.total{font-size:17px;font-weight:700;color:var(--pri-dark)}
+.chainprev{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;margin:10px 0}
+.chainprev .step{background:#fff;border:1px solid var(--line)}
+.tbl.lines{min-width:680px}.tbl.cart{min-width:480px}.lines input.qty-issue{width:80px;text-align:right;font-weight:600;padding:5px 8px}
+.lines input.note-issue{min-width:150px;padding:5px 8px;font-size:13px}
+.guide ol{margin:6px 0 0;padding-left:20px;line-height:1.9}.guide li button{margin-left:4px}
+.guide .done{color:var(--mut);text-decoration:line-through}
+.urgentbox,.salebox{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;border-radius:10px;padding:10px 12px}
+.urgentbox{background:#fff5f5;border:1px solid #fecaca}.salebox{background:#f0f9ff;border:1px solid #bae6fd}
+.urgentbox small,.salebox small{display:block;font-size:12px;color:var(--mut)}
+.waterform .product{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;background:var(--aqua);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.waterform .product small{display:block;font-size:12px;color:var(--mut)}
+.order-row{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}.order-fields{flex:1 1 280px;max-width:440px}
+.order-fields label{margin:0 0 12px;font-weight:600;color:var(--ink);font-size:14px}
+.qrbox{flex:0 0 auto;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}.qrbox svg{width:180px;height:180px;display:block}.qrbox b{display:block;margin-top:4px;color:var(--pri-dark)}.qrbox small{display:block;color:var(--mut)}
+.paybox{border:1px dashed var(--pri);border-radius:10px;padding:12px 14px;margin:12px 0;background:#f7fcfd}.paybox .amount b{font-size:26px;color:var(--pri-dark)}
+.chk{display:flex;align-items:center;gap:8px;margin:6px 0;color:var(--ink);font-size:14px}
+.bar{height:10px;background:var(--pri);border-radius:5px;min-width:2px}
+.barcell{width:40%;min-width:120px}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.csvprev td{white-space:nowrap;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;gap:8px;width:min(560px,calc(100% - 24px))}
+.toast{background:#10262c;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;animation:tin .2s ease-out}
+.toast.err{background:#7f1d1d}.toast .btn{margin-left:auto;padding:4px 10px;font-size:13px}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}}
+.hidden{display:none!important}
+@media (max-width:900px){.reqgrid{grid-template-columns:1fr 1fr}.c3,.c4,.c5,.c6{grid-column:span 1}.c5,.c6.wide{grid-column:1/-1}.picker{grid-template-columns:minmax(0,1fr)}.itemlist{max-height:300px}}
+@media (max-width:720px){
+  .stbar{grid-template-columns:1fr 1fr}.stbar a{padding:7px 8px}.stbar .st{font-size:11px;padding:2px 7px}
+  .tbl{font-size:13px}.tbl th,.tbl td{padding:6px 5px}main{padding:10px 8px 30px}.card{padding:12px}
+  .top .wrap{padding-left:10px;padding-right:10px}
+  .nav{flex-wrap:nowrap;overflow-x:auto;width:100%;order:3;padding-bottom:4px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
+  .who{margin-left:auto}.who .whotext{display:none}.rolepick select{min-width:0;max-width:200px}
+  .brand small{display:none}
+  .reqgrid{grid-template-columns:1fr}.c3,.c4,.c5,.c6{grid-column:1/-1}
+  .hide-sm{display:none}
+  .demobar .wrap{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <div class="demobar" role="note"><div class="wrap"><span class="tag">DEMO</span><span>เดโม · ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง</span><a href="../../#store-requisition">← กลับไปหน้าผลงาน</a></div></div>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#/">📦 เบิกของ <small>Store Requisition</small></a>
+      <div class="who">
+        <div class="whotext"><span class="who-name" id="who-name"></span><span class="who-sub" id="who-sub"></span></div>
+        <label class="rolepick">ดูในมุมของ:
+          <select id="role" aria-label="เลือกมุมมองผู้ใช้"></select>
+        </label>
+      </div>
+      <nav class="nav" id="nav" aria-label="เมนูหลัก"></nav>
+    </div>
+  </header>
+</div>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer class="foot">Store Requisition · เดโมสำหรับพอร์ตโฟลิโอ · ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น · <button class="btn sm" id="reset" type="button">↺ รีเซ็ตข้อมูลเดโม</button></footer>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='sr-demo-v1';
+const ROLES={
+  requester:{label:'ผู้เบิก',name:'สมชาย ใจดี',dept:'ฝ่ายอาคาร'},
+  supervisor:{label:'หัวหน้า',name:'วิภาวดี แสงทอง',dept:'ฝ่ายอาคาร'},
+  asst:{label:'ผู้ช่วยผู้จัดการ',name:'ธนากร ศรีสุข',dept:'สำนักผู้จัดการ'},
+  manager:{label:'ผู้จัดการ',name:'ประเสริฐ มั่นคง',dept:'สำนักผู้จัดการ'},
+  store:{label:'สโตร์',name:'อรุณี พูลสวัสดิ์',dept:'แผนกสโตร์'},
+  acct:{label:'บัญชี / การเงิน',name:'กมลา รักษ์ดี',dept:'ฝ่ายบัญชี'}
+};
+const APPROVER=['supervisor','asst','manager'];
+const STEP_LABEL={supervisor:'หัวหน้า',asst:'ผู้ช่วยผู้จัดการ',manager:'ผู้จัดการ'};
+const STEP_STATUS={supervisor:'pending_supervisor',asst:'pending_asst_manager',manager:'pending_manager'};
+const STATUS={
+  pending_supervisor:'รอหัวหน้าอนุมัติ',pending_asst_manager:'รอผู้ช่วยผู้จัดการอนุมัติ',pending_manager:'รอผู้จัดการอนุมัติ',
+  pending_finance:'รอการเงินตรวจสอบเงิน',approved:'อนุมัติแล้ว รอสโตร์จ่ายของ',urgent_memo:'จ่ายด่วนแล้ว รอผู้เบิกทำใบเบิก',
+  issued:'จ่ายของแล้ว รอ export',exported:'export แล้ว',rejected:'ไม่อนุมัติ',cancelled:'ยกเลิก'
+};
+const BRANCHES={SDC:'สาขา SDC',SBK:'สาขา SBK'};
+const CATS={BLD:'วัสดุอาคาร / สิ้นเปลือง',FB:'อาหารและเครื่องดื่ม (F&B)',WT:'น้ำดื่มพนักงาน'};
+const DEPTS=['ฝ่ายอาคาร','F&B','ฝ่ายบัญชี','ฝ่ายการตลาด','ฝ่ายไอที','ฝ่ายบุคคล','ฝ่ายแม่บ้าน','ฝ่ายรักษาความปลอดภัย'];
+const EMPS=[['สมชาย ใจดี','ฝ่ายอาคาร'],['มาลี สุขสันต์','F&B'],['ปิยะ ทองดี','ฝ่ายบัญชี'],['นันทนา ศรีงาม','ฝ่ายการตลาด'],['วีระ กล้าหาญ','ฝ่ายไอที'],['สุดา มีสุข','ฝ่ายแม่บ้าน'],['เกรียงไกร บุญมา','ฝ่ายอาคาร'],['รัตนา ใจงาม','ฝ่ายบุคคล'],['อนุชา แก้วใส','ฝ่ายรักษาความปลอดภัย']];
+const TIER=[2000,6000]; // เดโมเท่านั้น — UI แสดงแค่ "ตามวงเงิน"
+const WATER={code:'WT-001',price:55,pack:12};
+const ITEMS=[
+ ['BL-1001','กระดาษ A4 80 แกรม','รีม','BLD',125],['BL-1002','ปากกาลูกลื่น สีน้ำเงิน','ด้าม','BLD',6.5],['BL-1003','แฟ้มสันกว้าง 3 นิ้ว','เล่ม','BLD',65],
+ ['BL-1004','เทปใส 1 นิ้ว','ม้วน','BLD',18],['BL-1005','ถ่าน AA (แพ็ค 4)','แพ็ค','BLD',52],['BL-2001','หลอด LED 18W','หลอด','BLD',89],
+ ['BL-2002','เทปพันสายไฟ','ม้วน','BLD',22],['BL-2003','ซิลิโคนยาแนว','หลอด','BLD',110],['BL-3001','น้ำยาถูพื้น 3.8 ลิตร','แกลลอน','BLD',145],
+ ['BL-3002','น้ำยาล้างจาน 3.6 ลิตร','แกลลอน','BLD',120],['BL-3003','ถุงขยะดำ 30x40 นิ้ว','แพ็ค','BLD',55],['BL-3004','กระดาษชำระม้วนใหญ่','ม้วน','BLD',42],
+ ['BL-3005','สบู่เหลวล้างมือ 3.8 ลิตร','แกลลอน','BLD',160],['BL-3006','ถุงมือยาง (กล่อง 100)','กล่อง','BLD',95],['BL-3007','ไม้ม็อบถูพื้น','อัน','BLD',185],
+ ['BL-3008','ผ้าไมโครไฟเบอร์','ผืน','BLD',35],['BL-3009','สเปรย์ปรับอากาศ','กระป๋อง','BLD',79],['BL-3010','น้ำยาเช็ดกระจก','ขวด','BLD',48],
+ ['FB-1001','แก้วกาแฟ 8oz (แพ็ค 50)','แพ็ค','FB',95],['FB-1002','ฝาแก้ว 8oz (แพ็ค 50)','แพ็ค','FB',60],['FB-1003','หลอดกระดาษ (แพ็ค 100)','แพ็ค','FB',75],
+ ['FB-2001','น้ำตาลซอง (กล่อง 100 ซอง)','กล่อง','FB',85],['FB-2002','ครีมเทียมซอง (กล่อง 50 ซอง)','กล่อง','FB',110],['FB-2003','กาแฟคั่วบด 500 กรัม','ถุง','FB',320],
+ ['FB-2004','ชาเขียวผง 500 กรัม','ถุง','FB',280],['FB-2005','นมสด UHT 1 ลิตร','กล่อง','FB',48],['FB-3001','ทิชชู่ป๊อปอัพ','ห่อ','FB',28],
+ ['FB-3002','ถุงหูหิ้ว 6x14 นิ้ว','แพ็ค','FB',45],['FB-3003','กล่องข้าวกระดาษ (แพ็ค 50)','แพ็ค','FB',150],['FB-3004','ช้อนส้อมไม้ (แพ็ค 100)','แพ็ค','FB',90],
+ ['WT-001','น้ำดื่ม 600 มล. (แพ็ค 12 ขวด)','แพ็ค','WT',42]
+].map(a=>({code:a[0],name:a[1],unit:a[2],cat:a[3],cost:a[4]}));
+const ITEM=Object.fromEntries(ITEMS.map(i=>[i.code,i]));
+
+// ---------- utils ----------
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>(Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const qtyf=n=>(Number(n)||0).toLocaleString('en-US',{maximumFractionDigits:3});
+const coll=new Intl.Collator('th',{numeric:true});
+const dth=iso=>new Date(iso).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+const dtth=iso=>new Date(iso).toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+const dlong=iso=>new Date(iso).toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+const daysAgo=(d,h=10,m=0)=>{const t=new Date();t.setDate(t.getDate()-d);t.setHours(h,m,0,0);return t.toISOString();};
+const nowIso=()=>new Date().toISOString();
+const ymd=iso=>{const d=new Date(iso);return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');};
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+
+// ---------- state ----------
+let S=null;
+function lineVal(l,useIssued){const q=useIssued&&l.issued!=null?l.issued:l.qty;return q*l.cost;}
+function total(r,useIssued){return r.lines.reduce((a,l)=>a+lineVal(l,useIssued),0);}
+function chainFor(amount){const c=['supervisor'];if(amount>=TIER[0])c.push('asst');if(amount>=TIER[1])c.push('manager');return c.map(role=>({role,name:ROLES[role].name,at:null,decision:null,note:''}));}
+function nextSeq(key){S.seq[key]=(S.seq[key]||0)+1;return S.seq[key];}
+function docNo(branch,cat){const yy=String(new Date().getFullYear()).slice(-2);return `${branch}-${cat}-${yy}${String(nextSeq(branch+cat)).padStart(4,'0')}`;}
+function memoNo(branch){const yy=String(new Date().getFullYear()).slice(-2);return `${branch}-UR-${yy}${String(nextSeq(branch+'UR')).padStart(4,'0')}`;}
+function mkLines(arr){return arr.map(([code,qty])=>({code,name:ITEM[code].name,unit:ITEM[code].unit,cost:ITEM[code].cost,qty,issued:null,note:''}));}
+function hist(r,action,by,note,at){r.history.push({at:at||nowIso(),action,by,note:note||''});}
+
+function seed(){
+  S={v:1,seq:{},reqs:[],stock:{SDC:{},SBK:{}},batches:[],role:'requester',guide:{}};
+  ITEMS.forEach(i=>{['SDC','SBK'].forEach(b=>{const h=hash(i.code+b);S.stock[b][i.code]=i.cat==='WT'?240:(10+h%140);});});
+  S.stock.SDC['BL-2003']=0;S.stock.SBK['BL-1005']=0;S.stock.SBK['FB-2004']=0;
+  let id=0;
+  const mk=(d,branch,cat,who,dept,objective,lines,status,extra)=>{
+    const [nm,dp]=[who,dept];const at=daysAgo(d,9+(id%6),(id*13)%60);
+    const r={id:++id,no:null,date:at,branch,cat,requester:nm,rdept:dp,charge:dp,objective,lines:mkLines(lines),status:null,chain:[],history:[],receiver:null,issuedBy:null,issuedAt:null,issueNote:'',batch:null,urgent:null,water:null,returns:[],reject:''};
+    Object.assign(r,extra||{});
+    r.chain=chainFor(total(r));
+    r.no=docNo(branch,cat);
+    hist(r,'สร้างและส่งขออนุมัติ',nm,'',at);
+    const order=['supervisor','asst','manager'];
+    const target=status;
+    const stepsDone=s=>{let t=new Date(at).getTime();r.chain.forEach((c,i)=>{if(i<s){t+=3600e3*(2+i);c.at=new Date(t).toISOString();c.decision='อนุมัติ';hist(r,'อนุมัติ ('+STEP_LABEL[c.role]+')',c.name,'',c.at);}});return t;};
+    if(target.startsWith('pending_')&&target!=='pending_finance'){const role=Object.keys(STEP_STATUS).find(k=>STEP_STATUS[k]===target);stepsDone(r.chain.findIndex(c=>c.role===role));r.status=target;}
+    else if(['approved','issued','exported'].includes(target)){let t=stepsDone(r.chain.length);r.status='approved';
+      if(target!=='approved'){t+=3600e3*20;r.issuedAt=new Date(t).toISOString();r.issuedBy=ROLES.store.name;r.receiver=nm;r.lines.forEach(l=>{l.issued=l.qty;S.stock[branch][l.code]=Math.max(0,S.stock[branch][l.code]-l.qty);});hist(r,'สโตร์จ่ายของ',ROLES.store.name,'ผู้รับของ: '+nm,r.issuedAt);r.status='issued';}}
+    else if(target==='rejected'){const c=r.chain[0];c.at=new Date(new Date(at).getTime()+5400e3).toISOString();c.decision='ไม่อนุมัติ';c.note=extra.reject;hist(r,'ไม่อนุมัติ ('+STEP_LABEL[c.role]+')',c.name,extra.reject,c.at);r.status='rejected';}
+    S.reqs.push(r);return r;
+  };
+  mk(0,'SDC','BLD','สมชาย ใจดี','ฝ่ายอาคาร','เปลี่ยนหลอดไฟโถงชั้น 2',[['BL-2001',12],['BL-2002',4]],'pending_supervisor');
+  mk(0,'SBK','FB','มาลี สุขสันต์','F&B','เติมของจุดขายกาแฟ',[['FB-1001',6],['FB-1002',6],['FB-2001',3]],'pending_supervisor');
+  mk(1,'SDC','BLD','นันทนา ศรีงาม','ฝ่ายการตลาด','อุปกรณ์งานอีเวนต์ลานกิจกรรม',[['BL-1001',10],['BL-1004',12],['BL-1003',8],['BL-3009',6]],'pending_asst_manager');
+  mk(1,'SDC','FB','มาลี สุขสันต์','F&B','วัตถุดิบเครื่องดื่มประจำสัปดาห์',[['FB-2003',14],['FB-2004',6],['FB-2005',24]],'pending_manager');
+  mk(2,'SBK','BLD','สุดา มีสุข','ฝ่ายแม่บ้าน','ของใช้ทำความสะอาดประจำเดือน',[['BL-3001',4],['BL-3003',10],['BL-3004',24]],'approved');
+  mk(2,'SDC','BLD','สมชาย ใจดี','ฝ่ายอาคาร','ซ่อมบำรุงห้องน้ำชั้น 3',[['BL-3006',2],['BL-3008',6]],'approved');
+  mk(3,'SDC','BLD','ปิยะ ทองดี','ฝ่ายบัญชี','เครื่องเขียนสำนักงานประจำเดือน',[['BL-1001',5],['BL-1002',24],['BL-1003',6]],'issued');
+  mk(4,'SBK','FB','มาลี สุขสันต์','F&B','งานเลี้ยงรับรองลูกค้า',[['FB-3003',4],['FB-3004',3],['FB-3002',4]],'issued');
+  const ex=mk(6,'SDC','BLD','สมชาย ใจดี','ฝ่ายอาคาร','อุปกรณ์ทำความสะอาดลานจอดรถ',[['BL-3007',3],['BL-3001',2]],'exported');
+  mk(5,'SDC','FB','วีระ กล้าหาญ','ฝ่ายไอที','เครื่องดื่มรับรองห้องประชุม',[['FB-2003',1],['FB-2002',2]],'rejected',{reject:'ให้ใช้งบรับรองของฝ่ายแทน'});
+  // Memo จ่ายด่วน
+  const m={id:++id,no:null,date:daysAgo(1,15,20),branch:'SDC',cat:'BLD',requester:'สมชาย ใจดี',rdept:'ฝ่ายอาคาร',charge:'ฝ่ายอาคาร',objective:'',lines:mkLines([['BL-2002',3],['BL-3006',1],['BL-3008',4]]),status:'urgent_memo',chain:[],history:[],receiver:'สมชาย ใจดี',issuedBy:ROLES.store.name,issuedAt:daysAgo(1,15,20),issueNote:'',batch:null,water:null,returns:[],reject:'',
+    urgent:{memo:memoNo('SDC'),reason:'ท่อน้ำรั่วหน้าลิฟต์ ต้องซ่อมทันที',due:daysAgo(-2,17,0)}};
+  m.lines.forEach(l=>{l.issued=l.qty;S.stock.SDC[l.code]-=l.qty;});hist(m,'สโตร์จ่ายของด่วน (Memo '+m.urgent.memo+')',ROLES.store.name,m.urgent.reason,m.issuedAt);S.reqs.push(m);
+  // ซื้อน้ำดื่ม
+  const w={id:++id,no:docNo('SDC','WT'),date:daysAgo(0,8,40),branch:'SDC',cat:'WT',requester:'สมชาย ใจดี',rdept:'ฝ่ายอาคาร',charge:'ฝ่ายอาคาร',objective:'ซื้อน้ำดื่มพนักงาน',lines:mkLines([['WT-001',2]]),status:'pending_finance',chain:[],history:[],receiver:null,issuedBy:null,issuedAt:null,issueNote:'',batch:null,urgent:null,returns:[],reject:'',
+    water:{packs:2,pickup:daysAgo(-1,10,0),ref:'R'+ymd(daysAgo(0)).slice(2)+'0840',slip:true,checkedBy:null}};
+  hist(w,'สั่งซื้อน้ำดื่ม + แนบสลิป',w.requester,'2 แพ็ค',w.date);S.reqs.push(w);
+  // batch ที่ export ไปแล้ว
+  const bno=`EXP-SDC-${ymd(daysAgo(5))}-01`;ex.status='exported';ex.batch=bno;hist(ex,'บัญชี export',ROLES.acct.name,bno,daysAgo(5,16,0));
+  S.batches.push({no:bno,branch:'SDC',at:daysAgo(5,16,0),by:ROLES.acct.name,reqIds:[ex.id],returns:[],note:'',rows:null});
+  S.batches[0].rows=csvRows(S.batches[0]);
+  S.nextId=id+1;
+}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.v===1&&Array.isArray(d.reqs)){S=d;return;}}}catch(e){}seed();save();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const byId=id=>S.reqs.find(r=>r.id===Number(id));
+const me=()=>ROLES[S.role];
+
+// ---------- derived ----------
+function currentStep(r){return r.chain.find(c=>!c.decision);}
+function waitingAt(r){
+  if(r.status==='pending_finance')return 'การเงิน';
+  if(r.status==='approved')return 'สโตร์';
+  if(r.status==='urgent_memo')return r.requester;
+  if(r.status==='issued')return 'บัญชี (export)';
+  const c=currentStep(r);return c&&r.status.startsWith('pending_')?c.name:'';
+}
+function nextRoleOf(r){
+  if(r.status==='pending_finance')return 'acct';
+  if(r.status==='approved')return 'store';
+  if(r.status==='urgent_memo')return 'requester';
+  if(r.status==='issued')return 'acct';
+  if(r.status.startsWith('pending_')){const c=currentStep(r);return c?c.role:null;}
+  return null;
+}
+function nextDoing(role,r){return {acct:r.status==='issued'?'สร้าง batch export ไป ERP':'ตรวจสอบเงินโอน',store:'จ่ายของ + บันทึกผู้รับของ',requester:'ทำใบเบิกจาก Memo',supervisor:'อนุมัติ',asst:'อนุมัติ',manager:'อนุมัติ'}[role];}
+const qApprove=role=>S.reqs.filter(r=>r.status===STEP_STATUS[role]);
+const qStore=()=>S.reqs.filter(r=>r.status==='approved');
+const qMemo=()=>S.reqs.filter(r=>r.status==='urgent_memo');
+const qFinance=()=>S.reqs.filter(r=>r.status==='pending_finance');
+const qExport=b=>S.reqs.filter(r=>r.status==='issued'&&(!b||r.branch===b));
+const qReturns=b=>{const out=[];S.reqs.forEach(r=>(r.returns||[]).forEach(rt=>{if(!rt.batch&&(!b||r.branch===b))out.push({r,rt});}));return out;};
+
+// ---------- toast ----------
+function toast(msg,opt={}){
+  const t=document.createElement('div');t.className='toast'+(opt.err?' err':'');t.setAttribute('role','status');
+  t.innerHTML=`<span>${msg}</span>`;
+  if(opt.role){const b=document.createElement('button');b.className='btn';b.type='button';b.textContent=`ดูในมุม ${ROLES[opt.role].label} →`;b.onclick=()=>{setRole(opt.role);if(opt.go)location.hash=opt.go;t.remove();};t.appendChild(b);}
+  const box=$('#toasts');box.innerHTML='';box.appendChild(t);setTimeout(()=>t.remove(),opt.role?9000:4500);
+}
+
+// ---------- chrome ----------
+function setRole(r){S.role=r;save();$('#role').value=r;render();}
+function navItems(){
+  const role=S.role,n=[['#/','หน้าแรก']];
+  if(role!=='store'&&role!=='acct')n.push(['#/new','สร้างใบเบิก']);
+  if(role==='requester')n.push(['#/water','💧 ซื้อน้ำดื่ม']);
+  if(APPROVER.includes(role))n.push(['#/approvals','รออนุมัติ',qApprove(role).length]);
+  if(role==='store'){n.push(['#/store','สโตร์',qStore().length]);n.push(['#/new?mode=urgent','🚨 จ่ายของด่วน']);}
+  if(role==='acct'){n.push(['#/finance','การเงิน',qFinance().length]);n.push(['#/export','Export ERP',qExport().length+qReturns().length]);}
+  if(role!=='requester')n.push(['#/report','รายงาน']);
+  n.push(['#/list','รายการทั้งหมด']);
+  return n;
+}
+function renderChrome(route){
+  const u=me();$('#who-name').textContent=u.name;$('#who-sub').textContent=u.dept+' · '+ROLES[S.role].label;
+  const cur='#/'+route.join('/');
+  $('#nav').innerHTML=navItems().map(([h,l,b])=>{const on=(h.split('?')[0]===cur)||(h==='#/'&&cur==='#/');return `<a href="${h}" class="${on?'on':''}"${on?' aria-current="page"':''}>${l}${b?` <span class="badge">${b}</span>`:''}</a>`;}).join('');
+}
+
+// ---------- shared renderers ----------
+const brChip=b=>`<span class="br br-${b}">${b}</span>`;
+const stChip=r=>`<span class="st st-${r.status}">${STATUS[r.status]}</span>`;
+function chargeCell(r){
+  if(r.water)return `<span class="chip water">💧 ${r.water.packs} แพ็ค · รับ ${dth(r.water.pickup)}</span>`;
+  return esc(r.charge);
+}
+function displayNo(r){return r.no||(r.urgent&&r.urgent.memo)||'(ร่าง)';}
+function valueOf(r){return r.water?r.water.packs*WATER.price:total(r,r.status==='issued'||r.status==='exported');}
+
+const TSTATE={};
+function reqTable(key,rows,opt={}){
+  const st=TSTATE[key]||(TSTATE[key]={k:'date',dir:-1,page:0});
+  const cols=[['no','เลขที่'],['date','วันที่'],['requester','ผู้เบิก'],['branch','สาขา/หมวด'],['charge','CHARGE TO'],['value','มูลค่า','num'],['status','สถานะ'],['wait','รอที่']].filter(c=>!(opt.hide||[]).includes(c[0]));
+  const val=(r,k)=>({no:displayNo(r),date:r.date,requester:r.requester,branch:r.branch+r.cat,charge:r.water?'':r.charge,value:valueOf(r),status:STATUS[r.status],wait:waitingAt(r)}[k]);
+  const sorted=rows.slice().sort((a,b)=>{const x=val(a,st.k),y=val(b,st.k);return (typeof x==='number'?x-y:coll.compare(String(x),String(y)))*st.dir;});
+  const per=10,pages=Math.max(1,Math.ceil(sorted.length/per));if(st.page>=pages)st.page=pages-1;
+  const pg=sorted.slice(st.page*per,st.page*per+per);
+  const head=cols.map(([k,l,c])=>`<th data-k="${k}" class="${c||''} ${st.k===k?(st.dir>0?'asc':'desc'):''}" scope="col" aria-sort="${st.k===k?(st.dir>0?'ascending':'descending'):'none'}">${l}</th>`).join('');
+  const body=pg.length?pg.map(r=>`<tr data-id="${r.id}" tabindex="0" aria-label="เปิด ${esc(displayNo(r))}">${cols.map(([k])=>{
+    switch(k){
+      case 'no':return `<td class="nowrap">${esc(displayNo(r))}${r.urgent?' <span class="chip urgent">ด่วน</span>':''}</td>`;
+      case 'date':return `<td class="nowrap">${dth(r.date)}</td>`;
+      case 'requester':return `<td class="nowrap">${esc(r.requester)}</td>`;
+      case 'branch':return `<td class="nowrap">${brChip(r.branch)} · ${r.cat}</td>`;
+      case 'charge':return `<td>${chargeCell(r)}</td>`;
+      case 'value':return `<td class="num">${money(valueOf(r))}</td>`;
+      case 'status':return `<td>${stChip(r)}${r.batch?`<br><small class="muted">${esc(r.batch)}</small>`:''}</td>`;
+      case 'wait':return `<td class="muted nowrap">${esc(waitingAt(r))}</td>`;
+    }}).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}" class="muted">${opt.empty||'ไม่มีรายการ'}</td></tr>`;
+  const pager=pages>1?`<div class="pager"><button class="btn sm" data-pg="-1" ${st.page===0?'disabled':''} aria-label="หน้าก่อน">‹ ก่อนหน้า</button><span>หน้า ${st.page+1} / ${pages} · ${sorted.length} รายการ</span><button class="btn sm" data-pg="1" ${st.page>=pages-1?'disabled':''} aria-label="หน้าถัดไป">ถัดไป ›</button></div>`:'';
+  return `<div class="scroll" data-tbl="${key}"><table class="tbl sortable rowlink"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${pager?`<div data-pager="${key}">${pager}</div>`:''}`;
+}
+function bindTables(root,rerender){
+  $$('[data-tbl]',root).forEach(w=>{const key=w.dataset.tbl;
+    $$('th[data-k]',w).forEach(th=>th.onclick=()=>{const st=TSTATE[key];if(st.k===th.dataset.k)st.dir*=-1;else{st.k=th.dataset.k;st.dir=1;}rerender();});
+    $$('tr[data-id]',w).forEach(tr=>{tr.onclick=()=>location.hash='#/req/'+tr.dataset.id;tr.onkeydown=e=>{if(e.key==='Enter')location.hash='#/req/'+tr.dataset.id;};});
+  });
+  $$('[data-pager]',root).forEach(p=>$$('button[data-pg]',p).forEach(b=>b.onclick=()=>{TSTATE[p.dataset.pager].page+=Number(b.dataset.pg);rerender();}));
+}
+
+// ---------- views ----------
+const V={};
+V.home=function(el){
+  const role=S.role,u=me();let h='';
+  if(role==='requester'){qMemo().filter(r=>r.requester===u.name).forEach(r=>{h+=`<div class="errbox memo-banner"><span><b>🚨 คุณรับของด่วนไปแล้ว (Memo ${esc(r.urgent.memo)})</b> จากสโตร์ ${esc(r.issuedBy)} เมื่อ ${dth(r.issuedAt)} — กรุณาทำใบเบิกภายใน <b>${dth(r.urgent.due)}</b></span><a class="btn primary sm" href="#/memo/${r.id}">ทำใบเบิกจาก Memo</a></div>`;});}
+  const tiles=[];
+  if(role==='requester'){const mine=S.reqs.filter(r=>r.requester===u.name);
+    tiles.push(['#/list?mine=1&status=open',mine.filter(r=>!['issued','exported','rejected','cancelled'].includes(r.status)).length,'ใบของฉันที่ยังไม่จบ'],['#/new','＋','สร้างใบเบิกใหม่',1],['#/water','💧','ซื้อน้ำดื่มพนักงาน']);}
+  if(APPROVER.includes(role))tiles.push(['#/approvals',qApprove(role).length,'รอฉันอนุมัติ']);
+  if(role==='store')tiles.push(['#/store',qStore().length,'สโตร์: รอจ่ายของ'],['#/store',qMemo().length,'Memo จ่ายด่วน รอผู้เบิกทำใบ']);
+  if(role==='acct')tiles.push(['#/finance',qFinance().length,'การเงิน: รอตรวจเงินโอน'],['#/export',qExport().length+qReturns().length,'รอ export ขึ้น ERP']);
+  h+=`<div class="tiles">${tiles.map(([href,n,l,force])=>`<a class="tile${(force||(typeof n==='number'&&n))?' hot':''}" href="${href}"><b>${n}</b><span>${l}</span></a>`).join('')}</div>`;
+  // guide
+  h+=`<div class="card guide"><div class="card-head"><h2 style="margin:0">ลองเดินทั้ง flow ด้วยตัวเอง</h2><span class="muted">สลับบทบาทได้จากเมนู "ดูในมุมของ" มุมขวาบน</span></div>
+  <ol>
+    <li><b>ผู้เบิก</b> สร้างใบเบิก — ค้นหาสินค้า ดู on hand + ราคาเฉลี่ย ใส่จำนวน แล้วส่งขออนุมัติ <button class="btn sm" data-go="requester" data-href="#/new">เริ่มเลย</button></li>
+    <li><b>หัวหน้า → ผู้ช่วยผจก. → ผจก.</b> อนุมัติทีละขั้น (จำนวนขั้นขึ้นกับวงเงิน) <button class="btn sm" data-go="supervisor" data-href="#/approvals">ไปที่คิวอนุมัติ</button></li>
+    <li><b>สโตร์</b> จ่ายของตามจำนวนจริง + บันทึกผู้รับของ (ตัดยอด on hand) <button class="btn sm" data-go="store" data-href="#/store">ไปที่สโตร์</button></li>
+    <li><b>บัญชี</b> รวมใบที่จ่ายแล้วเป็น batch → ดาวน์โหลด CSV สำหรับ ERP <button class="btn sm" data-go="acct" data-href="#/export">ไปที่ Export</button></li>
+  </ol><p class="muted" style="margin:8px 0 0">ของแถม: 🚨 สโตร์จ่ายของด่วนก่อน (Memo) · 💧 ซื้อน้ำดื่มจ่ายผ่าน QR · ↩ รับของคืน · 📊 รายงานสรุปรายเดือน</p></div>`;
+  // status overview
+  const cnt={};S.reqs.forEach(r=>cnt[r.status]=(cnt[r.status]||0)+1);
+  h+=`<div class="card"><h2>ภาพรวมตามสถานะ <small class="muted" style="font-size:13px;font-weight:400">(ทุกสาขา · ${S.reqs.length} ใบ)</small></h2><div class="stbar">${Object.keys(STATUS).map(k=>`<a href="#/list?status=${k}"><span class="st st-${k}">${STATUS[k]}</span><b>${cnt[k]||0}</b></a>`).join('')}</div></div>`;
+  // my table
+  let title,rows,hide=[];
+  if(role==='requester'){title='ใบเบิกของฉัน';rows=S.reqs.filter(r=>r.requester===u.name);hide=['requester'];}
+  else if(APPROVER.includes(role)){title='รอฉันอนุมัติ';rows=qApprove(role);hide=['wait'];}
+  else if(role==='store'){title='รอสโตร์จ่ายของ';rows=qStore();hide=['wait'];}
+  else{title='รอ export ขึ้น ERP';rows=qExport();hide=['wait'];}
+  h+=`<div class="card"><div class="card-head"><h2>${title}</h2><a href="#/list">ดูทั้งหมด →</a></div>${reqTable('home-'+role,rows,{hide,empty:'ไม่มีงานค้าง 🎉'})}</div>`;
+  el.innerHTML=h;bindTables(el,()=>V.home(el));
+  $$('[data-go]',el).forEach(b=>b.onclick=()=>{S.role=b.dataset.go;save();$('#role').value=S.role;location.hash=b.dataset.href;});
+};
+
+V.list=function(el,q){
+  const f=Object.assign({branch:'',cat:'',status:'',s:'',mine:''},q);
+  const draw=()=>{
+    let rows=S.reqs.filter(r=>(!f.branch||r.branch===f.branch)&&(!f.cat||r.cat===f.cat)&&(!f.mine||r.requester===me().name));
+    if(f.status==='open')rows=rows.filter(r=>!['issued','exported','rejected','cancelled'].includes(r.status));else if(f.status)rows=rows.filter(r=>r.status===f.status);
+    if(f.s){const s=f.s.toLowerCase();rows=rows.filter(r=>[displayNo(r),r.requester,r.charge,r.objective,...r.lines.map(l=>l.name+' '+l.code)].join(' ').toLowerCase().includes(s));}
+    $('#list-out',el).innerHTML=reqTable('list',rows,{empty:'ไม่พบใบเบิกตามเงื่อนไข'});bindTables($('#list-out',el),draw);
+  };
+  el.innerHTML=`<div class="card"><h2>ใบเบิกทั้งหมด</h2>
+  <div class="filters" role="search">
+    <select id="f-branch" aria-label="สาขา"><option value="">ทุกสาขา</option>${Object.keys(BRANCHES).map(b=>`<option value="${b}">${b}</option>`).join('')}</select>
+    <select id="f-cat" aria-label="หมวด"><option value="">ทุกหมวด</option>${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${k} — ${v}</option>`).join('')}</select>
+    <select id="f-status" aria-label="สถานะ"><option value="">ทุกสถานะ</option><option value="open">ยังไม่จบ</option>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <label class="chk" style="margin:0 6px"><input type="checkbox" id="f-mine"> เฉพาะของ ${esc(me().name)}</label>
+    <input type="search" id="f-s" placeholder="พิมพ์เพื่อค้น: เลขที่ / ผู้เบิก / สินค้า" aria-label="ค้นหา">
+  </div><p class="muted" style="margin:-6px 0 8px;font-size:12px">กรองทันทีที่พิมพ์/เลือก · คลิกหัวตารางเพื่อเรียง · คลิกแถวเพื่อดูรายละเอียด</p><div id="list-out"></div></div>`;
+  $('#f-branch',el).value=f.branch;$('#f-cat',el).value=f.cat;$('#f-status',el).value=f.status;$('#f-mine',el).checked=!!f.mine;$('#f-s',el).value=f.s;
+  const upd=()=>{f.branch=$('#f-branch',el).value;f.cat=$('#f-cat',el).value;f.status=$('#f-status',el).value;f.mine=$('#f-mine',el).checked?'1':'';f.s=$('#f-s',el).value.trim();if(TSTATE.list)TSTATE.list.page=0;draw();};
+  ['#f-branch','#f-cat','#f-status','#f-mine'].forEach(s=>$(s,el).onchange=upd);$('#f-s',el).oninput=upd;
+  draw();
+};
+
+function queuePage(el,title,rows,desc,key,extra){
+  el.innerHTML=`<div class="card"><div class="card-head"><h2>${title}</h2>${extra||''}</div><p class="muted" style="margin-top:0">${desc}</p>${reqTable(key,rows,{hide:['wait'],empty:'ไม่มีรายการค้าง 🎉'})}</div>`;
+  bindTables(el,()=>queuePage(el,title,rows,desc,key,extra));
+}
+V.approvals=el=>{const role=S.role;if(!APPROVER.includes(role)){el.innerHTML=`<div class="card"><h2>รออนุมัติ</h2><p class="muted">หน้านี้สำหรับผู้อนุมัติ — สลับมุมมองเป็น หัวหน้า / ผู้ช่วยผจก. / ผจก.</p></div>`;return;}
+  queuePage(el,'รอฉันอนุมัติ ('+ROLES[role].label+')',qApprove(role),'สายอนุมัติเรียงตามลำดับ หัวหน้า → ผู้ช่วยผู้จัดการ → ผู้จัดการ · ใบจะมีกี่ขั้นขึ้นกับวงเงินของใบ','appr-'+role);};
+V.store=el=>{
+  el.innerHTML=`<div class="card"><div class="card-head"><h2>สโตร์: รอจ่ายของ</h2><a class="btn" href="#/new?mode=urgent">🚨 จ่ายของด่วน (Memo)</a></div><p class="muted" style="margin-top:0">ใบที่อนุมัติครบแล้ว — เปิดใบเพื่อกรอกจำนวนจ่ายจริงและผู้รับของ</p>${reqTable('store',qStore(),{hide:['wait'],empty:'ไม่มีใบรอจ่าย 🎉'})}</div>
+  <div class="card"><h2>Memo จ่ายด่วน รอผู้เบิกทำใบเบิก</h2>${reqTable('memo',qMemo(),{hide:['status'],empty:'ไม่มี Memo ค้าง'})}</div>`;
+  bindTables(el,()=>V.store(el));
+};
+V.finance=el=>queuePage(el,'การเงิน: รอตรวจเงินโอน (น้ำดื่ม)',qFinance(),'ตรวจยอดโอนกับสลิป/Ref2 แล้วกดยืนยันในใบ → ส่งต่อให้สโตร์จ่ายของตามวันรับ','fin');
+
+// ---------- new requisition ----------
+V.new=function(el,q,memoReq){
+  const urgent=q.mode==='urgent';const u=me();
+  if(!urgent&&(S.role==='store'||S.role==='acct')&&!memoReq){el.innerHTML=`<div class="card"><h2>สร้างใบเบิก</h2><p class="muted">สลับมุมมองเป็น "ผู้เบิก" เพื่อสร้างใบเบิก</p><button class="btn primary" id="sw">ดูในมุม ผู้เบิก</button></div>`;$('#sw',el).onclick=()=>setRole('requester');return;}
+  const d=memoReq?{branch:memoReq.branch,cat:memoReq.cat,charge:memoReq.charge,objective:'',cart:memoReq.lines.map(l=>({code:l.code,qty:l.qty}))}:(S.draft&&S.draft.urgent===urgent?S.draft:{branch:'SDC',cat:'BLD',charge:urgent?'':u.dept,objective:'',cart:[],requester:'',reason:''});
+  d.urgent=urgent;
+  const title=urgent?'🚨 สโตร์จ่ายของด่วน (Memo)':memoReq?`ทำใบเบิกจาก Memo ${esc(memoReq.urgent.memo)}`:'สร้างใบเบิก';
+  el.innerHTML=`<div class="card" id="reqform"><h2>${title}</h2>
+  ${urgent?'<p class="muted" style="margin-top:0">ของออกจากสโตร์ก่อน แล้วผู้เบิกค่อยมาทำใบเบิกอ้าง Memo ทีหลัง — ระบบตัดสต็อกทันที</p>':''}
+  ${memoReq?`<div class="msg">สโตร์ <b>${esc(memoReq.issuedBy)}</b> จ่ายของด่วนให้เมื่อ ${dtth(memoReq.issuedAt)} · เหตุผล: ${esc(memoReq.urgent.reason)} · <b>รายการสินค้าแก้ไม่ได้</b> กรอกวัตถุประสงค์แล้วส่งขออนุมัติ</div>`:''}
+  <div class="who-strip">${urgent?`<span class="lbl">สโตร์ผู้จ่าย</span> <b>${esc(u.name)}</b>`:`<span class="lbl">ผู้เบิก</span> <b>${esc(memoReq?memoReq.requester:u.name)}</b> <span class="muted">·</span> ${esc(memoReq?memoReq.rdept:u.dept)}`}</div>
+  <div class="reqgrid">
+    <label class="c3">สาขา <select id="n-branch" ${memoReq?'disabled':''}>${Object.keys(BRANCHES).map(b=>`<option value="${b}">${b} — ${BRANCHES[b]}</option>`).join('')}</select></label>
+    <label class="c3">หมวด (TYPE) <select id="n-cat" ${memoReq?'disabled':''}>${['BLD','FB'].map(c=>`<option value="${c}">${c} — ${CATS[c]}</option>`).join('')}</select></label>
+    ${urgent?`<label class="c3">ผู้เบิก (ผู้รับของ) <span class="req">*</span><select id="n-req"><option value="">— เลือกพนักงาน —</option>${EMPS.map(e=>`<option value="${esc(e[0])}">${esc(e[0])} · ${esc(e[1])}</option>`).join('')}</select></label>
+      <label class="c3">เหตุผลที่ต้องจ่ายด่วน <span class="req">*</span><input id="n-reason" maxlength="200" placeholder="เช่น ท่อแตกต้องซ่อมทันที"></label>`
+    :`<label class="c3">CHARGE TO <small>(หน่วยงานที่รับค่าใช้จ่าย)</small><select id="n-charge">${DEPTS.map(x=>`<option>${esc(x)}</option>`).join('')}</select></label>
+      <label class="c3">วัตถุประสงค์ <span class="req">*</span><input id="n-obj" maxlength="200" placeholder="เบิกไปทำอะไร / งานอะไร"></label>`}
+  </div>
+  <div class="picker">
+    <div ${memoReq?'class="hidden"':''}>
+      <h3 style="margin-top:0">ค้นหาสินค้า</h3>
+      <input type="search" id="n-q" placeholder="พิมพ์รหัส / ชื่อสินค้า เช่น กระดาษ, แก้ว, LED" aria-label="ค้นหาสินค้า" autocomplete="off">
+      <div class="legend">สี: <i style="background:#1d8a4b"></i>มีของ เบิกได้ <i style="background:#b91c1c"></i>on hand 0 เบิกไม่ได้</div>
+      <div class="itemlist" id="n-items" role="list"></div>
+    </div>
+    <div ${memoReq?'style="grid-column:1/-1"':''}>
+      <h3 style="margin-top:0">รายการที่จะเบิก <span class="muted" id="n-count" style="font-weight:400;font-size:13px"></span></h3>
+      <div class="scroll"><table class="tbl cart compact"><thead><tr><th>สินค้า</th><th class="num">on hand</th><th class="num">จำนวน</th><th class="num">ราคาเฉลี่ย</th><th class="num">มูลค่า</th><th><span class="hidden">ลบ</span></th></tr></thead><tbody id="n-cart"></tbody>
+      <tfoot><tr><td colspan="4" class="num"><b>รวมมูลค่าประมาณ</b></td><td class="num total" id="n-total">0.00</td><td></td></tr></tfoot></table></div>
+      ${urgent?'':'<div class="chainprev" id="n-chain"></div>'}
+      <div class="errbox hidden" id="n-err"></div>
+      <div class="actions"><button class="btn primary" id="n-submit" type="button">${urgent?'บันทึก Memo + ตัดสต็อก':'ส่งขออนุมัติ'}</button>${memoReq?`<a class="btn ghost" href="#/req/${memoReq.id}">ยกเลิก</a>`:'<button class="btn ghost" id="n-clear" type="button">ล้างรายการ</button>'}</div>
+    </div>
+  </div></div>`;
+  $('#n-branch',el).value=d.branch;$('#n-cat',el).value=d.cat;
+  if(!urgent&&!memoReq){$('#n-charge',el).value=d.charge||u.dept;$('#n-obj',el).value=d.objective||'';}
+  if(memoReq){$('#n-charge',el).value=memoReq.charge;}
+  const stockOf=c=>S.stock[d.branch][c]||0;
+  const persist=()=>{if(memoReq)return;d.branch=$('#n-branch',el).value;d.cat=$('#n-cat',el).value;if(!urgent){d.charge=$('#n-charge',el).value;d.objective=$('#n-obj',el).value;}else{d.requester=$('#n-req',el).value;d.reason=$('#n-reason',el).value;}S.draft=d;save();};
+  const drawItems=()=>{
+    const s=$('#n-q',el).value.trim().toLowerCase();
+    const list=ITEMS.filter(i=>i.cat===d.cat&&(!s||(i.code+' '+i.name).toLowerCase().includes(s)));
+    $('#n-items',el).innerHTML=list.length?list.map(i=>{const oh=stockOf(i.code),inCart=d.cart.some(c=>c.code===i.code);
+      return `<div class="it ${oh<=0?'no':''}" role="listitem"><div class="nm">${esc(i.name)}<small><span class="code">${i.code}</span> · ${esc(i.unit)} · ราคาเฉลี่ย ${money(i.cost)}</small></div><span class="stk ${oh<=0?'no':''}">on hand ${qtyf(oh)}</span>
+      <button class="btn sm ${inCart?'':'primary'}" type="button" data-add="${i.code}" ${oh<=0||inCart?'disabled':''} aria-label="เพิ่ม ${esc(i.name)}">${inCart?'✓ เพิ่มแล้ว':'＋ เพิ่ม'}</button></div>`;}).join(''):'<div class="it" style="border-left-color:#cbd5e1"><span class="muted">ไม่พบสินค้า</span></div>';
+    $$('[data-add]',el).forEach(b=>b.onclick=()=>{d.cart.push({code:b.dataset.add,qty:1});persist();drawItems();drawCart();const inp=$(`#n-cart input[data-code="${b.dataset.add}"]`,el);if(inp){inp.focus();inp.select();}});
+  };
+  const drawCart=()=>{
+    let tot=0;
+    $('#n-cart',el).innerHTML=d.cart.length?d.cart.map(c=>{const i=ITEM[c.code],oh=stockOf(c.code)+(memoReq?c.qty:0),v=c.qty*i.cost;tot+=v;const over=!memoReq&&c.qty>oh;
+      return `<tr><td>${esc(i.name)}<br><small class="muted mono">${i.code}</small></td><td class="num">${qtyf(memoReq?stockOf(c.code):oh)}</td>
+      <td class="num">${memoReq?`<b>${qtyf(c.qty)}</b> <small class="muted">${esc(i.unit)}</small>`:`<input class="qty${over?' over':''}" type="number" min="1" step="1" inputmode="numeric" value="${c.qty}" data-code="${c.code}" aria-label="จำนวน ${esc(i.name)}"><br><small class="muted">${esc(i.unit)}</small>`}</td>
+      <td class="num muted">${money(i.cost)}</td><td class="num">${money(v)}</td><td>${memoReq?'':`<button class="x" type="button" data-rm="${c.code}" aria-label="ลบ ${esc(i.name)}">×</button>`}</td></tr>`;}).join(''):'<tr><td colspan="6" class="muted">ยังไม่มีรายการ — ค้นหาสินค้าแล้วกด "＋ เพิ่ม"</td></tr>';
+    $('#n-total',el).textContent=money(tot);$('#n-count',el).textContent=d.cart.length?`(${d.cart.length} รายการ)`:'';
+    if($('#n-chain',el)){const ch=chainFor(tot);$('#n-chain',el).innerHTML=`<b>สายอนุมัติ (ตามวงเงิน):</b> ${ch.map(c=>`<span class="step">${STEP_LABEL[c.role]}: ${esc(c.name)}</span>`).join(' → ')} → <span class="step">สโตร์จ่ายของ</span>`;}
+    $$('#n-cart input.qty',el).forEach(inp=>inp.onchange=inp.oninput=()=>{const c=d.cart.find(x=>x.code===inp.dataset.code);c.qty=Math.max(0,Math.floor(Number(inp.value)||0));persist();
+      const oh=stockOf(c.code);inp.classList.toggle('over',c.qty>oh);const row=inp.closest('tr');row.cells[4].textContent=money(c.qty*ITEM[c.code].cost);
+      const t=d.cart.reduce((a,x)=>a+x.qty*ITEM[x.code].cost,0);$('#n-total',el).textContent=money(t);
+      if($('#n-chain',el)){const ch=chainFor(t);$('#n-chain',el).innerHTML=`<b>สายอนุมัติ (ตามวงเงิน):</b> ${ch.map(c=>`<span class="step">${STEP_LABEL[c.role]}: ${esc(c.name)}</span>`).join(' → ')} → <span class="step">สโตร์จ่ายของ</span>`;}});
+    $$('[data-rm]',el).forEach(b=>b.onclick=()=>{d.cart=d.cart.filter(x=>x.code!==b.dataset.rm);persist();drawItems();drawCart();});
+  };
+  if(urgent){$('#n-req',el).value=d.requester||'';$('#n-reason',el).value=d.reason||'';}
+  $('#n-q',el).oninput=drawItems;
+  $('#n-branch',el).onchange=()=>{persist();drawItems();drawCart();};
+  $('#n-cat',el).onchange=()=>{d.cart=[];persist();drawItems();drawCart();};
+  $$('#n-charge,#n-obj,#n-req,#n-reason',el).forEach(x=>x.oninput=x.onchange=persist);
+  if($('#n-clear',el))$('#n-clear',el).onclick=()=>{d.cart=[];persist();drawItems();drawCart();};
+  $('#n-submit',el).onclick=()=>{
+    const errs=[];persist();
+    const obj=memoReq?$('#n-obj',el).value.trim():(urgent?'':d.objective.trim());
+    if(!d.cart.length)errs.push('ยังไม่ได้เลือกสินค้า');
+    if(d.cart.some(c=>c.qty<=0))errs.push('จำนวนต้องมากกว่า 0');
+    if(!memoReq&&d.cart.some(c=>c.qty>stockOf(c.code)))errs.push('มีรายการที่เบิกเกินยอด on hand (ช่องสีแดง)');
+    if(!urgent&&!obj)errs.push('กรุณากรอกวัตถุประสงค์');
+    if(urgent&&!d.requester)errs.push('เลือกผู้เบิก (ผู้รับของ)');
+    if(urgent&&!d.reason.trim())errs.push('ระบุเหตุผลที่ต้องจ่ายด่วน');
+    const eb=$('#n-err',el);if(errs.length){eb.innerHTML='<b>แก้ก่อนส่ง:</b> '+errs.map(esc).join(' · ');eb.classList.remove('hidden');return;}
+    if(memoReq){const r=memoReq;r.objective=obj;r.charge=$('#n-charge',el).value;r.no=docNo(r.branch,r.cat);r.chain=chainFor(total(r));r.status='pending_supervisor';r.date=nowIso();hist(r,'ทำใบเบิกจาก Memo + ส่งขออนุมัติ',r.requester,r.no);save();location.hash='#/req/'+r.id;toast(`ส่งใบ ${esc(r.no)} แล้ว — รอหัวหน้าอนุมัติ`,{role:'supervisor'});return;}
+    const at=nowIso();
+    const r={id:S.nextId++,no:null,date:at,branch:d.branch,cat:d.cat,requester:urgent?d.requester:u.name,rdept:urgent?(EMPS.find(e=>e[0]===d.requester)||[])[1]:u.dept,charge:urgent?(EMPS.find(e=>e[0]===d.requester)||[])[1]:d.charge,objective:urgent?'':obj,lines:mkLines(d.cart.map(c=>[c.code,c.qty])),status:'',chain:[],history:[],receiver:null,issuedBy:null,issuedAt:null,issueNote:'',batch:null,urgent:null,water:null,returns:[],reject:''};
+    if(urgent){r.urgent={memo:memoNo(r.branch),reason:d.reason.trim(),due:daysAgo(-3,17,0)};r.status='urgent_memo';r.issuedBy=u.name;r.issuedAt=at;r.receiver=r.requester;r.lines.forEach(l=>{l.issued=l.qty;S.stock[r.branch][l.code]-=l.qty;});hist(r,'สโตร์จ่ายของด่วน (Memo '+r.urgent.memo+')',u.name,r.urgent.reason);}
+    else{r.no=docNo(r.branch,r.cat);r.chain=chainFor(total(r));r.status='pending_supervisor';hist(r,'สร้างและส่งขออนุมัติ',u.name);}
+    S.reqs.push(r);S.draft=null;save();location.hash='#/req/'+r.id;
+    if(urgent)toast(`บันทึก Memo ${esc(r.urgent.memo)} แล้ว — ผู้เบิกต้องมาทำใบเบิกภายหลัง`,{role:r.requester===ROLES.requester.name?'requester':null});
+    else toast(`ส่งใบ ${esc(r.no)} ขออนุมัติแล้ว — ขั้นแรก: หัวหน้า`,{role:'supervisor'});
+  };
+  drawItems();drawCart();
+};
+V.memo=(el,q,id)=>{const r=byId(id);if(!r||r.status!=='urgent_memo'){V.notfound(el);return;}V.new(el,{},r);};
+
+// ---------- detail ----------
+V.req=function(el,q,id){
+  const r=byId(id);if(!r){V.notfound(el);return;}
+  const role=S.role,u=me();
+  const cs=currentStep(r);
+  const isApprover=r.status.startsWith('pending_')&&r.status!=='pending_finance'&&cs&&cs.role===role;
+  const canIssue=role==='store'&&r.status==='approved';
+  const canFinance=role==='acct'&&r.status==='pending_finance';
+  const canMemo=role==='requester'&&r.status==='urgent_memo'&&r.requester===u.name;
+  const canReturn=role==='store'&&['issued','exported'].includes(r.status)&&!r.water;
+  const canCancel=role==='requester'&&r.requester===u.name&&r.status==='pending_supervisor'&&!r.chain.some(c=>c.decision)&&!r.urgent;
+  const showIssued=r.lines.some(l=>l.issued!=null);
+  let h=`<div class="card"><div class="card-head"><h2>${esc(displayNo(r))} ${stChip(r)}${r.urgent?` <span class="chip urgent">🚨 จ่ายของด่วน · Memo ${esc(r.urgent.memo)}</span>`:''}</h2>
+  <div class="actions" style="margin-top:0">${canMemo?`<a class="btn primary" href="#/memo/${r.id}">ทำใบเบิกจาก Memo</a>`:''}${canReturn?'<button class="btn" id="d-rt-open" type="button">↩ รับของคืน</button>':''}<a class="btn ghost" href="#/list">← รายการ</a></div></div>
+  <div class="grid3 info">
+    <div><small>ผู้เบิก</small>${esc(r.requester)}<br><small>${esc(r.rdept)}</small></div>
+    <div><small>วันที่</small>${dlong(r.date)}</div>
+    <div><small>สาขา / หมวด</small>${brChip(r.branch)} · ${esc(CATS[r.cat])}</div>`;
+  if(r.urgent)h+=`<div class="span3 urgentbox"><div><small>Memo</small><b>${esc(r.urgent.memo)}</b></div><div><small>สโตร์จ่ายด่วนเมื่อ</small>${dtth(r.issuedAt)} <span class="muted">โดย ${esc(r.issuedBy)}</span></div><div><small>ผู้รับของ</small>${esc(r.receiver)}</div><div><small>เหตุผลที่จ่ายด่วน</small>${esc(r.urgent.reason)}</div><div><small>ผู้เบิกต้องทำใบภายใน</small>${r.status==='urgent_memo'?`<b>${dth(r.urgent.due)}</b>`:`<span class="muted">ทำใบแล้ว${r.no?' · '+esc(r.no):''}</span>`}</div></div>`;
+  if(r.water)h+=`<div class="span3 salebox"><div><small>จำนวน</small><b>${r.water.packs}</b> แพ็ค <span class="muted">= ${r.water.packs*WATER.pack} ขวด</span></div><div><small>ราคา</small>${WATER.price} บาท/แพ็ค</div><div><small>ยอดโอน</small><b>${money(r.water.packs*WATER.price)}</b> บาท <span class="muted">· Ref2 ${esc(r.water.ref)}</span></div><div><small>วันรับของ</small><b>${dlong(r.water.pickup)}</b> <span class="muted">ที่สโตร์ ${r.branch}</span></div><div><small>สลิปโอนเงิน</small>🧾 แนบแล้ว <span class="muted">(ตัวอย่าง)</span></div><div><small>การเงินตรวจสอบ</small>${r.water.checkedBy?esc(r.water.checkedBy):'<span class="muted">รอตรวจสอบ</span>'}</div></div>`;
+  if(!r.water)h+=`<div><small>CHARGE TO</small>${esc(r.charge)}</div>`;
+  if(r.receiver&&!r.urgent)h+=`<div><small>ผู้รับของ</small>${esc(r.receiver)}<br><small>${r.receiver===r.requester?'ผู้เบิกรับเอง':'รับแทนผู้เบิก'}</small></div>`;
+  if(r.batch)h+=`<div><small>Batch export</small><span class="mono">${esc(r.batch)}</span></div>`;
+  if(!r.water)h+=`<div class="span3"><small>วัตถุประสงค์</small>${esc(r.objective||'—')}</div>`;
+  h+=`</div>`;
+  // lines
+  h+=`<div class="scroll" style="margin-top:14px"><table class="tbl lines"><thead><tr><th>#</th><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th class="num">on hand</th><th class="num">ขอเบิก</th>${showIssued||canIssue?'<th class="num">จ่ายจริง</th>':''}<th class="num">ราคาเฉลี่ย</th><th class="num">มูลค่า</th>${canIssue?'<th>เหตุผล (ถ้าจ่ายไม่ตรง)</th>':''}</tr></thead><tbody>
+  ${r.lines.map((l,i)=>`<tr><td class="muted">${i+1}</td><td class="mono nowrap">${l.code}</td><td>${esc(l.name)}${!canIssue&&l.note?`<br><small class="warn">สโตร์: ${esc(l.note)}</small>`:''}</td><td>${esc(l.unit)}</td><td class="num">${qtyf(S.stock[r.branch][l.code])}</td><td class="num">${qtyf(l.qty)}</td>
+    ${canIssue?`<td class="num"><input class="qty-issue" type="number" min="0" max="${l.qty}" step="1" inputmode="numeric" value="${l.qty}" data-i="${i}" aria-label="จ่ายจริง ${esc(l.name)}"></td>`:showIssued?`<td class="num ${l.issued!==l.qty?'warn':''}"><b>${l.issued==null?'—':qtyf(l.issued)}</b></td>`:''}
+    <td class="num muted">${money(l.cost)}</td><td class="num">${money(lineVal(l,showIssued))}</td>${canIssue?`<td><input class="note-issue" data-n="${i}" placeholder="ของเสียหาย / ไม่พอ…" aria-label="เหตุผล ${esc(l.name)}"></td>`:''}</tr>`).join('')}
+  </tbody><tfoot><tr><td colspan="${(showIssued||canIssue)?8:7}" class="num"><b>รวมมูลค่า${showIssued?'จ่ายจริง':'ประมาณ'}</b></td><td class="num total">${money(total(r,showIssued))}</td>${canIssue?'<td></td>':''}</tr></tfoot></table></div>`;
+  if(canIssue)h+=`<div class="issuebox"><div class="issuebox-text"><b>สโตร์จ่ายของ</b><br><small class="muted">แก้ช่อง "จ่ายจริง" ถ้าจ่ายไม่ครบ พร้อมเหตุผลรายบรรทัด · จ่ายน้อยกว่าที่ขอได้ ไม่ต้องอนุมัติใหม่ · จ่ายเกินที่ขอไม่ได้</small></div>
+    <label class="receiver">ผู้รับของ<select id="d-recv">${EMPS.map(e=>`<option value="${esc(e[0])}" ${e[0]===r.requester?'selected':''}>${esc(e[0])} · ${esc(e[1])}${e[0]===r.requester?' (ผู้เบิก)':''}</option>`).join('')}</select></label>
+    <input id="d-inote" class="issue-note" placeholder="หมายเหตุรวม (ถ้ามี)" maxlength="200" aria-label="หมายเหตุรวม"><button class="btn primary" id="d-issue" type="button">ยืนยันจ่ายของ</button></div>`;
+  // flow
+  if(r.water){h+=`<div class="flow"><b>ขั้นตอน:</b> <span class="step ${r.status==='pending_finance'?'now':r.water.checkedBy?'done':''}">การเงินตรวจเงินโอน${r.water.checkedBy?': '+esc(r.water.checkedBy):''}</span> → <span class="step ${r.status==='approved'?'now':r.issuedBy?'done':''}">สโตร์จ่ายของ${r.issuedBy?': '+esc(r.issuedBy):''}</span> → <span class="step ${r.status==='issued'?'now':r.status==='exported'?'done':''}">บัญชี export${r.batch?': '+esc(r.batch):''}</span></div>`;}
+  else{
+    h+=`<div class="flow">${r.urgent?`<span class="step done">🚨 สโตร์จ่ายด่วน: ${esc(r.issuedBy)}</span> → <span class="step ${r.status==='urgent_memo'?'now':'done'}">ผู้เบิกทำใบเบิก</span> → `:''}<b>สายอนุมัติ (ตามวงเงิน):</b> `;
+    h+=r.chain.length?r.chain.map(c=>`<span class="step ${c.decision==='อนุมัติ'?'done':c.decision?'':(cs===c&&r.status.startsWith('pending_')?'now':'dim')}">${STEP_LABEL[c.role]}: ${esc(c.name)}${c.decision&&c.decision!=='อนุมัติ'?' ✗ '+c.decision:''}</span>`).join(' → '):'<span class="step dim">จะกำหนดเมื่อส่งใบ</span>';
+    if(!r.urgent)h+=` → <span class="step ${r.status==='approved'?'now':r.issuedBy?'done':''}">สโตร์จ่ายของ${r.issuedBy?': '+esc(r.issuedBy):''}${r.receiver?' · ผู้รับของ: '+esc(r.receiver):''}</span>`;
+    h+=` → <span class="step ${r.status==='issued'?'now':r.status==='exported'?'done':''}">บัญชี export${r.batch?': '+esc(r.batch):''}</span></div>`;
+  }
+  if(isApprover){h+=`<div class="approvebox"><div class="grp"><input id="d-anote" placeholder="หมายเหตุ (ถ้ามี)" maxlength="200" aria-label="หมายเหตุการอนุมัติ"><button class="btn primary" id="d-approve" type="button">✓ อนุมัติ</button></div>
+    ${r.urgent?'<span class="muted" style="font-size:13px">ใบเบิกด่วน: ของออกจากสโตร์แล้ว จึง<b>ไม่อนุมัติไม่ได้</b></span>':`<div class="grp"><input id="d-reason" placeholder="เหตุผลที่ไม่อนุมัติ (บังคับ)" maxlength="200" aria-label="เหตุผลที่ไม่อนุมัติ"><button class="btn danger" id="d-reject" type="button">✗ ไม่อนุมัติ</button></div>`}</div>`;}
+  if(canFinance)h+=`<div class="approvebox"><button class="btn primary" id="d-fin-ok" type="button">✓ ตรวจสอบแล้ว — เงินเข้า</button><div class="grp"><input id="d-fin-reason" placeholder="เหตุผลที่ไม่ผ่าน (บังคับ)" aria-label="เหตุผลที่ไม่ผ่าน"><button class="btn danger" id="d-fin-no" type="button">✕ ไม่ผ่าน</button></div></div>`;
+  if(canCancel)h+=`<div class="actions"><button class="btn ghost" id="d-cancel" type="button" style="color:var(--dan);border-color:var(--dan)">✕ ยกเลิกใบเบิก</button></div>`;
+  if(r.reject)h+=`<p class="errbox">ไม่อนุมัติ/ไม่ผ่าน: ${esc(r.reject)}</p>`;
+  if(r.issueNote)h+=`<p class="muted">หมายเหตุสโตร์: ${esc(r.issueNote)}</p>`;
+  // return box
+  if(canReturn)h+=`<div class="returnbox hidden" id="d-rt"><div style="flex:1 1 100%"><b>↩ รับของคืนเข้าสโตร์</b> <small class="muted">— ออกเป็นรายการขาบวกใน batch export ถัดไป</small></div>
+    ${r.lines.map((l,i)=>{const back=r.returns.reduce((a,rt)=>a+(rt.lines.find(x=>x.i===i)||{qty:0}).qty,0),max=(l.issued||0)-back;return `<label style="flex:1 1 200px">${esc(l.name)} <small>(คืนได้ ${qtyf(max)} ${esc(l.unit)})</small><input type="number" min="0" max="${max}" value="0" data-rt="${i}" ${max<=0?'disabled':''}></label>`;}).join('')}
+    <input id="d-rt-reason" placeholder="เหตุผลที่คืน (บังคับ)" style="flex:1 1 240px" aria-label="เหตุผลที่คืน"><button class="btn primary" id="d-rt-save" type="button">บันทึกรับคืน</button></div>`;
+  // next step hint
+  const nr=nextRoleOf(r);
+  if(nr&&nr!==role)h+=`<div class="nexthint">👉 <span>ขั้นถัดไป: <b>${ROLES[nr].label}</b> (${esc(ROLES[nr].name)}) — ${nextDoing(nr,r)}</span><button class="btn primary sm" type="button" id="d-next">ดูในมุม ${ROLES[nr].label} →</button></div>`;
+  h+=`</div>`;
+  if(r.returns.length)h+=`<div class="card"><h3 style="margin-top:0">↩ รับของคืน (${r.returns.length} ครั้ง)</h3><div class="scroll"><table class="tbl compact"><thead><tr><th>ใบรับคืน</th><th>เมื่อ</th><th>สโตร์ผู้รับ</th><th>รายการ</th><th>เหตุผล</th><th>สถานะ</th></tr></thead><tbody>${r.returns.map(rt=>`<tr><td class="nowrap"><b>${esc(rt.no)}</b></td><td class="nowrap">${dtth(rt.at)}</td><td>${esc(rt.by)}</td><td>${rt.lines.map(x=>`${r.lines[x.i].code} × ${qtyf(x.qty)}`).join('<br>')}</td><td>${esc(rt.reason)}</td><td><span class="st ${rt.batch?'st-exported':'st-issued'}">${rt.batch?'export แล้ว · '+esc(rt.batch):'รอ export'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+  h+=`<div class="card"><h3 style="margin-top:0">ประวัติ</h3><div class="scroll"><table class="tbl compact"><tbody>${r.history.slice().reverse().map(x=>`<tr><td class="nowrap">${dtth(x.at)}</td><td>${esc(x.action)}</td><td class="nowrap">${esc(x.by)}</td><td class="muted">${esc(x.note)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  el.innerHTML=h;
+  const on=(s,f)=>{const x=$(s,el);if(x)x.onclick=f;};
+  on('#d-next',()=>setRole(nr));
+  on('#d-approve',()=>{const note=$('#d-anote',el).value.trim();cs.decision='อนุมัติ';cs.at=nowIso();cs.note=note;hist(r,'อนุมัติ ('+STEP_LABEL[cs.role]+')',u.name,note);
+    const nx=currentStep(r);let msg;
+    if(nx){r.status=STEP_STATUS[nx.role];msg=`อนุมัติแล้ว — ส่งต่อให้ ${STEP_LABEL[nx.role]}`;save();render();toast(msg,{role:nx.role});}
+    else if(r.urgent){r.status='issued';save();render();toast('อนุมัติครบ — ใบเบิกด่วนจ่ายของไปแล้ว รอบัญชี export',{role:'acct'});}
+    else{r.status='approved';save();render();toast('อนุมัติครบทุกขั้น — ส่งต่อให้สโตร์จ่ายของ',{role:'store'});}});
+  on('#d-reject',()=>{const rs=$('#d-reason',el).value.trim();if(!rs){$('#d-reason',el).focus();toast('ระบุเหตุผลที่ไม่อนุมัติ',{err:1});return;}cs.decision='ไม่อนุมัติ';cs.at=nowIso();cs.note=rs;r.reject=rs;r.status='rejected';hist(r,'ไม่อนุมัติ ('+STEP_LABEL[cs.role]+')',u.name,rs);save();render();toast('ไม่อนุมัติแล้ว — แจ้งผู้เบิก');});
+  on('#d-issue',()=>{const inputs=$$('input.qty-issue',el);let bad=false;
+    inputs.forEach(inp=>{const l=r.lines[inp.dataset.i];const v=Math.floor(Number(inp.value));if(!(v>=0)||v>l.qty||v>S.stock[r.branch][l.code]){bad=true;inp.style.borderColor='#b91c1c';}});
+    if(bad){toast('จำนวนจ่ายจริงต้องไม่เกินที่ขอ และไม่เกิน on hand',{err:1});return;}
+    inputs.forEach(inp=>{const l=r.lines[inp.dataset.i];l.issued=Math.floor(Number(inp.value));l.note=$(`input[data-n="${inp.dataset.i}"]`,el).value.trim();S.stock[r.branch][l.code]-=l.issued;});
+    r.receiver=$('#d-recv',el).value;r.issuedBy=u.name;r.issuedAt=nowIso();r.issueNote=$('#d-inote',el).value.trim();r.status='issued';
+    hist(r,'สโตร์จ่ายของ',u.name,'ผู้รับของ: '+r.receiver+(r.issueNote?' · '+r.issueNote:''));save();render();toast(`จ่ายของแล้ว (ผู้รับ: ${esc(r.receiver)}) — รอบัญชี export`,{role:'acct',go:'#/export'});});
+  on('#d-fin-ok',()=>{r.water.checkedBy=u.name;r.status='approved';hist(r,'การเงินตรวจสอบแล้ว — เงินเข้า',u.name,'Ref2 '+r.water.ref);save();render();toast('ยืนยันเงินเข้าแล้ว — ส่งต่อให้สโตร์จ่ายน้ำตามวันรับ',{role:'store'});});
+  on('#d-fin-no',()=>{const rs=$('#d-fin-reason',el).value.trim();if(!rs){toast('ระบุเหตุผลที่ไม่ผ่าน',{err:1});return;}r.reject=rs;r.status='rejected';hist(r,'การเงินตรวจสอบไม่ผ่าน',u.name,rs);save();render();});
+  on('#d-cancel',()=>{r.status='cancelled';hist(r,'ผู้เบิกยกเลิกใบ',u.name);save();render();toast('ยกเลิกใบเบิกแล้ว');});
+  on('#d-rt-open',()=>{$('#d-rt',el).classList.toggle('hidden');});
+  on('#d-rt-save',()=>{const lines=$$('input[data-rt]',el).map(x=>({i:Number(x.dataset.rt),qty:Math.floor(Number(x.value)||0),max:Number(x.max)})).filter(x=>x.qty>0);
+    const rs=$('#d-rt-reason',el).value.trim();
+    if(!lines.length||lines.some(x=>x.qty>x.max)){toast('ใส่จำนวนคืนอย่างน้อย 1 รายการ และไม่เกินที่คืนได้',{err:1});return;}
+    if(!rs){toast('ระบุเหตุผลที่คืน',{err:1});return;}
+    const rt={no:`RT-${r.branch}-${String(nextSeq('RT'+r.branch)).padStart(4,'0')}`,at:nowIso(),by:u.name,reason:rs,lines:lines.map(x=>({i:x.i,qty:x.qty})),batch:null};
+    r.returns.push(rt);lines.forEach(x=>S.stock[r.branch][r.lines[x.i].code]+=x.qty);hist(r,'รับของคืน '+rt.no,u.name,rs);save();render();toast(`บันทึกรับคืน ${rt.no} แล้ว — จะออกเป็นขาบวกใน batch ถัดไป`,{role:'acct',go:'#/export'});});
+};
+
+// ---------- water ----------
+function fakeQR(seed){const n=25,cell=8;let s=hash(seed),out='';const rnd=()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return (s>>>0)%100;};
+  const finder=(x,y)=>`<rect x="${x*cell}" y="${y*cell}" width="${7*cell}" height="${7*cell}" fill="#10262c"/><rect x="${(x+1)*cell}" y="${(y+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/><rect x="${(x+2)*cell}" y="${(y+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#10262c"/>`;
+  const inF=(x,y)=>(x<8&&y<8)||(x>16&&y<8)||(x<8&&y>16);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(!inF(x,y)&&rnd()<48)out+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}"/>`;}
+  return `<svg viewBox="-8 -8 216 216" role="img" aria-label="QR ตัวอย่าง (สแกนไม่ได้)"><rect x="-8" y="-8" width="216" height="216" fill="#fff"/><g fill="#10262c">${out}</g>${finder(0,0)}${finder(18,0)}${finder(0,18)}</svg>`;}
+V.water=function(el){
+  if(S.role!=='requester'){el.innerHTML=`<div class="card"><h2>💧 ซื้อน้ำดื่ม (พนักงาน)</h2><p class="muted">สลับมุมมองเป็น "ผู้เบิก" เพื่อสั่งซื้อ</p><button class="btn primary" id="sw" type="button">ดูในมุม ผู้เบิก</button></div>`;$('#sw',el).onclick=()=>setRole('requester');return;}
+  const days=[];for(let i=1;days.length<5;i++){const d=new Date();d.setDate(d.getDate()+i);if(d.getDay()!==0&&d.getDay()!==6){d.setHours(10,0,0,0);days.push(d.toISOString());}}
+  el.innerHTML=`<div class="card waterform"><div class="card-head"><h2>💧 ซื้อน้ำดื่ม (พนักงาน)</h2><span class="muted">สแกน QR ชำระ → แนบสลิป → การเงินตรวจสอบ → รับที่สโตร์ตามวันรับ</span></div>
+  <div class="product"><div><small>รับที่สโตร์สาขา</small><select id="w-branch" aria-label="สาขาที่รับ"><option value="SDC">SDC — ${BRANCHES.SDC}</option><option value="SBK">SBK — ${BRANCHES.SBK}</option></select></div>
+  <div><small>สินค้า</small><b>${esc(ITEM[WATER.code].name)}</b></div><div><small>ราคา</small><b>${WATER.price}</b> บาท/แพ็ค</div><div><small>พร้อมขายตอนนี้</small><b id="w-avail"></b> แพ็ค</div></div>
+  <div class="order-row"><div class="order-fields">
+    <label>จำนวนที่ซื้อ (แพ็ค)<input type="number" id="w-packs" min="1" max="10" value="1" inputmode="numeric"></label>
+    <label>วันรับของ <small class="muted" style="font-weight:400">(เฉพาะวันที่สโตร์เปิดจ่าย)</small><select id="w-day">${days.map(d=>`<option value="${d}">${dlong(d)}</option>`).join('')}</select></label>
+    <div class="paybox"><div class="amount">ยอดที่ต้องโอน <b id="w-amt">0</b> บาท <small class="muted" id="w-bottles"></small></div><div class="muted" style="font-size:13px">Ref2 <span class="mono" id="w-ref"></span> (ผูกกับผู้สั่ง + เวลา)</div></div>
+    <label class="chk" style="font-weight:400"><input type="checkbox" id="w-slip"> แนบสลิปโอนเงินแล้ว <small class="muted">(เดโม: ติ๊กแทนการอัปโหลดไฟล์)</small></label>
+    <div class="actions"><button class="btn primary" id="w-submit" type="button">ยืนยันสั่งซื้อ</button></div>
+  </div><div class="qrbox" id="w-qr"></div></div></div>`;
+  const ref='R'+ymd(nowIso()).slice(2)+String(new Date().getHours()).padStart(2,'0')+String(new Date().getMinutes()).padStart(2,'0');
+  const upd=()=>{const p=Math.max(1,Math.floor(Number($('#w-packs',el).value)||1)),b=$('#w-branch',el).value;$('#w-amt',el).textContent=money(p*WATER.price);$('#w-bottles',el).textContent=`(${p*WATER.pack} ขวด)`;$('#w-ref',el).textContent=ref;$('#w-avail',el).textContent=qtyf(S.stock[b][WATER.code]);
+    $('#w-qr',el).innerHTML=fakeQR(b+p+ref)+`<b>สแกนจ่าย ${money(p*WATER.price)} บาท</b><small>QR ตัวอย่าง · สแกนไม่ได้</small>`;};
+  $('#w-packs',el).oninput=upd;$('#w-branch',el).onchange=upd;upd();
+  $('#w-submit',el).onclick=()=>{const p=Math.floor(Number($('#w-packs',el).value)||0),b=$('#w-branch',el).value;
+    if(p<1||p>10){toast('สั่งได้ 1–10 แพ็คต่อครั้ง',{err:1});return;}if(p>S.stock[b][WATER.code]){toast('เกินจำนวนที่มีอยู่',{err:1});return;}
+    if(!$('#w-slip',el).checked){toast('กรุณาแนบสลิปโอนเงิน',{err:1});return;}
+    const u=me(),at=nowIso();const r={id:S.nextId++,no:docNo(b,'WT'),date:at,branch:b,cat:'WT',requester:u.name,rdept:u.dept,charge:u.dept,objective:'ซื้อน้ำดื่มพนักงาน',lines:mkLines([[WATER.code,p]]),status:'pending_finance',chain:[],history:[],receiver:null,issuedBy:null,issuedAt:null,issueNote:'',batch:null,urgent:null,returns:[],reject:'',water:{packs:p,pickup:$('#w-day',el).value,ref,slip:true,checkedBy:null}};
+    hist(r,'สั่งซื้อน้ำดื่ม + แนบสลิป',u.name,p+' แพ็ค');S.reqs.push(r);save();location.hash='#/req/'+r.id;toast('ส่งคำสั่งซื้อแล้ว — รอการเงินตรวจสอบเงินโอน',{role:'acct'});};
+};
+
+// ---------- export ----------
+function csvRows(batch){
+  const rows=[['BATCH','DOC_NO','DATE','BRANCH','CATEGORY','DEPARTMENT','ITEM_CODE','ITEM_NAME','ADJUST_QTY','UNIT','UNIT_COST','AMOUNT','MEMO']];
+  batch.reqIds.forEach(id=>{const r=byId(id);r.lines.forEach(l=>{const q=l.issued==null?l.qty:l.issued;if(!q)return;rows.push([batch.no,r.no,ymd(r.issuedAt||r.date),r.branch,r.cat,r.charge,l.code,l.name,-q,l.unit,l.cost.toFixed(2),(-q*l.cost).toFixed(2),r.objective||'']);});});
+  (batch.returns||[]).forEach(([id,no])=>{const r=byId(id),rt=r.returns.find(x=>x.no===no);rt.lines.forEach(x=>{const l=r.lines[x.i];rows.push([batch.no,rt.no,ymd(rt.at),r.branch,r.cat,r.charge,l.code,l.name,x.qty,l.unit,l.cost.toFixed(2),(x.qty*l.cost).toFixed(2),'คืนของ '+r.no+' '+rt.reason]);});});
+  return rows;
+}
+function downloadCSV(batch){
+  const rows=batch.rows||csvRows(batch);
+  const csv='﻿'+rows.map(r=>r.map(v=>{v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download=batch.no+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+V.export=function(el,q){
+  if(S.role!=='acct'){el.innerHTML=`<div class="card"><h2>Export ขึ้น ERP</h2><p class="muted">งานหลังบ้านของบัญชี — สลับมุมมองเป็น "บัญชี / การเงิน"</p><button class="btn primary" id="sw" type="button">ดูในมุม บัญชี</button></div>`;$('#sw',el).onclick=()=>setRole('acct');return;}
+  const br=q.branch||'SDC';const reqs=qExport(br),rts=qReturns(br);
+  el.innerHTML=`<div class="card"><h2>Export ขึ้น ERP (Inventory Adjustment)</h2>
+  <p class="muted" style="margin-top:0">รวบใบที่สโตร์จ่ายของแล้วของแต่ละสาขาออกเป็น CSV ชุดเดียว (ใบเบิก = ขาลบ · รับของคืน = ขาบวก) แล้วนำไป import เข้า ERP (NetSuite)</p>
+  <div class="tabs" role="tablist">${Object.keys(BRANCHES).map(b=>`<a class="tab br-${b} ${b===br?'on':''}" role="tab" aria-selected="${b===br}" href="#/export?branch=${b}">${b} — ${BRANCHES[b]} <span class="chip">รอ ${qExport(b).length+qReturns(b).length}</span></a>`).join('')}</div>
+  <h3>รอ export (${reqs.length+rts.length})</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th><input type="checkbox" id="x-all" checked aria-label="เลือกทั้งหมด"></th><th>เลขที่</th><th>หมวด</th><th>ผู้เบิก</th><th>CHARGE TO</th><th class="num">บรรทัด</th><th class="num">มูลค่า</th><th>จ่ายเมื่อ</th></tr></thead><tbody>
+  ${rts.map(({r,rt})=>`<tr><td><input type="checkbox" class="x-rt" data-id="${r.id}" data-no="${esc(rt.no)}" checked aria-label="เลือก ${esc(rt.no)}"></td><td class="nowrap"><b>${esc(rt.no)}</b> <span class="chip return">↩ คืนของ · ขาบวก</span><br><small class="muted">จากใบ ${esc(r.no)}</small></td><td>${r.cat}</td><td>${esc(r.requester)}</td><td>${esc(r.charge)}</td><td class="num">${rt.lines.length}</td><td class="num">+${money(rt.lines.reduce((a,x)=>a+x.qty*r.lines[x.i].cost,0))}</td><td class="nowrap">${dtth(rt.at)}</td></tr>`).join('')}
+  ${reqs.map(r=>`<tr><td><input type="checkbox" class="x-req" data-id="${r.id}" checked aria-label="เลือก ${esc(r.no)}"></td><td class="nowrap"><a href="#/req/${r.id}">${esc(r.no)}</a>${r.urgent?' <span class="chip urgent">ด่วน</span>':''}</td><td>${r.cat}</td><td class="nowrap">${esc(r.requester)}</td><td>${chargeCell(r)}</td><td class="num">${r.lines.filter(l=>l.issued).length}</td><td class="num">${money(total(r,true))}</td><td class="nowrap">${dtth(r.issuedAt)}<br><small class="muted">โดย ${esc(r.issuedBy)}</small></td></tr>`).join('')}
+  ${!reqs.length&&!rts.length?`<tr><td colspan="8" class="muted">ไม่มีใบรอ export ของ ${br}</td></tr>`:''}
+  </tbody></table></div>
+  ${reqs.length||rts.length?`<div class="actions"><input id="x-note" placeholder="หมายเหตุ batch (ถ้ามี)" style="width:auto;flex:1 1 220px" aria-label="หมายเหตุ batch"><button class="btn primary" id="x-go" type="button">สร้าง batch + ดาวน์โหลด CSV</button></div>`:''}
+  <div id="x-prev"></div></div>
+  <div class="card"><h3 style="margin-top:0">Batch ที่ export แล้ว</h3><div class="scroll"><table class="tbl compact"><thead><tr><th>Batch</th><th>สาขา</th><th>สร้างเมื่อ</th><th>โดย</th><th class="num">เอกสาร</th><th class="num">บรรทัด CSV</th><th></th></tr></thead><tbody>
+  ${S.batches.slice().reverse().map((b,i)=>`<tr><td class="mono nowrap">${esc(b.no)}</td><td>${brChip(b.branch)}</td><td class="nowrap">${dtth(b.at)}</td><td class="nowrap">${esc(b.by)}</td><td class="num">${b.reqIds.length+(b.returns||[]).length}</td><td class="num">${(b.rows||[]).length-1}</td><td><button class="btn sm" type="button" data-dl="${esc(b.no)}">⬇ CSV</button></td></tr>`).join('')||'<tr><td colspan="7" class="muted">ยังไม่มี</td></tr>'}
+  </tbody></table></div></div>`;
+  const all=$('#x-all',el);if(all)all.onchange=()=>$$('.x-req,.x-rt',el).forEach(c=>c.checked=all.checked);
+  $$('[data-dl]',el).forEach(b=>b.onclick=()=>downloadCSV(S.batches.find(x=>x.no===b.dataset.dl)));
+  const go=$('#x-go',el);if(go)go.onclick=()=>{
+    const ids=$$('.x-req:checked',el).map(c=>Number(c.dataset.id)),rtl=$$('.x-rt:checked',el).map(c=>[Number(c.dataset.id),c.dataset.no]);
+    if(!ids.length&&!rtl.length){toast('เลือกอย่างน้อย 1 รายการ',{err:1});return;}
+    const pre=`EXP-${br}-${ymd(nowIso())}-`;const n=S.batches.filter(b=>b.no.startsWith(pre)).length+1;
+    const b={no:pre+String(n).padStart(2,'0'),branch:br,at:nowIso(),by:me().name,reqIds:ids,returns:rtl,note:$('#x-note',el).value.trim(),rows:null};
+    b.rows=csvRows(b);S.batches.push(b);
+    ids.forEach(id=>{const r=byId(id);r.status='exported';r.batch=b.no;hist(r,'บัญชี export',me().name,b.no);});
+    rtl.forEach(([id,no])=>{const r=byId(id);r.returns.find(x=>x.no===no).batch=b.no;});
+    save();downloadCSV(b);render();
+    const prev=$('#x-prev');if(prev)prev.innerHTML=`<div class="msg" style="margin-top:14px">✓ สร้าง <b class="mono">${esc(b.no)}</b> แล้ว — ${ids.length+rtl.length} เอกสาร · ดาวน์โหลด CSV ให้แล้ว (ตัวอย่าง ${Math.min(8,b.rows.length-1)} บรรทัดแรกด้านล่าง)</div><div class="scroll"><table class="tbl compact csvprev"><thead><tr>${b.rows[0].map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${b.rows.slice(1,9).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    toast(`สร้าง batch ${esc(b.no)} + ดาวน์โหลด CSV แล้ว`);
+  };
+};
+
+// ---------- report ----------
+V.report=function(el,q){
+  const done=S.reqs.filter(r=>['issued','exported'].includes(r.status));
+  const months=[...new Set(done.map(r=>r.date.slice(0,7)))].sort().reverse();
+  const f={m:q.m||months[0]||'',b:q.b||''};
+  const draw=()=>{
+    const rows=done.filter(r=>r.date.slice(0,7)===f.m&&(!f.b||r.branch===f.b));
+    const byDept={},byItem={};let tot=0;
+    rows.forEach(r=>r.lines.forEach(l=>{const v=(l.issued||0)*l.cost;tot+=v;(byDept[r.charge]=byDept[r.charge]||{v:0,n:new Set()}).v+=v;byDept[r.charge].n.add(r.id);const it=byItem[l.code]=byItem[l.code]||{name:l.name,unit:l.unit,q:0,v:0};it.q+=l.issued||0;it.v+=v;}));
+    const dmax=Math.max(1,...Object.values(byDept).map(x=>x.v));
+    const depts=Object.entries(byDept).sort((a,b)=>b[1].v-a[1].v);
+    const items=Object.entries(byItem).sort((a,b)=>b[1].v-a[1].v);
+    $('#rp-out',el).innerHTML=`<div class="tiles"><div class="tile"><b>${rows.length}</b><span>ใบเบิกที่นับ</span></div><div class="tile"><b>${items.length}</b><span>รายการสินค้า (ไม่ซ้ำ)</span></div><div class="tile"><b>${money(tot)}</b><span>มูลค่ารวมประมาณ (บาท)</span></div></div>
+    <h3>ตามหน่วยงานที่ charge</h3><div class="scroll"><table class="tbl"><thead><tr><th>หน่วยงาน</th><th class="num">ใบ</th><th class="num">มูลค่า</th><th class="barcell hide-sm"><span class="hidden">สัดส่วน</span></th></tr></thead><tbody>${depts.map(([d,x])=>`<tr><td>${esc(d)}</td><td class="num">${x.n.size}</td><td class="num">${money(x.v)}</td><td class="barcell hide-sm"><div class="bar" style="width:${(x.v/dmax*100).toFixed(1)}%"></div></td></tr>`).join('')||'<tr><td colspan="4" class="muted">ไม่มีข้อมูล</td></tr>'}</tbody></table></div>
+    <h3>สินค้าที่เบิก</h3><div class="scroll"><table class="tbl compact"><thead><tr><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th class="num">จำนวนเบิก</th><th class="num">มูลค่า</th></tr></thead><tbody>${items.map(([c,x])=>`<tr><td class="mono">${c}</td><td>${esc(x.name)}</td><td>${esc(x.unit)}</td><td class="num"><b>${qtyf(x.q)}</b></td><td class="num">${money(x.v)}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">—</td></tr>'}</tbody>${items.length?`<tfoot><tr><td colspan="4" class="num"><b>รวม</b></td><td class="num total">${money(tot)}</td></tr></tfoot>`:''}</table></div>`;
+  };
+  el.innerHTML=`<div class="card"><h2>📊 สรุปการเบิกรายเดือน</h2><p class="muted" style="margin-top:0">นับเฉพาะใบที่สโตร์จ่ายของแล้ว ตามจำนวนจ่ายจริง · มูลค่า = จำนวน × ราคาเฉลี่ย</p>
+  <div class="filters"><select id="rp-m" aria-label="เดือน">${months.map(m=>`<option value="${m}">${new Date(m+'-01T00:00:00').toLocaleDateString('th-TH',{month:'long',year:'numeric'})}</option>`).join('')||'<option value="">—</option>'}</select>
+  <select id="rp-b" aria-label="สาขา"><option value="">ทุกสาขา</option><option>SDC</option><option>SBK</option></select></div><div id="rp-out"></div></div>`;
+  $('#rp-m',el).value=f.m;$('#rp-b',el).value=f.b;
+  $('#rp-m',el).onchange=()=>{f.m=$('#rp-m',el).value;draw();};$('#rp-b',el).onchange=()=>{f.b=$('#rp-b',el).value;draw();};
+  draw();
+};
+V.notfound=el=>{el.innerHTML='<div class="card"><h2>ไม่พบหน้านี้</h2><a href="#/">← กลับหน้าแรก</a></div>';};
+
+// ---------- router ----------
+function parse(){const h=location.hash.replace(/^#\/?/,'');const [p,qs]=h.split('?');const q={};(qs||'').split('&').filter(Boolean).forEach(kv=>{const [k,v]=kv.split('=');q[decodeURIComponent(k)]=decodeURIComponent(v||'');});return {parts:(p||'').split('/').filter(Boolean),q};}
+let lastRoute='';
+function render(){
+  const {parts,q}=parse();const el=$('#app');
+  renderChrome(parts);
+  const name=parts[0]||'home';
+  const view=V[name]||V.notfound;
+  if(name==='home')V.home(el);else view(el,q,parts[1]);
+  const key=location.hash;if(key!==lastRoute){lastRoute=key;window.scrollTo(0,0);}
+  document.title=({home:'หน้าแรก',new:q.mode==='urgent'?'จ่ายของด่วน':'สร้างใบเบิก',list:'ใบเบิกทั้งหมด',req:'รายละเอียดใบเบิก',export:'Export ERP',report:'รายงาน',water:'ซื้อน้ำดื่ม',approvals:'รออนุมัติ',store:'สโตร์',finance:'การเงิน',memo:'ทำใบเบิกจาก Memo'}[name]||'เบิกของ')+' · เบิกของ SR (เดโม)';
+}
+// ---------- boot ----------
+load();
+$('#role').innerHTML=Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v.label} — ${v.name}</option>`).join('');
+$('#role').value=S.role;
+$('#role').onchange=e=>setRole(e.target.value);
+$('#reset').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}seed();save();Object.keys(TSTATE).forEach(k=>delete TSTATE[k]);$('#role').value=S.role;location.hash='#/';render();toast('รีเซ็ตข้อมูลเดโมแล้ว');};
+window.addEventListener('hashchange',render);
+render();
+})();
+</script>
+</body>
+</html>

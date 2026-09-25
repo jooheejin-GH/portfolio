@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service Fee Demo</title>
+<meta name="description" content="เดโมระบบคิดค่าบริการร้านค้าระหว่างตกแต่ง (Service Fee) — ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a2233;--mut:#5f6b82;--line:#e3e7ef;--bg:#f4f6fa;--pri:#1f5eff;--pri-d:#1748c4;--ok:#0d8a4f;--warn:#9a6708;--red:#c2382e;--sbk:#f97316;--sbk-d:#c2560a;--card:#fff}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;font-family:'Noto Sans Thai','Sukhumvit Set',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+a{color:var(--pri);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid #7aa2ff;outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.topwrap{position:sticky;top:0;z-index:20}
+.demo-banner{background:#1a2233;color:#fff;font-size:13.5px;display:flex;align-items:center;gap:12px;padding:7px 24px;flex-wrap:wrap}
+.demo-banner b{background:#facc15;color:#1a2233;border-radius:6px;padding:1px 8px;font-size:12px}
+.demo-banner a{color:#c7d6ff;margin-left:auto;white-space:nowrap}
+.demo-banner button{background:transparent;color:#fff;border:1px solid #56607a;border-radius:7px;font:inherit;font-size:12.5px;padding:2px 10px;cursor:pointer}
+.demo-banner button:hover{background:#2b3550}
+header.top{background:#fff;border-bottom:1px solid var(--line);padding:0 24px;display:flex;align-items:center;gap:22px;height:56px}
+.brand{font-weight:700;font-size:17px;white-space:nowrap;color:var(--ink)}
+.brand span{color:var(--pri)}
+header.top nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0}
+header.top nav::-webkit-scrollbar{display:none}
+header.top nav a{color:var(--mut);padding:6px 10px;border-radius:8px;font-weight:500;white-space:nowrap}
+header.top nav a:hover{text-decoration:none;color:var(--pri);background:#eef3ff}
+header.top nav a[aria-current="page"]{color:var(--pri);background:#eef3ff}
+.me{margin-left:auto;color:var(--mut);font-size:13px;white-space:nowrap}
+main{max-width:1440px;margin:24px auto;padding:0 24px}
+h1{font-size:22px;margin:4px 0 18px}
+h2{font-size:16px;margin:0 0 8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.tblwrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;-webkit-overflow-scrolling:touch}
+table.list{width:100%;border-collapse:collapse}
+table.list th{background:#f8fafd;color:var(--mut);font-size:12.5px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-weight:600}
+table.list th button{all:unset;cursor:pointer}
+table.list th button:focus-visible{outline:2px solid #7aa2ff}
+table.list td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.list tr:last-child td{border-bottom:none}
+table.list tr.rowlink{cursor:pointer}
+table.list tr.rowlink:hover{background:#f6f9ff}
+.nowrap{white-space:nowrap}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.chip-gray{background:#eceff5;color:#4f596c}.chip-blue{background:#e3edff;color:#1748c4}
+.chip-amber{background:#fdf1dc;color:#8a5c05}.chip-green{background:#dff3e8;color:#0b7543}
+.chip-red{background:#fde4e2;color:#b0312a}.chip-green2{background:#0d8a4f;color:#fff}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--pri);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--pri-d);text-decoration:none}
+.btn.gray{background:#eceff5;color:var(--ink)}.btn.gray:hover{background:#dfe4ee}
+.btn.red{background:var(--red)}.btn.red:hover{background:#a12b23}
+.btn.green{background:var(--ok)}.btn.green:hover{background:#0a6e3f}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:16px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label,.flabel{font-size:12.5px;color:var(--mut)}
+.flabel{color:var(--pri-d);font-weight:600;font-size:13px}
+.req{color:var(--red);font-weight:700}
+input,select,textarea{font-family:inherit;font-size:14.5px;padding:8px 10px;border:1px solid #c3cbd9;border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid #bcd0ff;border-color:var(--pri)}
+input[type=checkbox]{width:17px;height:17px;accent-color:var(--pri)}
+.msg{padding:11px 16px;border-radius:10px;margin-bottom:14px;font-weight:500}
+.msg.success{background:#dff3e8;color:#0d6b3f}.msg.error{background:#fde4e2;color:#a12b23}
+.msg.warning{background:#fdf1dc;color:#7c5306}.msg.info{background:#e3edff;color:#1748c4}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.grid2>*,.formgrid>*{min-width:0}
+.card .f input,.card .f select{width:100%}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mut{color:var(--mut)}.sm{font-size:13px}
+.branch-tab{display:inline-block;padding:7px 16px;border-radius:9px;font-weight:600;color:var(--mut);background:#fff;border:1px solid var(--line);cursor:pointer;font:inherit;font-weight:600}
+.branch-tab[aria-pressed="true"]{background:var(--pri);color:#fff;border-color:var(--pri)}
+.br-SDC{color:var(--pri-d)}.br-SBK{color:var(--sbk-d)}
+.branch-tab.br-SDC{color:var(--pri-d)}.branch-tab.br-SBK{color:var(--sbk-d)}
+.branch-tab.br-SDC[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff}
+.branch-tab.br-SBK[aria-pressed="true"]{background:var(--sbk);border-color:var(--sbk);color:#fff}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.stat:hover{border-color:#bcd0ff}
+.stat[aria-pressed="true"]{border-color:var(--pri);box-shadow:0 0 0 2px #dbe6ff}
+.stat .n{font-size:24px;font-weight:700;line-height:1.2}
+.stat .s{font-size:12.5px;color:var(--mut)}
+.pager{display:flex;gap:6px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.pager button{padding:5px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;font:inherit;font-size:13.5px;cursor:pointer;color:var(--pri)}
+.pager button[aria-current="page"]{background:var(--pri);color:#fff;border-color:var(--pri)}
+.pager button[disabled]{color:#aab3c3;cursor:default}
+.pager .info{color:var(--mut);font-size:13px;margin-left:6px}
+/* form */
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.formgrid .span2{grid-column:span 2}
+.formgrid .span4{grid-column:1/-1}
+.ac{position:relative}
+.acbox{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,30,60,.14);z-index:30;max-height:300px;overflow:auto}
+.acbox [role=option]{padding:9px 14px;cursor:pointer;border-bottom:1px solid #f0f2f7}
+.acbox [role=option][aria-selected="true"],.acbox [role=option]:hover{background:#eef3ff}
+.cat{font-weight:700;margin:18px 0 6px;color:var(--pri-d)}
+.itemrow{max-width:1000px;display:grid;grid-template-columns:1fr 90px 110px 120px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.itemrow.head{background:#eef2f8;border-radius:8px;padding:8px 10px;border-bottom:none;font-weight:700;font-size:13px}
+.itemrow .rate{color:var(--mut);font-size:12.5px}
+.itemrow input[type=number]{width:100%;text-align:right}
+.itemrow.other{grid-template-columns:1fr 90px 130px 120px 40px}
+.totals{margin-left:auto;border-collapse:collapse}
+.totals td{padding:6px 10px}
+.totals .num{font-weight:600;min-width:120px}
+.totals tr.grand td{font-size:18px;font-weight:700;border-top:2px solid var(--line)}
+.docno-box{margin-left:auto;background:#eef3ff;border:1px solid #bcd0ff;border-radius:10px;padding:8px 18px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:none;background:#fff;font:inherit;font-weight:600;padding:7px 16px;cursor:pointer;color:var(--mut)}
+.seg button[aria-pressed="true"].SDC{background:var(--pri);color:#fff}
+.seg button[aria-pressed="true"].SBK{background:var(--sbk);color:#fff}
+/* invoice sheet */
+.inv-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.inv-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+.sheet-wrap{overflow-x:auto;border-radius:6px;background:#dde2ea;padding:18px}
+.sheet{width:794px;min-height:1060px;margin:0 auto;background:#fff;box-shadow:0 6px 24px rgba(20,30,60,.18);padding:44px 40px;font-size:11px;color:#111;position:relative;font-family:'Noto Sans Thai',Tahoma,sans-serif;line-height:1.45}
+.sheet .hd{display:flex;gap:14px;align-items:flex-start}
+.sheet .logo{width:46px;height:46px;flex:none}
+.sheet .titlebox{margin-left:auto;border:1.5px solid #111;border-radius:8px;padding:10px 28px;text-align:center;font-weight:700;font-size:12px}
+.sheet .band{background:#fff1cc;padding:3px 8px;font-weight:600;margin:14px 0 4px;display:inline-block;min-width:330px}
+.sheet table.it{width:100%;border-collapse:collapse;margin-top:10px}
+.sheet table.it th{background:#fff1cc;border:1px solid #111;padding:4px;font-size:10.5px;font-weight:600}
+.sheet table.it td{border-left:1px solid #111;border-right:1px solid #111;padding:3px 6px;vertical-align:top}
+.sheet table.it tr.grp td{padding-top:8px}
+.sheet table.it tbody tr:last-child td{border-bottom:1px solid #111;padding-bottom:10px}
+.sheet table.sum td{padding:2px 6px}
+.sheet .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sheet .stamp{position:absolute;top:360px;left:50%;transform:translateX(-50%) rotate(-18deg);font-size:64px;font-weight:700;letter-spacing:4px;padding:4px 26px;border:6px solid;border-radius:14px;opacity:.16;pointer-events:none;white-space:nowrap}
+.sheet .stamp.paid{color:#0d8a4f}.sheet .stamp.cancel{color:#c2382e}
+.qrbox{display:flex;flex-direction:column;align-items:center;width:160px;margin-top:18px}
+.qrbox .warn{background:#c2382e;color:#fff;font-weight:700;font-size:11px;border-radius:4px;padding:1px 8px;margin-top:4px}
+.side .card{padding:16px}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{position:relative;padding:0 0 12px 22px;font-size:13.5px}
+.timeline li::before{content:"";position:absolute;left:4px;top:6px;width:10px;height:10px;border-radius:50%;background:#cfd6e4}
+.timeline li.done::before{background:var(--ok)}
+.timeline li.now::before{background:var(--pri);box-shadow:0 0 0 3px #dbe6ff}
+.timeline li::after{content:"";position:absolute;left:8px;top:18px;bottom:0;width:2px;background:#e3e7ef}
+.timeline li:last-child::after{display:none}
+.slipthumb{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fafbfd}
+.slipthumb svg{flex:none;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.audit{list-style:none;margin:0;padding:0}
+.audit li{padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;display:grid;grid-template-columns:130px 1fr;gap:10px}
+.audit li:last-child{border-bottom:none}
+.audit .t{color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2233;color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;z-index:50;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+dialog{border:none;border-radius:14px;padding:0;max-width:min(440px,calc(100% - 32px));box-shadow:0 20px 50px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(20,28,45,.45)}
+dialog .dbody{padding:20px}
+dialog .dfoot{display:flex;gap:8px;justify-content:flex-end;padding:12px 20px;background:#f8fafd;border-top:1px solid var(--line)}
+.empty{text-align:center;padding:30px;color:var(--mut)}
+@media(max-width:1100px){.inv-layout{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+  main{margin:14px auto;padding:0 16px}
+  header.top{padding:0 16px;gap:12px;height:auto;min-height:52px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+  header.top nav{order:3;width:100%;margin:0 -4px}
+  .me{font-size:12px}
+  .demo-banner{padding:7px 16px;font-size:12.5px}
+  .grid2,.grid3,.formgrid{grid-template-columns:minmax(0,1fr)}
+  .formgrid .span2{grid-column:auto}
+  .stats{grid-template-columns:1fr 1fr}
+  .itemrow{grid-template-columns:1fr 70px 96px}
+  .itemrow .amt{grid-column:2/-1;text-align:right}
+  .itemrow.head .amt{display:none}
+  .itemrow.other{grid-template-columns:1fr 70px 40px}
+  .itemrow.other .desc{grid-column:1/-1}
+  .itemrow.other.head{display:none}
+  .inv-layout .side{order:-1}
+  header.top nav{gap:2px}
+  header.top nav a{padding:6px 8px;font-size:14px}
+  .docno-box{margin-left:0;width:100%}
+  .sheet-wrap{padding:10px}
+  .audit li{grid-template-columns:1fr;gap:2px}
+  .filters .f{flex:1 1 140px}
+  .filters input[type=search]{width:100%!important}
+}
+@media print{.topwrap,.inv-toolbar,.side,.toast{display:none!important}body{background:#fff}main{margin:0;padding:0}.sheet-wrap{padding:0;background:none}.sheet{box-shadow:none}.inv-layout{display:block}}
+</style>
+</head>
+<body>
+<div class="topwrap">
+  <div class="demo-banner" role="note">
+    <b>DEMO</b><span>เดโม · ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง</span>
+    <button type="button" id="resetBtn">รีเซ็ตข้อมูลเดโม</button>
+    <a href="../../#service-fee-webapp">← กลับไปหน้าผลงาน</a>
+  </div>
+  <header class="top">
+    <a class="brand" href="#/" aria-label="Service Fee หน้าแรก" style="text-decoration:none">🏬 Service<span>Fee</span></a>
+    <nav aria-label="เมนูหลัก">
+      <a href="#/" data-nav="dash">Dashboard</a>
+      <a href="#/new" data-nav="new">+ ออกใบแจ้งหนี้</a>
+      <a href="#/other" data-nav="other">+ ใบคิดค่าบริการอื่นๆ</a>
+      <a href="#/reconcile" data-nav="reconcile">จัดการรายการ</a>
+    </nav>
+    <div class="me">demo.user · ฝ่ายอาคาร</div>
+  </header>
+</div>
+<main id="app" tabindex="-1"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="dlg" aria-labelledby="dlgTitle"><form method="dialog"><div class="dbody"><h2 id="dlgTitle"></h2><div id="dlgMsg" class="sm"></div></div>
+<div class="dfoot"><button class="btn gray" value="no">ยกเลิก</button><button class="btn" value="yes" id="dlgOk">ยืนยัน</button></div></form></dialog>
+
+<script>
+'use strict';
+/* ============ ค่าคงที่ (อัตราสมมติทั้งหมด ไม่ใช่อัตราจริง) ============ */
+const BRANCHES = {
+  SDC:{code:'SDC',name:'ศูนย์การค้าตัวอย่าง สาขา 1',company:'บริษัท ตัวอย่าง จำกัด',companyEn:'SAMPLE COMPANY LTD.'},
+  SBK:{code:'SBK',name:'ศูนย์การค้าตัวอย่าง สาขา 2',company:'บริษัท ตัวอย่าง จำกัด (สาขา 2)',companyEn:'SAMPLE COMPANY LTD. (Branch 2)'}
+};
+const VAT = 0.07, WHT = 0.03;
+const AREA_RATES = [ // บาท/ตร.ม./เดือน (สมมติ)
+  {key:'KIOSK',label:'Kiosk',rate:150},
+  {key:'S',label:'Shop พื้นที่ไม่เกิน 100 ตร.ม.',rate:100},
+  {key:'M',label:'Shop พื้นที่ 101–300 ตร.ม.',rate:90},
+  {key:'L',label:'Shop พื้นที่ 300 ตร.ม. ขึ้นไป',rate:70}
+];
+const CATALOG = [
+  {grp:'coord',code:'CW-EL',label:'ปิดระบบงานไฟฟ้า (ย้ายตำแหน่งตู้ไฟ ฯลฯ)',rate:1000,unit:'ครั้ง'},
+  {grp:'coord',code:'CW-PL',label:'ปิดระบบงานประปา (ย้ายมิเตอร์/ท่อประปา)',rate:1000,unit:'ครั้ง'},
+  {grp:'coord',code:'CW-GS',label:'ปิดระบบงานแก๊ส (ต่อ/เดินท่อแก๊ส)',rate:2000,unit:'ครั้ง'},
+  {grp:'coord',code:'CW-CH',label:'ปิดระบบน้ำเย็น (Chiller) ติดตั้ง/ย้าย Air',rate:4000,unit:'ครั้ง'},
+  {grp:'coord',code:'CW-SD',label:'ติดตั้งอุปกรณ์ Smoke Detector',rate:1000,unit:'ตัว'},
+  {grp:'coord',code:'CW-HD',label:'ติดตั้งอุปกรณ์ Heat Detector',rate:500,unit:'ตัว'},
+  {grp:'coord',code:'CW-SP',label:'ปิดระบบงานสปริงเกอร์ Sprinkler',rate:2000,unit:'ครั้ง'},
+  {grp:'gen',code:'GN-HW1',label:'Hot Work งานประกายไฟ / งานเชื่อม',rate:500,unit:'วัน'},
+  {grp:'gen',code:'GN-HW2',label:'Hot Work งานกาว สี ทินเนอร์',rate:500,unit:'วัน'},
+  {grp:'gen',code:'GN-DR',label:'เปิดประตู Shutter / AUTO DOOR',rate:400,unit:'ชม.'},
+  {grp:'gen',code:'GN-FN',label:'ค่าปรับผิดนัดงานสปริงเกอร์',rate:1000,unit:'ครั้ง'}
+];
+const GROUPS = {area:'ค่าบริการส่วนกลางระหว่างการตกแต่งหรือรื้อถอน',coord:'ค่าดำเนินการประสานงานช่าง',gen:'ค่าดำเนินการประสานงานทั่วไป',other:'ค่าบริการอื่นๆ'};
+const SHOPS = {
+  SDC:[
+    {unit:'1F-101',name:'ร้านตัวอย่าง A',size:48,type:'Shop',cust:'C001'},
+    {unit:'1F-118',name:'คาเฟ่ทดลอง',size:85,type:'Shop',cust:'C002'},
+    {unit:'2F-205',name:'ร้านรองเท้าสมมติ',size:160,type:'Shop',cust:'C003'},
+    {unit:'2F-K07',name:'คีออสชาไข่มุกเดโม',size:6,type:'Kiosk',cust:'C004'},
+    {unit:'3F-310',name:'ร้านอาหารตัวอย่าง B',size:240,type:'Shop',cust:'C005'},
+    {unit:'3F-322',name:'สตูดิโอโยคะทดลอง',size:420,type:'Shop',cust:'C006'},
+    {unit:'GF-012',name:'ร้านเบเกอรี่เดโม',size:62,type:'Shop',cust:'C007'},
+    {unit:'4F-401',name:'ร้านเกมจำลอง',size:130,type:'Shop',cust:'C008'}
+  ],
+  SBK:[
+    {unit:'1F-150',name:'ร้านตัวอย่าง C',size:55,type:'Shop',cust:'C009'},
+    {unit:'1F-K03',name:'คีออสมือถือเดโม',size:8,type:'Kiosk',cust:'C010'},
+    {unit:'2F-220',name:'ครัวทดลอง',size:110,type:'Shop',cust:'C011'},
+    {unit:'2F-231',name:'ร้านแว่นตาสมมติ',size:38,type:'Shop',cust:'C012'},
+    {unit:'3F-305',name:'ฟิตเนสตัวอย่าง',size:350,type:'Shop',cust:'C013'},
+    {unit:'GF-020',name:'ร้านดอกไม้เดโม',size:24,type:'Shop',cust:'C002'},
+    {unit:'3F-318',name:'ร้านชาบูทดลอง',size:190,type:'Shop',cust:'C005'}
+  ]
+};
+const CUSTOMERS = {
+  C001:'บริษัท ทดลองค้าปลีก จำกัด',C002:'บริษัท กาแฟสมมติ จำกัด',C003:'บริษัท ก้าวเดโม จำกัด',C004:'นาย ตัวอย่าง ทดสอบ',
+  C005:'บริษัท อร่อยตัวอย่าง จำกัด',C006:'บริษัท สุขภาพดีเดโม จำกัด',C007:'หจก. ขนมอบทดลอง',C008:'บริษัท เล่นสนุกสมมติ จำกัด',
+  C009:'บริษัท ตัวอย่างซี จำกัด',C010:'นางสาว เดโม ทดลองใช้',C011:'บริษัท ครัวสมมติ จำกัด',C012:'บริษัท มองชัดเดโม จำกัด',C013:'บริษัท แข็งแรงตัวอย่าง จำกัด'
+};
+const CONTRACTORS = [
+  {name:'หจก. ช่างตัวอย่าง',tel:'08x-xxx-0101'},
+  {name:'บริษัท รับเหมาสมมติ จำกัด',tel:'08x-xxx-0202'},
+  {name:'ช่างเดโม ทีมตกแต่ง',tel:'09x-xxx-0303'},
+  {name:'บริษัท อินทีเรียทดลอง จำกัด',tel:'06x-xxx-0404'},
+  {name:'หจก. ไฟฟ้าตัวอย่าง',tel:'08x-xxx-0505'}
+];
+const ISSUERS = ['demo.user','somchai.demo','suda.demo'];
+const TODAY = '2026-09-25';
+const LS_KEY = 'servicefee-demo-v1';
+
+/* ============ utils ============ */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r2 = n=>Math.round((+n+Number.EPSILON)*100)/100;
+const money = n=>(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const collator = new Intl.Collator('th',{numeric:true});
+const pad = (n,l=2)=>String(n).padStart(l,'0');
+const parseD = s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const isoD = d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addDays = (s,n)=>{const d=parseD(s);d.setDate(d.getDate()+n);return isoD(d)};
+const fmtD = s=>{if(!s)return '—';const [y,m,d]=s.split('-');return `${d}/${m}/${y.slice(2)}`};
+const fmtDL = s=>{if(!s)return '—';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`};
+const daysIncl = (a,b)=>Math.round((parseD(b)-parseD(a))/864e5)+1;
+const nowStamp = ()=>{const d=new Date();return `${fmtDL(TODAY)} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+function hash(str){let h=2166136261;for(const c of str){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let s=seed>>>0||1;return ()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296}}
+
+function bahtText(num){
+  num=r2(num); if(num===0) return 'ศูนย์บาทถ้วน';
+  const D=['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'],P=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+  const conv=n=>{ if(n===0) return '';
+    if(n>=1e6) return conv(Math.floor(n/1e6))+'ล้าน'+conv(n%1e6);
+    let s='',str=String(n),len=str.length;
+    for(let i=0;i<len;i++){const d=+str[i],p=len-i-1;if(!d)continue;
+      if(p===0&&d===1&&len>1) s+='เอ็ด'; else if(p===1&&d===2) s+='ยี่'; else if(p===1&&d===1) s+=''; else s+=D[d];
+      s+=P[p];}
+    return s;};
+  const b=Math.floor(num),st=Math.round((num-b)*100);
+  return (b?conv(b)+'บาท':'')+(st?conv(st)+'สตางค์':'ถ้วน');
+}
+function areaTier(shop){ if(/kiosk/i.test(shop.type)) return AREA_RATES[0]; if(shop.size<=100) return AREA_RATES[1]; if(shop.size<=300) return AREA_RATES[2]; return AREA_RATES[3]; }
+function areaAmount(shop,start,end){ const t=areaTier(shop); const d=daysIncl(start,end); return {tier:t,days:d,amount:r2(shop.size*t.rate/30*d)}; }
+function calcTotals(c){
+  const sub=r2(c.lines.reduce((a,l)=>a+(+l.amount||0),0));
+  const vat=r2(sub*VAT), total=r2(sub+vat), wht=c.wht?r2(sub*WHT):0;
+  return {sub,vat,total,wht,net:r2(total-wht)};
+}
+
+/* ============ state ============ */
+let S;
+function save(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); }catch(e){} }
+function load(){ try{ const raw=localStorage.getItem(LS_KEY); if(raw){ const o=JSON.parse(raw); if(o&&Array.isArray(o.charges)) return o; } }catch(e){} return null; }
+function nextDocNo(branch,dateIso,kind){
+  const ym=dateIso.slice(2,4)+dateIso.slice(5,7);
+  const key=`${branch}-${ym}`; S.seq[key]=(S.seq[key]||0)+1;
+  return `${kind==='CHARGE'?'OC':'SF'}-${branch}-${ym}${pad(S.seq[key],3)}`;
+}
+function peekDocNo(branch,dateIso,kind){ const ym=dateIso.slice(2,4)+dateIso.slice(5,7); return `${kind==='CHARGE'?'OC':'SF'}-${branch}-${ym}${pad((S.seq[`${branch}-${ym}`]||0)+1,3)}`; }
+const byDoc = d=>S.charges.find(c=>c.doc===d);
+function addAudit(c,action,detail,user='demo.user'){ c.audit=c.audit||[]; c.audit.push({t:nowStamp(),user,action,detail}); }
+function dashState(c){ return c.status==='CANCELLED'?'CANCELLED':c.notified?'NOTIFIED':c.slips.length?'PAID':'ISSUED'; }
+const STATE = {ISSUED:['รอชำระ','chip-gray'],PAID:['จ่ายแล้ว','chip-blue'],NOTIFIED:['แจ้งหน่วยงานแล้ว','chip-green2'],CANCELLED:['ยกเลิก','chip-red']};
+const chip = c=>{const s=STATE[dashState(c)];return `<span class="chip ${s[1]}">${s[0]}</span>`};
+const slipTotal = c=>r2(c.slips.reduce((a,s)=>a+s.amount,0));
+function problems(c){
+  const p=[]; const t=calcTotals(c);
+  if(c.status!=='CANCELLED'&&c.slips.length&&Math.abs(slipTotal(c)-t.net)>0.009) p.push(['ยอดสลิปไม่ตรง','chip-amber']);
+  if(c.status==='CANCELLED'&&c.slips.length) p.push(['สลิปเข้าใบยกเลิก','chip-red']);
+  if(c.replacedBy) p.push(['ถูกแทน','chip-gray']);
+  return p;
+}
+
+function seed(){
+  S={charges:[],seq:{}};
+  const R=rng(20260925);
+  const pick=a=>a[Math.floor(R()*a.length)];
+  const specs=[];
+  for(let i=0;i<20;i++){
+    const branch=i%3===2?'SBK':(i%2?'SBK':'SDC');
+    const start=addDays(TODAY,-68+Math.floor(i*3.3)+Math.floor(R()*3));
+    specs.push({branch,start,i});
+  }
+  specs.sort((a,b)=>a.start.localeCompare(b.start));
+  specs.forEach((sp,k)=>{
+    const shop=pick(SHOPS[sp.branch]); const con=pick(CONTRACTORS);
+    const kind=(k===6||k===15)?'CHARGE':'SF';
+    const dur=kind==='CHARGE'?1:[1,2,3,5,7,14,30][Math.floor(R()*7)];
+    const end=addDays(sp.start,dur-1);
+    const lines=[];
+    if(kind==='CHARGE'){
+      const opts=[['ค่าทำความสะอาดพื้นที่ส่วนกลางหลังงานตกแต่ง',1,1500],['ค่าเช่าพื้นที่วางวัสดุชั่วคราว',3,800],['ค่าไฟฟ้าชั่วคราวระหว่างตกแต่ง',1,2500]];
+      const o=opts[k%3]; lines.push({grp:'other',code:'OT-01',desc:o[0],qty:o[1],rate:o[2],amount:r2(o[1]*o[2])});
+    } else {
+      if(dur>=3&&R()<.8){ const a=areaAmount(shop,sp.start,end); lines.push({grp:'area',code:'AR-'+a.tier.key,desc:`${a.tier.label} (${a.tier.rate} บาท/ตร.ม./เดือน) · ${shop.size} ตร.ม. × ${a.days} วัน`,qty:1,rate:a.amount,amount:a.amount,auto:true}); }
+      const n=1+Math.floor(R()*2);
+      for(let j=0;j<n;j++){ const it=pick(CATALOG); if(lines.some(l=>l.code===it.code)) continue;
+        const q=it.unit==='ชม.'?2+Math.floor(R()*3):it.unit==='วัน'?Math.min(dur,1+Math.floor(R()*3)):1+Math.floor(R()*(it.unit==='ตัว'?3:1));
+        lines.push({grp:it.grp,code:it.code,desc:it.label,qty:q,rate:it.rate,amount:r2(q*it.rate)}); }
+    }
+    const c={doc:nextDocNo(sp.branch,sp.start,kind),branch:sp.branch,kind,shop:{...shop},customer:CUSTOMERS[shop.cust],contractor:con.name,phone:con.tel,
+      start:sp.start,end,lines,wht:R()<.3,slips:[],receipt:'',notified:false,status:'ISSUED',issuer:pick(ISSUERS),created:sp.start,audit:[]};
+    c.audit.push({t:fmtDL(sp.start)+' 09:'+pad(10+k),user:c.issuer,action:'ออกเอกสาร',detail:`ยอดสุทธิ ${money(calcTotals(c).net)} บาท`});
+    const age=daysIncl(sp.start,TODAY);
+    const net=calcTotals(c).net;
+    if(age>40){ paySlip(c,net,addDays(sp.start,1),'QR'); c.receipt=`RC-${sp.branch}-${sp.start.slice(2,4)}${sp.start.slice(5,7)}${pad(k+11,4)}`; c.notified=age>48; }
+    else if(age>18){ if(k!==9) paySlip(c,k===8?r2(net-net*0.03/1.07):net,addDays(sp.start,2),'QR'); if(k%2===0) c.receipt=`RC-${sp.branch}-${sp.start.slice(2,4)}${sp.start.slice(5,7)}${pad(k+11,4)}`; }
+    // audit for seeded events
+    c.slips.forEach(s=>c.audit.push({t:fmtDL(s.date)+' 14:05',user:'line-oa-bot',action:'รับสลิป',detail:`${s.bank} ${money(s.amount)} บาท (ref ${s.ref})`}));
+    if(c.receipt) c.audit.push({t:fmtDL(addDays(sp.start,3))+' 08:30',user:'erp-sync',action:'ซิงก์ ERP',detail:`ใบเสร็จ ${c.receipt}`});
+    if(c.notified) c.audit.push({t:fmtDL(addDays(sp.start,3))+' 10:00',user:c.issuer,action:'แจ้งหน่วยงาน',detail:'ส่งอีเมลแจ้งหน่วยงานที่เกี่ยวข้อง (จำลอง)'});
+    S.charges.push(c);
+  });
+  // คู่ใบยกเลิก+ออกใหม่ ที่ลูกค้าจ่ายด้วย QR ใบเก่า (ไว้โชว์ "ย้ายสลิป")
+  const old=S.charges.find(c=>c.kind==='SF'&&!c.slips.length&&daysIncl(c.start,TODAY)<18&&daysIncl(c.start,TODAY)>5);
+  if(old){
+    const nw=reissue(old,'แก้ชื่อลูกค้าบนใบ (ลูกค้าขอเปลี่ยนนิติบุคคล)',old.issuer,fmtDL(addDays(old.start,1))+' 11:20');
+    paySlip(old,calcTotals(old).net,addDays(old.start,2),'QR');
+    old.audit.push({t:fmtDL(addDays(old.start,2))+' 15:40',user:'line-oa-bot',action:'รับสลิป',detail:`สลิปเข้าใบที่ยกเลิกแล้ว — ลูกค้าจ่ายด้วย QR ใบเก่า`});
+    void nw;
+  }
+  S.charges.forEach(c=>c.audit.sort((a,b)=>a.t.localeCompare(b.t)));
+}
+function paySlip(c,amount,date,channel){
+  const banks=['ธนาคาร A','ธนาคาร B','ธนาคาร C'];
+  const s={id:'S'+(hash(c.doc+date+amount+Math.random())%1e8),amount:r2(amount),date,bank:channel==='QR'?banks[hash(c.doc)%3]:channel,ref:'DEMO'+(hash(c.doc+date)%1e6).toString().padStart(6,'0'),manual:channel!=='QR',channel};
+  c.slips.push(s); return s;
+}
+function reissue(old,reason,user='demo.user',t){
+  const doc=nextDocNo(old.branch,TODAY>old.start?TODAY:old.start,old.kind);
+  const nw=JSON.parse(JSON.stringify({...old,doc,slips:[],receipt:'',notified:false,status:'ISSUED',audit:[],replacedBy:null}));
+  nw.replaces=old.doc; nw.created=TODAY;
+  old.status='CANCELLED'; old.replacedBy=doc; old.cancelReason=reason;
+  const stamp=t||nowStamp();
+  old.audit.push({t:stamp,user,action:'ยกเลิก + ออกใบใหม่',detail:`${reason} → ออกแทนด้วย ${doc}`});
+  nw.audit.push({t:stamp,user,action:'ออกเอกสาร (แทนใบเดิม)',detail:`ออกแทน ${old.doc} · ${reason}`});
+  S.charges.push(nw); return nw;
+}
+
+/* ============ UI helpers ============ */
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600); }
+function confirmBox(title,msg,okLabel='ยืนยัน',danger=false){
+  return new Promise(res=>{ const d=$('#dlg'); $('#dlgTitle').textContent=title; $('#dlgMsg').innerHTML=msg; const ok=$('#dlgOk'); ok.textContent=okLabel; ok.className='btn'+(danger?' red':'');
+    d.returnValue=''; d.onclose=()=>res(d.returnValue==='yes'); d.showModal(); });
+}
+function branchTabs(sel,name){
+  return `<div class="tabs" role="group" aria-label="เลือกสาขา">
+    <button type="button" class="branch-tab" data-${name}="" aria-pressed="${!sel}">ทุกสาขา</button>
+    ${Object.values(BRANCHES).map(b=>`<button type="button" class="branch-tab br-${b.code}" data-${name}="${b.code}" aria-pressed="${sel===b.code}">${b.code} · ${esc(b.name)}</button>`).join('')}
+  </div>`;
+}
+function shopDisp(c){ return c.shop?`${c.shop.unit} : ${c.shop.name}`:'—'; }
+function sortRows(rows,key,dir,getters){ const g=getters[key]; if(!g) return rows; return rows.slice().sort((a,b)=>{const x=g(a),y=g(b);const r=(typeof x==='number'&&typeof y==='number')?x-y:collator.compare(String(x),String(y));return dir*r;}); }
+function thSort(label,key,st,cls=''){ const arrow=st.sort===key?(st.dir>0?' ▲':' ▼'):''; return `<th class="${cls}" aria-sort="${st.sort===key?(st.dir>0?'ascending':'descending'):'none'}"><button type="button" data-sort="${key}">${label}${arrow}</button></th>`; }
+function pager(total,page,per=10){
+  const pages=Math.max(1,Math.ceil(total/per)); if(total<=per) return `<div class="pager"><span class="info">ทั้งหมด ${total} รายการ</span></div>`;
+  let h=`<nav class="pager" aria-label="แบ่งหน้า"><button type="button" data-page="${page-1}" ${page<=1?'disabled':''} aria-label="หน้าก่อน">‹</button>`;
+  for(let i=1;i<=pages;i++) h+=`<button type="button" data-page="${i}" ${i===page?'aria-current="page"':''}>${i}</button>`;
+  return h+`<button type="button" data-page="${page+1}" ${page>=pages?'disabled':''} aria-label="หน้าถัดไป">›</button><span class="info">${(page-1)*per+1}–${Math.min(page*per,total)} จาก ${total}</span></nav>`;
+}
+function wireRowLinks(root){ $$('tr.rowlink',root).forEach(tr=>tr.addEventListener('click',e=>{ if(e.target.closest('a,button,input')) return; location.hash=tr.dataset.href; })); }
+
+/* ============ Dashboard ============ */
+const dashSt={b:'',q:'',date:'',kind:'',state:'',sort:'doc',dir:-1,page:1};
+const dashGetters={doc:c=>c.created+c.doc,branch:c=>c.branch,shop:c=>shopDisp(c),cust:c=>c.customer,period:c=>c.start,total:c=>calcTotals(c).net,receipt:c=>c.receipt||'',state:c=>dashState(c),issuer:c=>c.issuer};
+function viewDashboard(){
+  const st=dashSt;
+  const inBranch=S.charges.filter(c=>!st.b||c.branch===st.b);
+  let rows=inBranch.filter(c=>{
+    if(st.q){const q=st.q.toLowerCase(); if(![c.doc,shopDisp(c),c.customer,c.receipt,c.contractor].join(' ').toLowerCase().includes(q)) return false;}
+    if(st.date&&(st.date<c.start||st.date>c.end)) return false;
+    if(st.kind&&c.kind!==st.kind) return false;
+    if(st.state&&dashState(c)!==st.state) return false;
+    return true;});
+  rows=sortRows(rows,st.sort,st.dir,dashGetters);
+  const pages=Math.max(1,Math.ceil(rows.length/10)); if(st.page>pages) st.page=pages;
+  const pageRows=rows.slice((st.page-1)*10,st.page*10);
+  const cnt=k=>inBranch.filter(c=>dashState(c)===k);
+  const sum=a=>money(a.reduce((x,c)=>x+calcTotals(c).net,0));
+  $('#app').innerHTML=`
+  <h1>Dashboard</h1>
+  ${branchTabs(st.b,'b')}
+  <div class="stats" role="group" aria-label="สรุปตามสถานะ (คลิกเพื่อกรอง)">
+    ${['ISSUED','PAID','NOTIFIED','CANCELLED'].map(k=>{const a=cnt(k);return `<button type="button" class="stat" data-state="${k}" aria-pressed="${st.state===k}">
+      <span class="chip ${STATE[k][1]}">${STATE[k][0]}</span><div class="n">${a.length} <span class="s">ใบ</span></div><div class="s">${sum(a)} บาท</div></button>`}).join('')}
+  </div>
+  <form class="filters" id="dashF" role="search">
+    <div class="f"><label for="fq">ค้นหา</label><input type="search" id="fq" value="${esc(st.q)}" placeholder="เลขเอกสาร / ร้าน / ลูกค้า / ใบเสร็จ" style="width:260px"></div>
+    <div class="f"><label for="fdate">วันที่ (ช่วงงานคาบเกี่ยว)</label><input type="date" id="fdate" value="${esc(st.date)}"></div>
+    <div class="f"><label for="fkind">ประเภทเอกสาร</label><select id="fkind"><option value="">ทั้งหมด</option><option value="SF" ${st.kind==='SF'?'selected':''}>ใบแจ้งหนี้ Service Fee</option><option value="CHARGE" ${st.kind==='CHARGE'?'selected':''}>ใบคิดค่าบริการอื่นๆ</option></select></div>
+    <div class="f"><label for="fstate">สถานะ</label><select id="fstate"><option value="">ทั้งหมด</option>${Object.entries(STATE).map(([k,v])=>`<option value="${k}" ${st.state===k?'selected':''}>${v[0]}</option>`).join('')}</select></div>
+    <button class="btn" type="submit">กรอง</button>
+    <button class="btn gray" type="button" id="fclear">✕ ล้างตัวกรอง</button>
+  </form>
+  <div class="tblwrap"><table class="list"><caption class="sr-only">รายการเอกสารค่าบริการ</caption><thead><tr>
+    ${thSort('เลขเอกสาร','doc',st)}${thSort('สาขา','branch',st)}${thSort('ร้านค้า','shop',st)}${thSort('ลูกค้า','cust',st)}${thSort('ช่วงงาน','period',st)}${thSort('ยอดรวม','total',st,'num')}${thSort('ใบเสร็จ (ERP)','receipt',st)}${thSort('สถานะ','state',st)}${thSort('ผู้ออก','issuer',st)}
+  </tr></thead><tbody>
+  ${pageRows.map(c=>`<tr class="rowlink" data-href="#/inv/${c.doc}">
+    <td class="nowrap"><a class="br-${c.branch}" href="#/inv/${c.doc}">${c.doc}</a>${c.kind==='CHARGE'?' <span class="chip chip-amber" title="ใบคิดค่าบริการอื่นๆ">อื่นๆ</span>':''}</td>
+    <td><b class="br-${c.branch}">${c.branch}</b></td>
+    <td class="nowrap">${esc(shopDisp(c))}</td>
+    <td class="mut">${esc(c.customer)}</td>
+    <td class="sm nowrap">${fmtD(c.start)} – ${fmtD(c.end)}</td>
+    <td class="num">${money(calcTotals(c).net)}</td>
+    <td class="sm nowrap">${esc(c.receipt||'—')}</td>
+    <td>${chip(c)}</td>
+    <td class="sm mut">${esc(c.issuer)}</td></tr>`).join('')||`<tr><td colspan="9" class="empty">ไม่พบเอกสารตามเงื่อนไข</td></tr>`}
+  </tbody></table></div>
+  ${pager(rows.length,st.page)}`;
+  const app=$('#app');
+  $$('[data-b]',app).forEach(b=>b.onclick=()=>{st.b=b.dataset.b;st.page=1;viewDashboard();});
+  $$('.stat',app).forEach(b=>b.onclick=()=>{st.state=st.state===b.dataset.state?'':b.dataset.state;st.page=1;viewDashboard();});
+  $('#dashF').onsubmit=e=>{e.preventDefault();st.q=$('#fq').value.trim();st.date=$('#fdate').value;st.kind=$('#fkind').value;st.state=$('#fstate').value;st.page=1;viewDashboard();};
+  $('#fq').oninput=e=>{st.q=e.target.value.trim();st.page=1;const pos=e.target.selectionStart;viewDashboard();const f=$('#fq');f.focus();f.setSelectionRange(pos,pos);};
+  $('#fclear').onclick=()=>{Object.assign(st,{q:'',date:'',kind:'',state:'',page:1});viewDashboard();};
+  $$('[data-sort]',app).forEach(b=>b.onclick=()=>{const k=b.dataset.sort;if(st.sort===k)st.dir*=-1;else{st.sort=k;st.dir=1;}viewDashboard();$(`[data-sort="${k}"]`).focus();});
+  $$('[data-page]',app).forEach(b=>b.onclick=()=>{st.page=+b.dataset.page;viewDashboard();});
+  wireRowLinks(app);
+}
+
+/* ============ สร้างใบแจ้ง ============ */
+let formSt=null;
+function newForm(kind){ return {kind,branch:'SDC',shop:null,customer:'',contractor:'',phone:'',start:TODAY,end:addDays(TODAY,6),cont:false,wht:false,qty:{},others:[{desc:'',qty:1,rate:0}]}; }
+function formLines(f){
+  const lines=[];
+  if(f.kind==='CHARGE'){ f.others.forEach((o,i)=>{ if(o.desc.trim()&&+o.qty>0&&+o.rate>0) lines.push({grp:'other',code:'OT-'+pad(i+1),desc:o.desc.trim(),qty:+o.qty,rate:+o.rate,amount:r2(o.qty*o.rate)}); }); return lines; }
+  if(f.shop&&!f.cont&&f.start&&f.end&&f.end>=f.start){ const a=areaAmount(f.shop,f.start,f.end); lines.push({grp:'area',code:'AR-'+a.tier.key,desc:`${a.tier.label} (${a.tier.rate} บาท/ตร.ม./เดือน) · ${f.shop.size} ตร.ม. × ${a.days} วัน`,qty:1,rate:a.amount,amount:a.amount,auto:true}); }
+  CATALOG.forEach(it=>{ const q=+f.qty[it.code]||0; if(q>0) lines.push({grp:it.grp,code:it.code,desc:it.label,qty:q,rate:it.rate,amount:r2(q*it.rate)}); });
+  return lines;
+}
+function viewForm(kind){
+  if(!formSt||formSt.kind!==kind) formSt=newForm(kind);
+  const f=formSt, isOther=kind==='CHARGE';
+  $('#app').innerHTML=`
+  <form id="invform" novalidate>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px">
+    <h1 style="margin:0">${isOther?'ใบคิดค่าบริการอื่นๆ':'ออกใบแจ้งหนี้ค่าบริการ'}</h1>
+    <div class="docno-box" aria-live="polite"><span class="mut sm">เลขที่เอกสาร / Doc No. (ถัดไป)</span>
+      <div class="br-${f.branch}" style="font-size:20px;font-weight:700" id="nextDoc">${peekDocNo(f.branch,TODAY,kind)}</div>
+      <div class="mut" style="font-size:11px">ระบบยืนยันเลขตอนบันทึก — ออกพร้อมกันหลายคนเลขไม่ชน</div></div>
+  </div>
+  ${isOther?'<div class="msg info sm">ใบคิดค่าบริการอื่นๆ — รายการที่ไม่มีในแคตตาล็อก กรอกคำอธิบายและราคาเองได้ (VAT/หัก ณ ที่จ่ายคิดให้เหมือนใบปกติ)</div>':''}
+  <div class="card">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+      <span class="flabel" id="brLbl">สาขา</span>
+      <div class="seg" role="group" aria-labelledby="brLbl">${Object.keys(BRANCHES).map(b=>`<button type="button" class="${b}" data-fb="${b}" aria-pressed="${f.branch===b}">${b} · ${esc(BRANCHES[b].name)}</button>`).join('')}</div>
+    </div>
+    <div class="formgrid">
+      <div class="f span2 ac"><label class="flabel" for="shopQ">ร้านค้า (SHOP) <span class="req">*</span></label>
+        <input id="shopQ" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="shopList" autocomplete="off" placeholder="พิมพ์เลขห้อง/ชื่อร้าน เช่น 1F, คาเฟ่" value="${f.shop?esc(f.shop.unit+' : '+f.shop.name):''}">
+        <div class="acbox" id="shopList" role="listbox" hidden></div></div>
+      <div class="f"><label class="flabel" for="fsize">ขนาดพื้นที่ (ตร.ม.)</label><input id="fsize" readonly value="${f.shop?f.shop.size:''}" style="background:#f4f6fa"></div>
+      <div class="f"><label class="flabel" for="ftype">TENANT TYPE</label><input id="ftype" readonly value="${f.shop?f.shop.type:''}" style="background:#f4f6fa"></div>
+      <div class="f span2"><label class="flabel" for="fcust">ลูกค้า (CUSTOMER) <span class="req">*</span></label><input id="fcust" value="${esc(f.customer)}" placeholder="เติมอัตโนมัติจากร้าน หรือพิมพ์เอง"></div>
+      <div class="f"><label class="flabel" for="fcon">ผู้ใช้บริการ (ผู้รับเหมา)</label><input id="fcon" list="conList" value="${esc(f.contractor)}" placeholder="เลือก/พิมพ์ชื่อ"><datalist id="conList">${CONTRACTORS.map(c=>`<option value="${esc(c.name)}">`).join('')}</datalist></div>
+      <div class="f"><label class="flabel" for="fphone">เบอร์ติดต่อ</label><input id="fphone" value="${esc(f.phone)}" placeholder="08x-xxx-xxxx"></div>
+      <div class="f"><label class="flabel" for="fstart">วันที่เริ่มต้น <span class="req">*</span></label><input type="date" id="fstart" value="${f.start}"></div>
+      <div class="f"><label class="flabel" for="fend">วันที่สิ้นสุด <span class="req">*</span></label><input type="date" id="fend" value="${f.end}"></div>
+      ${isOther?'':`<div class="f span2" style="justify-content:end"><label style="display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" id="fcont" ${f.cont?'checked':''}> ใบต่อเนื่อง (REF. DOC) — ไม่คิดค่าส่วนกลางซ้ำ</label></div>`}
+      <div class="span4" id="ferr" role="alert"></div>
+    </div>
+  </div>
+  <div class="card" id="itemsCard"></div>
+  <div class="card">
+    <table class="totals" aria-label="สรุปยอด">
+      <tr><td class="mut">รวมจำนวนเงิน (ก่อน VAT)</td><td class="num" id="t_sub">0.00</td></tr>
+      <tr><td class="mut">ภาษีมูลค่าเพิ่ม 7%</td><td class="num" id="t_vat">0.00</td></tr>
+      <tr><td class="mut">รวมทั้งสิ้น</td><td class="num" id="t_total">0.00</td></tr>
+      <tr><td><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="fwht" ${f.wht?'checked':''}> หักภาษี ณ ที่จ่าย 3% <span class="mut sm">(คิดจากยอดก่อน VAT)</span></label></td><td class="num" id="t_wht">0.00</td></tr>
+      <tr class="grand"><td>ยอดชำระสุทธิ</td><td class="num" id="t_net">0.00</td></tr>
+    </table>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">
+      <button class="btn gray" type="button" id="fcancel">ล้างฟอร์ม</button>
+      <button class="btn" type="submit" id="fsave">บันทึก + ออกเลขเอกสาร</button>
+    </div>
+  </div>
+  </form>`;
+  renderItems(); wireForm();
+}
+function renderItems(){
+  const f=formSt, box=$('#itemsCard');
+  if(f.kind==='CHARGE'){
+    box.innerHTML=`<h2>รายการค่าบริการอื่นๆ (กรอกราคาเอง)</h2>
+      <div class="itemrow other head" aria-hidden="true"><div>รายละเอียด</div><div class="ctr">จำนวน</div><div>ราคา/หน่วย</div><div class="amt" style="text-align:right">จำนวนเงิน</div><div></div></div>
+      ${f.others.map((o,i)=>`<div class="itemrow other">
+        <div class="desc"><label class="sr-only" for="od${i}">รายละเอียดรายการที่ ${i+1}</label><input id="od${i}" data-o="desc" data-i="${i}" value="${esc(o.desc)}" placeholder="เช่น ค่าทำความสะอาดพื้นที่" style="width:100%"></div>
+        <div><label class="sr-only" for="oq${i}">จำนวน</label><input id="oq${i}" type="number" min="0" step="1" data-o="qty" data-i="${i}" value="${o.qty}"></div>
+        <div><label class="sr-only" for="or${i}">ราคาต่อหน่วย</label><input id="or${i}" type="number" min="0" step="0.01" data-o="rate" data-i="${i}" value="${o.rate||''}" placeholder="0.00" style="width:100%;text-align:right"></div>
+        <div class="amt num" data-amt="${i}">${money((+o.qty||0)*(+o.rate||0))}</div>
+        <div><button type="button" class="btn gray sm" data-del="${i}" aria-label="ลบรายการที่ ${i+1}" ${f.others.length<2?'disabled':''}>✕</button></div></div>`).join('')}
+      <button type="button" class="btn gray sm" id="oadd" style="margin-top:10px">+ เพิ่มรายการ</button>`;
+  } else {
+    const a=(f.shop&&f.end>=f.start)?areaAmount(f.shop,f.start,f.end):null;
+    box.innerHTML=`<h2>รายการค่าบริการ</h2><p class="mut sm" style="margin:0 0 6px">อัตราในเดโมเป็นตัวเลขสมมติ — ใส่จำนวน ระบบคิดเงินให้อัตโนมัติ</p>
+      <div class="cat">${GROUPS.area}</div>
+      <div class="itemrow"><div>${a?`${a.tier.label} <span class="rate">(${a.tier.rate} บาท/ตร.ม./เดือน · ${f.shop.size} ตร.ม. × ${a.days} วัน ÷ 30)</span>`:'<span class="mut">เลือกร้านค้าและช่วงวันที่ — ระบบเลือก tier จากประเภท/ขนาดพื้นที่ให้เอง</span>'}${f.cont?' <span class="chip chip-amber">ใบต่อเนื่อง ไม่คิด</span>':''}</div><div></div><div></div><div class="amt num" id="areaAmt">${a&&!f.cont?money(a.amount):'—'}</div></div>
+      ${['coord','gen'].map(g=>`<div class="cat">${GROUPS[g]}</div>
+        <div class="itemrow head" aria-hidden="true"><div>รายการ</div><div style="text-align:right">จำนวน</div><div>อัตรา</div><div class="amt" style="text-align:right">จำนวนเงิน</div></div>
+        ${CATALOG.filter(i=>i.grp===g).map(it=>`<div class="itemrow"><label for="q_${it.code}">${esc(it.label)}</label>
+          <input type="number" min="0" step="${it.unit==='ชม.'?'0.5':'1'}" id="q_${it.code}" data-q="${it.code}" value="${f.qty[it.code]||''}" placeholder="0">
+          <div class="rate">${money(it.rate).replace('.00','')} บาท/${it.unit}</div>
+          <div class="amt num" data-qa="${it.code}">${f.qty[it.code]?money(f.qty[it.code]*it.rate):'—'}</div></div>`).join('')}`).join('')}`;
+  }
+  wireItems(); updateTotals();
+}
+function updateTotals(){
+  const f=formSt; const t=calcTotals({lines:formLines(f),wht:f.wht});
+  $('#t_sub').textContent=money(t.sub);$('#t_vat').textContent=money(t.vat);$('#t_total').textContent=money(t.total);$('#t_wht').textContent=t.wht?'−'+money(t.wht):'0.00';$('#t_net').textContent=money(t.net);
+}
+function wireItems(){
+  const f=formSt;
+  $$('[data-q]').forEach(inp=>inp.oninput=()=>{const v=Math.max(0,+inp.value||0);f.qty[inp.dataset.q]=v;const it=CATALOG.find(i=>i.code===inp.dataset.q);$(`[data-qa="${inp.dataset.q}"]`).textContent=v?money(v*it.rate):'—';updateTotals();});
+  $$('[data-o]').forEach(inp=>inp.oninput=()=>{const o=f.others[+inp.dataset.i];o[inp.dataset.o]=inp.dataset.o==='desc'?inp.value:Math.max(0,+inp.value||0);$(`[data-amt="${inp.dataset.i}"]`).textContent=money((+o.qty||0)*(+o.rate||0));updateTotals();});
+  $$('[data-del]').forEach(b=>b.onclick=()=>{f.others.splice(+b.dataset.del,1);renderItems();});
+  const add=$('#oadd'); if(add) add.onclick=()=>{f.others.push({desc:'',qty:1,rate:0});renderItems();$(`#od${f.others.length-1}`).focus();};
+}
+function wireForm(){
+  const f=formSt;
+  $$('[data-fb]').forEach(b=>b.onclick=()=>{ if(f.branch===b.dataset.fb) return; f.branch=b.dataset.fb; f.shop=null; f.customer=''; viewForm(f.kind); });
+  const q=$('#shopQ'), list=$('#shopList'); let act=-1, opts=[];
+  const close=()=>{list.hidden=true;q.setAttribute('aria-expanded','false');q.removeAttribute('aria-activedescendant');act=-1;};
+  const choose=s=>{f.shop={...s};f.customer=CUSTOMERS[s.cust];q.value=`${s.unit} : ${s.name}`;$('#fsize').value=s.size;$('#ftype').value=s.type;$('#fcust').value=f.customer;close();renderItems();};
+  const show=()=>{const t=q.value.trim().toLowerCase();opts=SHOPS[f.branch].filter(s=>!t||(`${s.unit} ${s.name} ${CUSTOMERS[s.cust]}`).toLowerCase().includes(t)).sort((a,b)=>collator.compare(a.unit,b.unit));
+    list.innerHTML=opts.length?opts.map((s,i)=>`<div role="option" id="opt${i}" aria-selected="false" data-i="${i}"><b>${esc(s.unit)} : ${esc(s.name)}</b><br><span class="mut sm">${esc(CUSTOMERS[s.cust])} · ${s.size} ตร.ม. · ${s.type}</span></div>`).join(''):'<div class="mut sm" style="padding:10px 14px">ไม่พบร้านในสาขานี้</div>';
+    list.hidden=false;q.setAttribute('aria-expanded','true');act=-1;
+    $$('[role=option]',list).forEach(o=>o.onmousedown=e=>{e.preventDefault();choose(opts[+o.dataset.i]);});};
+  q.onfocus=show; q.oninput=()=>{f.shop=null;show();}; q.onblur=()=>setTimeout(close,120);
+  q.onkeydown=e=>{ if(list.hidden&&e.key==='ArrowDown'){show();return;} const os=$$('[role=option]',list); if(!os.length) return;
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();act=(act+(e.key==='ArrowDown'?1:-1)+os.length)%os.length;os.forEach((o,i)=>o.setAttribute('aria-selected',i===act));q.setAttribute('aria-activedescendant','opt'+act);os[act].scrollIntoView({block:'nearest'});}
+    else if(e.key==='Enter'){e.preventDefault();if(act>=0)choose(opts[act]);else if(opts.length===1)choose(opts[0]);}
+    else if(e.key==='Escape'){close();} };
+  $('#fcust').oninput=e=>f.customer=e.target.value;
+  $('#fcon').oninput=e=>{f.contractor=e.target.value;const c=CONTRACTORS.find(x=>x.name===f.contractor);if(c&&!f.phone){f.phone=c.tel;$('#fphone').value=c.tel;}};
+  $('#fphone').oninput=e=>f.phone=e.target.value;
+  $('#fstart').onchange=e=>{f.start=e.target.value;if(f.end<f.start){f.end=f.start;$('#fend').value=f.end;}renderItems();};
+  $('#fend').onchange=e=>{f.end=e.target.value;renderItems();};
+  const cont=$('#fcont'); if(cont) cont.onchange=e=>{f.cont=e.target.checked;renderItems();};
+  $('#fwht').onchange=e=>{f.wht=e.target.checked;updateTotals();};
+  $('#fcancel').onclick=()=>{formSt=newForm(f.kind);viewForm(f.kind);};
+  $('#invform').onkeydown=e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.id!=='shopQ')e.preventDefault();};
+  $('#invform').onsubmit=async e=>{
+    e.preventDefault();
+    const errs=[]; const lines=formLines(f);
+    if(!f.shop&&f.kind!=='CHARGE') errs.push('เลือกร้านค้าจากรายการ');
+    if(!f.shop&&f.kind==='CHARGE'&&!f.customer.trim()) errs.push('เลือกร้านค้าหรือกรอกชื่อลูกค้า');
+    if(!f.customer.trim()) errs.push('กรอกชื่อลูกค้า');
+    if(!f.start||!f.end||f.end<f.start) errs.push('วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มต้น');
+    if(!lines.length) errs.push(f.kind==='CHARGE'?'กรอกอย่างน้อย 1 รายการ (รายละเอียด + ราคา)':'ใส่จำนวนอย่างน้อย 1 รายการ');
+    $('#ferr').innerHTML=errs.length?`<div class="msg error" style="margin:0">บันทึกไม่ได้: ${errs.map(esc).join(' · ')}</div>`:'';
+    if(errs.length){ $('#ferr').scrollIntoView({block:'center',behavior:'smooth'}); return; }
+    const t=calcTotals({lines,wht:f.wht});
+    if(!await confirmBox('ยืนยันออกใบแจ้งหนี้?',`${esc(f.shop?f.shop.unit+' : '+f.shop.name:f.customer)}<br>ยอดชำระสุทธิ <b>${money(t.net)}</b> บาท — ระบบจะออกเลขเอกสารและสร้างใบแจ้งหนี้พร้อม QR ทันที`,'ออกเลขเอกสาร')) return;
+    const c={doc:nextDocNo(f.branch,TODAY,f.kind),branch:f.branch,kind:f.kind,shop:f.shop?{...f.shop}:null,customer:f.customer.trim(),contractor:f.contractor.trim()||'—',phone:f.phone.trim(),
+      start:f.start,end:f.end,lines,wht:f.wht,slips:[],receipt:'',notified:false,status:'ISSUED',issuer:'demo.user',created:TODAY,audit:[]};
+    addAudit(c,'ออกเอกสาร',`ยอดสุทธิ ${money(t.net)} บาท`);
+    S.charges.push(c); save(); formSt=null;
+    location.hash='#/inv/'+c.doc; toast(`ออกเอกสาร ${c.doc} แล้ว`);
+  };
+}
+
+/* ============ ใบแจ้งค่าบริการ ============ */
+function fakeQR(seedStr,size=132){
+  const N=29, R=rng(hash(seedStr)), cell=size/(N+2); let rects='';
+  const inFinder=(x,y)=>(x<8&&y<8)||(x>N-9&&y<8)||(x<8&&y>N-9);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){ if(inFinder(x,y)) continue; if(R()<.47) rects+=`M${((x+1)*cell).toFixed(2)} ${((y+1)*cell).toFixed(2)}h${cell.toFixed(2)}v${cell.toFixed(2)}h-${cell.toFixed(2)}z`; }
+  const finder=(fx,fy)=>{const X=(fx+1)*cell,Y=(fy+1)*cell;return `<rect x="${X}" y="${Y}" width="${7*cell}" height="${7*cell}" fill="#111"/><rect x="${X+cell}" y="${Y+cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/><rect x="${X+2*cell}" y="${Y+2*cell}" width="${3*cell}" height="${3*cell}" fill="#111"/>`;};
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="QR จำลอง (ตัวอย่าง ห้ามสแกน)"><rect width="${size}" height="${size}" fill="#fff"/><path d="${rects}" fill="#111"/>${finder(0,0)}${finder(N-7,0)}${finder(0,N-7)}
+    <g transform="translate(${size/2} ${size/2}) rotate(-30)"><rect x="-58" y="-11" width="116" height="22" rx="4" fill="#c2382e" opacity=".92"/><text x="0" y="5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Noto Sans Thai,Tahoma,sans-serif">ตัวอย่าง ห้ามสแกน</text></g></svg>`;
+}
+function slipSVG(s,w=64){
+  const h=Math.round(w*1.6);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 80 128" role="img" aria-label="ภาพสลิปจำลอง ${money(s.amount)} บาท"><rect width="80" height="128" rx="6" fill="#f3fbf6"/><rect width="80" height="22" rx="6" fill="${s.manual?'#5f6b82':'#0d8a4f'}"/><text x="40" y="15" text-anchor="middle" font-size="8" fill="#fff" font-family="Noto Sans Thai,sans-serif">${s.manual?'บันทึกมือ':'โอนเงินสำเร็จ'}</text>
+  <circle cx="40" cy="42" r="11" fill="#dff3e8"/><path d="M34 42l4 4 8-8" stroke="#0d8a4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <text x="40" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#1a2233" font-family="sans-serif">${money(s.amount)}</text><text x="40" y="80" text-anchor="middle" font-size="7" fill="#5f6b82" font-family="Noto Sans Thai,sans-serif">บาท</text>
+  <rect x="10" y="90" width="60" height="3" rx="1.5" fill="#d5dbe6"/><rect x="10" y="98" width="44" height="3" rx="1.5" fill="#d5dbe6"/><rect x="10" y="106" width="52" height="3" rx="1.5" fill="#d5dbe6"/><text x="40" y="121" text-anchor="middle" font-size="6.5" fill="#c2382e" font-family="Noto Sans Thai,sans-serif">สลิปจำลอง</text></svg>`;
+}
+function logoSVG(branch){ const c2=branch==='SBK'?'#f97316':'#1f5eff'; return `<svg class="logo" viewBox="0 0 46 46" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3" fill="${c2}"/><rect x="24" y="2" width="20" height="20" rx="3" fill="#9aa6bd"/><rect x="2" y="24" width="20" height="20" rx="3" fill="#cfd6e4"/><rect x="24" y="24" width="20" height="20" rx="3" fill="${c2}" opacity=".55"/><text x="23" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1a2233" font-family="sans-serif">ต</text></svg>`; }
+function invoiceSheet(c){
+  const t=calcTotals(c), B=BRANCHES[c.branch], st=dashState(c);
+  const groups=['area','coord','gen','other'].filter(g=>c.lines.some(l=>l.grp===g));
+  const size=c.shop?` : ขนาดพื้นที่ ${c.shop.size} ตารางเมตร`:'';
+  return `<article class="sheet" aria-label="ใบเรียกเก็บค่าบริการ ${c.doc}">
+    ${st==='CANCELLED'?'<div class="stamp cancel">ยกเลิก</div>':c.slips.length?'<div class="stamp paid">ชำระแล้ว</div>':''}
+    <div class="hd">${logoSVG(c.branch)}<div><b style="font-size:12px">${esc(B.company)}</b><br><b>${esc(B.companyEn)}</b><br>
+      <span>ที่อยู่ตัวอย่าง (ข้อมูลสมมติ) · ${esc(B.name)}</span><br><span>โทร 0-0000-0000 · เลขประจำตัวผู้เสียภาษี 0-0000-00000-00-0 (ตัวอย่าง)</span></div>
+      <div class="titlebox">ใบเรียกเก็บค่าบริการ<br>Service Invoice</div></div>
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:nowrap">
+      <div style="flex:1"><div class="band">ข้อมูลร้านค้า-ชื่อที่อยู่ลูกค้า / Shop &amp; Customer Detail</div>
+        <div><b>${c.shop?esc(c.shop.unit+' : '+c.shop.name)+esc(size):'—'}</b></div><div>${esc(c.customer)}</div>
+        <div>ที่อยู่ลูกค้า (ตัวอย่าง) · เลขประจำตัวผู้เสียภาษี 0-0000-00000-00-0</div></div>
+      <table style="margin-top:14px;font-size:11px"><tr><td style="padding:1px 14px 1px 0">เลขที่เอกสาร / Doc No.</td><td><b>${c.doc}</b></td></tr>
+        <tr><td style="padding:1px 14px 1px 0">วันที่เริ่มต้น / Start Date</td><td>${fmtDL(c.start)}</td></tr>
+        <tr><td style="padding:1px 14px 1px 0">วันที่สิ้นสุด / End Date</td><td>${fmtDL(c.end)}</td></tr>
+        ${c.replaces?`<tr><td style="padding:1px 14px 1px 0">ออกแทนเอกสาร</td><td>${c.replaces}</td></tr>`:''}</table>
+    </div>
+    <table class="it"><thead><tr><th style="width:52%">รายละเอียด<br>Description</th><th>CODE</th><th>จำนวน<br>Qty</th><th>จำนวนเงิน<br>Amount</th><th>ภาษีมูลค่าเพิ่ม<br>VAT</th><th>จำนวนเงินรวม<br>Total Amount</th></tr></thead><tbody>
+      ${groups.map(g=>`<tr class="grp"><td><b>${GROUPS[g]}</b></td><td></td><td></td><td></td><td></td><td></td></tr>`+c.lines.filter(l=>l.grp===g).map(l=>`<tr><td>- ${esc(l.desc)}${l.auto?'':` (${money(l.rate).replace('.00','')} บาท)`}</td><td><b>${l.code}</b></td><td class="n">${l.auto?1:l.qty}</td><td class="n">${money(l.amount)}</td><td class="n">${money(l.amount*VAT)}</td><td class="n">${money(l.amount*(1+VAT))}</td></tr>`).join('')).join('')}
+    </tbody></table>
+    <table class="sum" style="margin-left:auto;margin-top:2px"><tr><td class="n">รวมจำนวนเงิน (ภาษี)</td><td class="n" style="width:80px">${money(t.sub)}</td><td class="n" style="width:70px">${money(t.vat)}</td><td class="n" style="width:80px">${money(t.total)}</td></tr>
+      <tr><td class="n">ภาษีหัก ณ ที่จ่าย 3%</td><td></td><td></td><td class="n">${t.wht?'−'+money(t.wht):'—'}</td></tr>
+      <tr><td class="n"><b>รวมเป็นยอดสุทธิ</b></td><td></td><td></td><td class="n" style="border:1px solid #111"><b>${money(t.net)}</b></td></tr></table>
+    <p style="margin:12px 0 2px"><b>จำนวนเงิน</b> &nbsp; - ${bahtText(t.net)} -</p>
+    <p style="margin:0">หมายเหตุ ขอสงวนสิทธิ์การคืนเงินทุกกรณี · ผู้ใช้บริการ ${esc(c.contractor)} ${esc(c.phone||'')}</p>
+    <div style="display:flex;gap:30px;margin-top:22px;flex-wrap:wrap"><div style="flex:1;min-width:260px">ฝ่ายปฏิบัติการอาคาร ____________________ (${esc(c.issuer)})<br><br>ฝ่ายการเงิน ____________________</div>
+      <div>ลงชื่อ ____________________ ผู้ใช้บริการ<br><br>เบอร์ติดต่อ ____________________</div></div>
+    <div class="qrbox">${fakeQR(c.doc)}<div class="warn">ตัวอย่าง ห้ามสแกน</div><div style="text-align:center;margin-top:4px">สำหรับการชำระเงินด้วยคิวอาร์โค้ด<br>For payment with QR Code<br><span style="color:#666">Ref1 0000 · Ref2 ${c.branch}${c.doc.slice(-7)}</span></div></div>
+  </article>`;
+}
+function viewInvoice(doc){
+  const c=byDoc(doc); if(!c) return viewNotFound(doc);
+  const t=calcTotals(c), st=dashState(c);
+  const steps=[['ออกใบแจ้งหนี้ + QR',true],['ลูกค้าชำระ / แนบสลิป',c.slips.length>0],['ซิงก์ ERP · ออกใบเสร็จ',!!c.receipt],['แจ้งหน่วยงาน',c.notified]];
+  const nowIdx=steps.findIndex(s=>!s[1]);
+  $('#app').innerHTML=`
+  <div class="inv-toolbar">
+    <a class="mut sm" href="#/">‹ Dashboard</a>
+    <h1 style="margin:0" class="br-${c.branch}">${c.doc}</h1>${chip(c)}${c.kind==='CHARGE'?'<span class="chip chip-amber">ใบคิดค่าบริการอื่นๆ</span>':''}
+    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+      <a class="btn gray" href="#/reconcile/${c.doc}">จัดการรายการ</a>
+      <button class="btn gray" type="button" id="printBtn">🖨️ พิมพ์</button>
+    </div>
+  </div>
+  ${c.replacedBy?`<div class="msg warning">🔁 ใบนี้ถูกยกเลิกและออกใบใหม่แทน → <a href="#/inv/${c.replacedBy}"><b>${c.replacedBy}</b></a></div>`:''}
+  ${c.replaces?`<div class="msg info">↩️ ใบนี้ออกแทนใบเดิมที่ถูกยกเลิก → <a href="#/inv/${c.replaces}"><b>${c.replaces}</b></a></div>`:''}
+  <div class="inv-layout">
+    <div class="sheet-wrap" tabindex="0" aria-label="ตัวอย่างใบแจ้งหนี้ (เลื่อนซ้ายขวาได้)">${invoiceSheet(c)}</div>
+    <aside class="side" aria-label="สถานะและการดำเนินการ">
+      <div class="card"><h2>ยอดชำระสุทธิ</h2><div style="font-size:26px;font-weight:700" class="br-${c.branch}">${money(t.net)} <span class="sm mut">บาท</span></div>
+        <div class="sm mut">ก่อน VAT ${money(t.sub)} · VAT 7% ${money(t.vat)}${t.wht?` · หัก ณ ที่จ่าย 3% −${money(t.wht)}`:''}</div></div>
+      <div class="card"><h2>ขั้นตอน</h2><ol class="timeline">${steps.map((s,i)=>`<li class="${s[1]?'done':i===nowIdx&&st!=='CANCELLED'?'now':''}">${s[0]}${s[1]?' <span class="sr-only">(เสร็จแล้ว)</span>':''}</li>`).join('')}</ol>
+        ${st==='CANCELLED'?`<div class="msg error sm" style="margin:0">เอกสารถูกยกเลิก — ${esc(c.cancelReason||'')}</div>`:
+        !c.slips.length?`<button class="btn green" type="button" id="payBtn" style="width:100%;justify-content:center">💳 จำลองการชำระเงิน</button><p class="sm mut" style="margin:6px 0 0">จำลองลูกค้าสแกน QR แล้วส่งสลิปเข้า LINE OA → ระบบจับคู่ Ref2 ให้อัตโนมัติ</p>`:
+        !c.receipt?`<button class="btn" type="button" id="erpBtn" style="width:100%;justify-content:center">🔄 จำลองซิงก์ ERP (ออกใบเสร็จ)</button>`:
+        !c.notified?`<button class="btn" type="button" id="notiBtn" style="width:100%;justify-content:center">📣 แจ้งหน่วยงาน (จำลอง)</button><p class="sm mut" style="margin:6px 0 0">เดโมไม่ส่งอีเมลจริง</p>`:
+        '<div class="msg success sm" style="margin:0">✅ ครบทุกขั้นตอน</div>'}
+      </div>
+      <div class="card"><h2>สลิป / การชำระเงิน (${c.slips.length})</h2>
+        ${c.slips.map(s=>`<div class="slipthumb" style="margin-bottom:8px">${slipSVG(s)}<div class="sm"><b>${money(s.amount)}</b> บาท<br>${esc(s.bank)} · ${fmtDL(s.date)}<br><span class="mut">ref ${esc(s.ref)}</span>${Math.abs(s.amount-t.net)>0.009&&st!=='CANCELLED'?'<br><span class="chip chip-amber">ยอดต่างจากใบ</span>':''}</div></div>`).join('')||'<div class="mut sm">ยังไม่มีสลิป</div>'}
+        ${c.receipt?`<div class="sm" style="margin-top:6px">ใบเสร็จ ERP: <b>${esc(c.receipt)}</b></div>`:''}
+      </div>
+      <div class="card"><h2>ข้อมูลงาน</h2><div class="sm">${esc(shopDisp(c))}<br>${esc(c.customer)}<br>ผู้รับเหมา ${esc(c.contractor)} ${esc(c.phone||'')}<br>ช่วงงาน ${fmtDL(c.start)} – ${fmtDL(c.end)}<br><span class="mut">ผู้ออก ${esc(c.issuer)}</span></div></div>
+    </aside>
+  </div>`;
+  $('#printBtn').onclick=()=>window.print();
+  const pay=$('#payBtn'); if(pay) pay.onclick=async()=>{
+    if(!await confirmBox('จำลองการชำระเงิน',`จำลองลูกค้าโอน <b>${money(t.net)}</b> บาท ผ่าน QR ของ ${c.doc}<br><span class="mut">ไม่มีการตัดเงินจริง</span>`,'ชำระเงิน (จำลอง)')) return;
+    const s=paySlip(c,t.net,TODAY,'QR'); addAudit(c,'รับสลิป',`${s.bank} ${money(s.amount)} บาท (ref ${s.ref}) — จับคู่ Ref2 อัตโนมัติ`,'line-oa-bot'); save(); viewInvoice(doc); toast('ชำระแล้ว — แนบสลิปเข้าใบเรียบร้อย'); };
+  const erp=$('#erpBtn'); if(erp) erp.onclick=()=>{ c.receipt=`RC-${c.branch}-${TODAY.slice(2,4)}${TODAY.slice(5,7)}${pad(hash(c.doc)%10000,4)}`; addAudit(c,'ซิงก์ ERP',`ใบเสร็จ ${c.receipt}`,'erp-sync'); save(); viewInvoice(doc); toast('ซิงก์ ERP แล้ว — ได้เลขใบเสร็จ '+c.receipt); };
+  const noti=$('#notiBtn'); if(noti) noti.onclick=()=>{ c.notified=true; addAudit(c,'แจ้งหน่วยงาน','ส่งอีเมลแจ้งหน่วยงานที่เกี่ยวข้อง (จำลอง — ไม่ได้ส่งจริง)'); save(); viewInvoice(doc); toast('บันทึกการแจ้งหน่วยงานแล้ว (จำลอง)'); };
+}
+
+/* ============ Reconcile ============ */
+const recSt={b:'',q:'',state:'',problem:false,sort:'doc',dir:-1,page:1};
+const recGetters={doc:c=>c.created+c.doc,branch:c=>c.branch,shop:c=>shopDisp(c),total:c=>calcTotals(c).net,slip:c=>slipTotal(c),state:c=>dashState(c)};
+function viewReconcile(){
+  const st=recSt;
+  let rows=S.charges.filter(c=>(!st.b||c.branch===st.b)&&(!st.state||dashState(c)===st.state)&&(!st.problem||problems(c).some(p=>p[1]!=='chip-gray'))
+    &&(!st.q||[c.doc,shopDisp(c),c.customer,c.receipt].join(' ').toLowerCase().includes(st.q.toLowerCase())));
+  rows=sortRows(rows,st.sort,st.dir,recGetters);
+  const pages=Math.max(1,Math.ceil(rows.length/10)); if(st.page>pages) st.page=pages;
+  const recent=S.charges.flatMap(c=>(c.audit||[]).filter(a=>a.user==='demo.user'&&!/^ออกเอกสาร$/.test(a.action)||/ปรับยอด|ยกเลิก|ย้ายสลิป|บันทึกจ่าย/.test(a.action)).map(a=>({...a,doc:c.doc}))).sort((a,b)=>b.t.localeCompare(a.t)).slice(0,8);
+  $('#app').innerHTML=`
+  <h1>จัดการรายการ (Reconciliation)</h1>
+  <p class="mut sm" style="margin:-8px 0 16px">บันทึกจ่ายมือ · ปรับยอดในใบเดิม · ยกเลิก+ออกใบใหม่ · ย้ายสลิป — คลิกแถวเพื่อจัดการต่อใบ ทุกการแก้ไขเก็บ audit log</p>
+  ${branchTabs(st.b,'rb')}
+  <form class="filters" id="recF" role="search">
+    <div class="f"><label for="rq">ค้นหา</label><input type="search" id="rq" value="${esc(st.q)}" placeholder="เลขเอกสาร / ร้าน / ลูกค้า" style="width:240px"></div>
+    <div class="f"><label for="rstate">สถานะชำระ</label><select id="rstate"><option value="">ทั้งหมด</option>${Object.entries(STATE).map(([k,v])=>`<option value="${k}" ${st.state===k?'selected':''}>${v[0]}</option>`).join('')}</select></div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px;padding:8px 0;cursor:pointer"><input type="checkbox" id="rprob" ${st.problem?'checked':''}> ⚠️ เฉพาะที่มีปัญหา</label>
+    <button class="btn" type="submit">กรอง</button>
+  </form>
+  <div class="tblwrap"><table class="list"><caption class="sr-only">รายการสำหรับกระทบยอด</caption><thead><tr>
+    ${thSort('เลขเอกสาร','doc',st)}${thSort('สาขา','branch',st)}${thSort('ร้านค้า','shop',st)}${thSort('ยอดตามใบ','total',st,'num')}${thSort('ยอดสลิป','slip',st,'num')}${thSort('สถานะ','state',st)}<th>ปัญหา</th></tr></thead><tbody>
+    ${rows.slice((st.page-1)*10,st.page*10).map(c=>`<tr class="rowlink" data-href="#/reconcile/${c.doc}">
+      <td class="nowrap"><a class="br-${c.branch}" href="#/reconcile/${c.doc}">${c.doc}</a></td><td><b class="br-${c.branch}">${c.branch}</b></td>
+      <td class="nowrap">${esc(shopDisp(c))}</td><td class="num">${money(calcTotals(c).net)}</td><td class="num">${c.slips.length?money(slipTotal(c)):'—'}</td><td>${chip(c)}</td>
+      <td class="nowrap">${problems(c).map(p=>`<span class="chip ${p[1]}">${p[0]}</span>`).join(' ')||'<span class="mut">—</span>'}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">ไม่พบรายการ</td></tr>'}
+  </tbody></table></div>
+  ${pager(rows.length,st.page)}
+  <div class="card" style="margin-top:18px"><h2>บันทึกการแก้ไขล่าสุด (Audit log)</h2>
+    ${recent.length?`<ul class="audit">${recent.map(a=>`<li><span class="t">${esc(a.t)}</span><span><a href="#/reconcile/${a.doc}">${a.doc}</a> · <b>${esc(a.action)}</b> — ${esc(a.detail)} <span class="mut sm">(${esc(a.user)})</span></span></li>`).join('')}</ul>`:'<div class="mut sm">ยังไม่มี</div>'}</div>`;
+  const app=$('#app');
+  $$('[data-rb]',app).forEach(b=>b.onclick=()=>{st.b=b.dataset.rb;st.page=1;viewReconcile();});
+  $('#recF').onsubmit=e=>{e.preventDefault();st.q=$('#rq').value.trim();st.state=$('#rstate').value;st.problem=$('#rprob').checked;st.page=1;viewReconcile();};
+  $('#rprob').onchange=e=>{st.problem=e.target.checked;st.page=1;viewReconcile();$('#rprob').focus();};
+  $$('[data-sort]',app).forEach(b=>b.onclick=()=>{const k=b.dataset.sort;if(st.sort===k)st.dir*=-1;else{st.sort=k;st.dir=1;}viewReconcile();$(`[data-sort="${k}"]`).focus();});
+  $$('[data-page]',app).forEach(b=>b.onclick=()=>{st.page=+b.dataset.page;viewReconcile();});
+  wireRowLinks(app);
+}
+function viewReconcileDetail(doc){
+  const c=byDoc(doc); if(!c) return viewNotFound(doc);
+  const t=calcTotals(c), guard=!!(c.receipt||c.notified), cancelled=c.status==='CANCELLED';
+  const canMove=cancelled&&c.replacedBy&&c.slips.length;
+  $('#app').innerHTML=`
+  <div class="inv-toolbar"><a class="mut sm" href="#/reconcile">‹ จัดการรายการ</a><h1 style="margin:0" class="br-${c.branch}">${c.doc}</h1>${chip(c)}
+    <div style="margin-left:auto"><a class="btn gray" href="#/inv/${c.doc}">📄 ดูใบแจ้งหนี้</a></div></div>
+  <div class="mut sm" style="margin:-4px 0 16px">${esc(shopDisp(c))} · ${esc(c.customer)} · ยอดตามใบ <b>${money(t.net)}</b> บาท</div>
+  ${c.replacedBy?`<div class="msg warning">🔁 ใบนี้ถูกยกเลิกและออกใบใหม่แทน → <a href="#/reconcile/${c.replacedBy}"><b>${c.replacedBy}</b></a></div>`:''}
+  ${c.replaces?`<div class="msg info">↩️ ใบนี้ออกแทนใบเดิมที่ถูกยกเลิก → <a href="#/reconcile/${c.replaces}"><b>${c.replaces}</b></a></div>`:''}
+  ${canMove?`<div class="msg error">⚠️ มีสลิปเข้าใบที่ยกเลิกแล้ว — ลูกค้าอาจจ่ายด้วย QR เก่า กด <b>“ย้ายสลิปไปใบใหม่”</b> เพื่อย้ายไป ${c.replacedBy}</div>`:''}
+  <div class="card"><h2>สลิป / การชำระเงิน (${c.slips.length})</h2>
+    ${c.slips.map(s=>`<div class="slipthumb" style="margin-bottom:8px;flex-wrap:wrap">${slipSVG(s,48)}<div class="sm" style="flex:1;min-width:180px">${s.manual?'<span class="chip chip-blue">บันทึกมือ</span> ':''}${esc(s.bank)} · <b>${money(s.amount)}</b> บาท · ${fmtDL(s.date)} · ref ${esc(s.ref)}
+      ${Math.abs(s.amount-t.net)>0.009&&!cancelled?` <span class="chip chip-amber">ยอดต่างจากใบ ${money(t.net)}</span>`:''}</div>
+      ${canMove?`<button class="btn sm" type="button" data-move="${s.id}">➡️ ย้ายสลิปไปใบใหม่</button>`:''}</div>`).join('')||'<div class="mut sm">ยังไม่มีสลิป</div>'}
+  </div>
+  ${cancelled?`<div class="card"><div class="msg error" style="margin:0">เอกสารถูกยกเลิก — เหตุผล: ${esc(c.cancelReason||'—')}</div></div>`:`
+  <div class="grid2">
+    <form class="card" id="payF"><h2>① บันทึกจ่าย (นอกช่องทาง QR)</h2>
+      <p class="mut sm" style="margin:0 0 12px">จ่ายเงินสด/โอน/บัตร — สร้างสลิปบันทึกมือ ใบขึ้น “จ่ายแล้ว”</p>
+      <div class="grid2" style="gap:10px">
+        <div class="f"><label for="pch">ช่องทาง *</label><select id="pch"><option>เงินสด</option><option>โอนเงิน</option><option>บัตรเครดิต</option><option>เคาน์เตอร์</option></select></div>
+        <div class="f"><label for="pamt">ยอดเงิน *</label><input id="pamt" type="number" step="0.01" min="0.01" value="${t.net.toFixed(2)}" required></div>
+        <div class="f"><label for="pdate">วันที่จ่าย</label><input id="pdate" type="date" value="${TODAY}"></div>
+        <div class="f"><label for="pref">เลขอ้างอิง</label><input id="pref" placeholder="เลขที่/หมายเหตุ"></div>
+      </div>
+      <button class="btn" type="submit" style="margin-top:12px">💾 บันทึกการจ่าย</button></form>
+    <form class="card" id="adjF"><h2>② ปรับยอดในใบเดิม</h2>
+      <p class="mut sm" style="margin:0 0 10px">แก้จำนวน/ยอดแต่ละบรรทัด — ระบบคิด VAT/หัก ณ ที่จ่าย/ยอดรวมใหม่ และเก็บ audit</p>
+      ${guard?'<div class="msg warning sm">⚠️ ใบนี้ออกใบเสร็จ/แจ้งหน่วยงานแล้ว — ต้องระบุเหตุผลก่อนปรับยอด</div>':''}
+      <div class="tblwrap" style="border:none"><table class="list"><thead><tr><th>รายการ</th><th class="num">จำนวน</th><th class="num">จำนวนเงิน</th></tr></thead><tbody>
+        ${c.lines.map((l,i)=>`<tr><td class="sm" style="min-width:160px">${esc(l.desc)}</td>
+          <td class="num"><label class="sr-only" for="aq${i}">จำนวน ${esc(l.desc)}</label><input id="aq${i}" data-aq="${i}" type="number" step="0.5" min="0" value="${l.qty}" style="width:70px;text-align:right" ${l.auto?'readonly':''}></td>
+          <td class="num"><label class="sr-only" for="aa${i}">จำนวนเงิน ${esc(l.desc)}</label><input id="aa${i}" data-aa="${i}" type="number" step="0.01" min="0" value="${l.amount.toFixed(2)}" style="width:110px;text-align:right"></td></tr>`).join('')}
+      </tbody></table></div>
+      <label class="sm" style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer"><input type="checkbox" id="awht" ${c.wht?'checked':''}> หัก ณ ที่จ่าย 3% <span class="mut">(ลูกค้าบางรายหักเองตอนโอน)</span></label>
+      <div class="sm" style="margin-top:6px">ยอดใหม่: <b id="anet">${money(t.net)}</b> บาท <span class="mut">(เดิม ${money(t.net)})</span></div>
+      <label class="sr-only" for="areason">เหตุผลการปรับยอด</label><input id="areason" placeholder="เหตุผลการปรับยอด *" style="width:100%;margin-top:10px">
+      <button class="btn" type="submit" style="margin-top:10px">🧮 ปรับยอด + คิดใหม่</button></form>
+  </div>
+  <form class="card" id="reF"><h2>③ ยกเลิก + ออกใบใหม่แทน</h2>
+    <p class="mut sm" style="margin:0 0 12px">ยกเลิกใบนี้ (ไม่ลบ — เปลี่ยนสถานะ) แล้วสร้างใบใหม่ คัดลอกรายการ ได้เลขใหม่ ผูกกันไว้ให้ตามรอยได้</p>
+    <label class="sr-only" for="rreason">เหตุผลการยกเลิก</label><input id="rreason" placeholder="เหตุผลการยกเลิก+ออกใหม่ *" style="width:100%">
+    <button class="btn red" type="submit" style="margin-top:10px">🔁 ยกเลิก + ออกใบใหม่</button></form>`}
+  <div class="card"><h2>ประวัติการแก้ไข (Audit log)</h2>
+    <ul class="audit">${(c.audit||[]).slice().reverse().map(a=>`<li><span class="t">${esc(a.t)}</span><span><b>${esc(a.action)}</b> — ${esc(a.detail)} <span class="mut sm">(${esc(a.user)})</span></span></li>`).join('')||'<li class="mut">ยังไม่มี</li>'}</ul></div>`;
+  const rerender=()=>{save();viewReconcileDetail(doc);};
+  $$('[data-move]').forEach(b=>b.onclick=async()=>{
+    const nw=byDoc(c.replacedBy); if(!nw) return;
+    if(!await confirmBox('ย้ายสลิป',`ย้ายสลิปนี้ไปใบใหม่ <b>${nw.doc}</b>?`,'ย้ายสลิป')) return;
+    const i=c.slips.findIndex(s=>s.id===b.dataset.move); const [s]=c.slips.splice(i,1); nw.slips.push(s);
+    addAudit(c,'ย้ายสลิป',`ย้ายสลิป ${money(s.amount)} บาท (ref ${s.ref}) → ${nw.doc}`); addAudit(nw,'รับสลิป (ย้ายมา)',`จาก ${c.doc} · ${money(s.amount)} บาท`);
+    rerender(); toast('ย้ายสลิปไป '+nw.doc+' แล้ว'); });
+  if(cancelled) return;
+  $('#payF').onsubmit=e=>{e.preventDefault();const amt=r2(+$('#pamt').value);if(!(amt>0)){toast('กรอกยอดเงินให้ถูกต้อง');return;}
+    const s=paySlip(c,amt,$('#pdate').value||TODAY,$('#pch').value); if($('#pref').value.trim()) s.ref=$('#pref').value.trim();
+    addAudit(c,'บันทึกจ่าย (มือ)',`${s.channel} ${money(amt)} บาท · ref ${s.ref}`); rerender(); toast('บันทึกการจ่ายแล้ว'); };
+  const preview=()=>{const lines=c.lines.map((l,i)=>({...l,amount:+$(`[data-aa="${i}"]`).value||0}));$('#anet').textContent=money(calcTotals({lines,wht:$('#awht').checked}).net);};
+  $$('[data-aq]').forEach(inp=>inp.oninput=()=>{const i=+inp.dataset.aq,l=c.lines[i];if(!l.auto){$(`[data-aa="${i}"]`).value=(r2((+inp.value||0)*l.rate)).toFixed(2);}preview();});
+  $$('[data-aa]').forEach(inp=>inp.oninput=preview); $('#awht').onchange=preview;
+  $('#adjF').onsubmit=async e=>{e.preventDefault();const reason=$('#areason').value.trim();
+    if(!reason){toast('ระบุเหตุผลการปรับยอดก่อน');$('#areason').focus();return;}
+    const before=calcTotals(c).net; const changes=[];
+    const nl=c.lines.map((l,i)=>{const q=+$(`[data-aq="${i}"]`).value||0,a=r2(+$(`[data-aa="${i}"]`).value||0);if(q!==l.qty||a!==l.amount)changes.push(`${l.code}: ${money(l.amount)}→${money(a)}`);return {...l,qty:q,amount:a};});
+    const nw=$('#awht').checked; if(nw!==c.wht) changes.push(`หัก ณ ที่จ่าย ${c.wht?'หัก':'ไม่หัก'}→${nw?'หัก':'ไม่หัก'}`);
+    if(!changes.length){toast('ยังไม่มีการเปลี่ยนแปลง');return;}
+    const after=calcTotals({lines:nl,wht:nw}).net;
+    if(!await confirmBox('ยืนยันปรับยอด',`${c.doc}: ${money(before)} → <b>${money(after)}</b> บาท`,'ปรับยอด')) return;
+    c.lines=nl; c.wht=nw; addAudit(c,'ปรับยอด',`${money(before)} → ${money(after)} บาท · ${changes.join(', ')} · เหตุผล: ${reason}`); rerender(); toast('ปรับยอดแล้ว'); };
+  $('#reF').onsubmit=async e=>{e.preventDefault();const reason=$('#rreason').value.trim();
+    if(!reason){toast('ระบุเหตุผลการยกเลิกก่อน');$('#rreason').focus();return;}
+    if(!await confirmBox('ยกเลิก + ออกใบใหม่',`ยกเลิก <b>${c.doc}</b> และออกใบใหม่แทน?<br><span class="mut">ใบเดิมจะเปลี่ยนสถานะเป็น “ยกเลิก” (ไม่ถูกลบ)</span>`,'ยกเลิก + ออกใหม่',true)) return;
+    const nw=reissue(c,reason); save(); location.hash='#/reconcile/'+nw.doc; toast(`ออก ${nw.doc} แทน ${c.doc} แล้ว`); };
+}
+function viewNotFound(doc){ $('#app').innerHTML=`<div class="card"><h1>ไม่พบเอกสาร</h1><p class="mut">ไม่มีเอกสาร ${esc(doc||'')} ในข้อมูลเดโม (อาจรีเซ็ตข้อมูลไปแล้ว)</p><a class="btn" href="#/">กลับ Dashboard</a></div>`; }
+
+/* ============ router ============ */
+function route(){
+  const h=decodeURIComponent(location.hash.replace(/^#/,''))||'/';
+  const parts=h.split('/').filter(Boolean);
+  let nav='dash', title='Dashboard';
+  if(parts[0]==='new'){nav='new';title='ออกใบแจ้งหนี้';viewForm('SF');}
+  else if(parts[0]==='other'){nav='other';title='ใบคิดค่าบริการอื่นๆ';viewForm('CHARGE');}
+  else if(parts[0]==='inv'){nav='dash';title=parts[1];viewInvoice(parts[1]);}
+  else if(parts[0]==='reconcile'&&parts[1]){nav='reconcile';title='จัดการ '+parts[1];viewReconcileDetail(parts[1]);}
+  else if(parts[0]==='reconcile'){nav='reconcile';title='จัดการรายการ';viewReconcile();}
+  else viewDashboard();
+  $$('[data-nav]').forEach(a=>a.dataset.nav===nav?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  document.title=`${title} · Service Fee Demo`;
+  window.scrollTo(0,0);
+}
+let lastHash=null;
+window.addEventListener('hashchange',()=>{route();$('#app').focus({preventScroll:true});});
+$('#resetBtn').onclick=async()=>{ if(!await confirmBox('รีเซ็ตข้อมูลเดโม','ล้างทุกอย่างที่ทำไว้ แล้วกลับไปใช้ข้อมูลตัวอย่างชุดเริ่มต้น?','รีเซ็ต',true)) return;
+  try{localStorage.removeItem(LS_KEY);}catch(e){} seed(); save(); formSt=null; Object.assign(dashSt,{b:'',q:'',date:'',kind:'',state:'',page:1}); Object.assign(recSt,{b:'',q:'',state:'',problem:false,page:1});
+  if(location.hash&&location.hash!=='#/') location.hash='#/'; else route(); toast('รีเซ็ตข้อมูลเดโมแล้ว'); };
+S=load(); if(!S){ seed(); save(); }
+route();
+</script>
+</body>
+</html>

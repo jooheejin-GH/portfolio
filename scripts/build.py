@@ -21,6 +21,7 @@ def shots_for(slug):
 
 for j in jobs:
     j["shots"] = shots_for(j["slug"])
+    j["demo"] = f"demo/{j['slug']}/" if (ROOT / "docs/demo" / j["slug"] / "index.html").exists() else ""
     blob = json.dumps({k: v for k, v in j.items() if k != "links"}, ensure_ascii=False)
     if LEAK.search(blob):
         raise SystemExit(f"leak check failed in {j['slug']}: {LEAK.search(blob).group(0)}")
@@ -35,4 +36,4 @@ for k, v in {
     out = out.replace(k, html.escape(v))
 out = out.replace("__JOBS__", json.dumps(jobs, ensure_ascii=False).replace("</", "<\\/"))
 (ROOT / "docs/index.html").write_text(out)
-print(f"built docs/index.html · {len(jobs)} jobs · {sum(bool(j['shots']) for j in jobs)} with screenshots")
+print(f"built docs/index.html · {len(jobs)} jobs · {sum(bool(j['shots']) for j in jobs)} with screenshots · {sum(bool(j['demo']) for j in jobs)} demos")

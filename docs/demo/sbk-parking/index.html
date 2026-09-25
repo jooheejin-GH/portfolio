@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SBK Parking เดโม</title>
+<meta name="description" content="เดโมระบบที่จอดรถรายเดือน — ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --brand:#e35d0a; --brand-2:#f97316; --brand-dark:#9a3c05;
+    --bg:#faf6f2; --line:#eadfd3; --ink:#222; --muted:#6b6f7a;
+    --th:#eef2f8; --link:#155ab6;
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; font-family:'Sarabun','Segoe UI',Tahoma,sans-serif; background:var(--bg); color:var(--ink); font-size:16px; overflow-x:hidden; }
+  a { color:var(--link); }
+  [hidden] { display:none !important; }
+  :focus-visible { outline:3px solid #ffb36b; outline-offset:2px; }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+  /* demo banner */
+  .demo-bar { position:sticky; top:0; z-index:200; background:#1f2430; color:#fff; font-size:.88rem;
+    display:flex; align-items:center; gap:.5rem 1rem; flex-wrap:wrap; padding:.45rem 1rem; }
+  .demo-bar strong { color:#ffd27a; }
+  .demo-bar a { color:#fff; }
+  .demo-bar .sp { margin-left:auto; display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+  .demo-bar button.linkish { background:none; border:1px solid #5a6273; color:#dfe3ea; border-radius:6px; padding:.2rem .6rem; font:inherit; cursor:pointer; }
+  .demo-bar button.linkish:hover { border-color:#ffd27a; color:#fff; }
+  .viewtoggle { display:inline-flex; background:#343b4b; border-radius:99px; padding:3px; }
+  .viewtoggle button { border:0; background:none; color:#cfd5df; font:inherit; font-weight:600; padding:.25rem .9rem; border-radius:99px; cursor:pointer; }
+  .viewtoggle button[aria-pressed="true"] { background:var(--brand-2); color:#1a0d00; }
+
+  /* app header */
+  header.app { background:var(--brand); color:#fff; padding:.55rem 1rem; display:flex; align-items:center; gap:.4rem 1rem; flex-wrap:wrap;
+    position:sticky; top:var(--bar-h,38px); z-index:100; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+  .brand { display:flex; align-items:center; gap:.55rem; font-weight:700; font-size:1.08rem; white-space:nowrap; }
+  .logo { background:#fff; color:var(--brand); border-radius:6px; padding:1px 8px; font-weight:800; letter-spacing:.5px; font-size:.95rem; line-height:1.25; text-align:center; }
+  .logo small { display:block; font-size:.5rem; letter-spacing:2px; color:#777; font-weight:600; }
+  header.app nav { display:flex; gap:.15rem; overflow-x:auto; scrollbar-width:none; max-width:100%; }
+  header.app nav::-webkit-scrollbar { display:none; }
+  header.app nav button { background:none; border:0; color:#fff3e8; font:inherit; font-size:.95rem; padding:.35rem .7rem; border-radius:6px; cursor:pointer; white-space:nowrap; }
+  header.app nav button:hover { background:rgba(255,255,255,.15); color:#fff; }
+  header.app nav button[aria-current="page"] { background:rgba(255,255,255,.22); color:#fff; font-weight:600; }
+  header.app .user { margin-left:auto; font-size:.85rem; color:#ffe6d2; white-space:nowrap; }
+
+  main { max-width:1100px; margin:1.2rem auto 3rem; padding:0 1rem; }
+  h1 { font-size:1.3rem; margin:.2rem 0 .9rem; color:var(--brand); }
+  h2 { font-size:1.08rem; color:var(--brand); margin:.2rem 0 .7rem; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:1.1rem 1.3rem; margin-bottom:1rem; }
+  .muted { color:var(--muted); font-size:.88rem; }
+  .btn { display:inline-flex; align-items:center; gap:.35rem; background:var(--brand); color:#fff; border:none; border-radius:7px; padding:.5rem 1.1rem; font:inherit; font-weight:600; cursor:pointer; text-decoration:none; }
+  .btn:hover { filter:brightness(1.1); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; filter:none; }
+  .btn.secondary { background:#5f6f86; }
+  .btn.ghost { background:#fff; color:var(--brand-dark); border:1px solid var(--line); }
+  .btn.small { padding:.22rem .65rem; font-size:.85rem; }
+
+  .badge { display:inline-block; padding:.08rem .6rem; border-radius:99px; font-size:.82rem; white-space:nowrap; }
+  .badge.paid { background:#ddf3e1; color:#186a2c; }
+  .badge.pending { background:#fff3d6; color:#7a5600; }
+  .badge.corp { background:#e3ebfb; color:#1c4587; }
+  .badge.none { background:#eee; color:#555; }
+  .badge.warn { background:#fbdcdc; color:#8f1d1d; }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1rem; margin-bottom:1rem; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:10px; padding:.9rem 1.1rem; text-align:left; font:inherit; color:inherit; }
+  button.stat { cursor:pointer; }
+  button.stat:hover { border-color:var(--brand); box-shadow:0 4px 14px rgba(0,0,0,.07); }
+  .stat .n { font-size:1.8rem; font-weight:700; color:var(--brand); line-height:1.2; }
+  .stat .l { font-size:.88rem; color:#555; }
+  .stat.alert { border-left:4px solid #c0392b; }
+
+  .searchbar { display:flex; gap:.5rem; margin-bottom:.9rem; flex-wrap:wrap; }
+  .searchbar input { flex:1 1 220px; min-width:0; }
+  .searchbar select { flex:0 0 190px; }
+  input[type=text], input[type=email], input[type=tel], input[type=search], select {
+    width:100%; padding:.5rem .65rem; border:1px solid #bcc3cf; border-radius:7px; font:inherit; background:#fff; color:inherit; }
+  input:focus, select:focus { outline:2px solid #f3c9a4; border-color:var(--brand); }
+  label.f { display:block; font-size:.9rem; color:#445; margin:.55rem 0 .2rem; }
+  .err { color:#b3261e; font-size:.85rem; margin-top:.15rem; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 1.2rem; }
+  @media (max-width:640px) { .grid2 { grid-template-columns:1fr; } }
+
+  .tablewrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:6px; }
+  table { width:100%; border-collapse:collapse; font-size:.93rem; }
+  th, td { padding:.5rem .6rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+  th { background:var(--th); color:#334; white-space:nowrap; font-weight:700; }
+  th button.sort { background:none; border:0; font:inherit; color:inherit; cursor:pointer; padding:0; white-space:nowrap; }
+  th button.sort .ar { opacity:.45; font-size:.75em; margin-left:.15rem; }
+  td.num, th.num { text-align:right; }
+  tbody tr.click { cursor:pointer; }
+  tbody tr.click:hover td { background:#fff4ea; }
+  td .plate { font-weight:700; white-space:nowrap; }
+  .nowrap { white-space:nowrap; }
+  .pager { display:flex; gap:.3rem; align-items:center; justify-content:flex-end; margin-top:.7rem; flex-wrap:wrap; font-size:.88rem; }
+  .pager button { min-width:2.1rem; }
+  tr.flash td { animation:flash 1.6s ease; }
+  @keyframes flash { 0%,40% { background:#fff0c2; } 100% { background:transparent; } }
+
+  .guide { background:#fff; border:1px dashed #f0b27f; border-radius:10px; padding:.7rem 1rem; margin-bottom:1rem; font-size:.92rem; }
+  .guide ol { margin:.3rem 0 0; padding-left:1.3rem; }
+  .guide li.done { color:#186a2c; }
+  .guide li.done::marker { content:"✓ "; }
+
+  /* customer */
+  .cust { max-width:740px; margin:0 auto; }
+  .carcard { display:flex; gap:1.2rem; flex-wrap:wrap; align-items:center; }
+  .carcard .info { flex:1 1 240px; min-width:0; }
+  .qrcard { flex:0 0 auto; margin:0 auto; text-align:center; border:1px solid var(--line); border-radius:12px; padding:.7rem .8rem .6rem; background:#fff; }
+  .qrcard .hdr { background:#113566; color:#fff; font-weight:700; font-size:.82rem; border-radius:6px; padding:.2rem .6rem; margin-bottom:.45rem; letter-spacing:.3px; }
+  .qrwrap { position:relative; width:190px; height:190px; margin:0 auto; }
+  .qrwrap svg { width:100%; height:100%; display:block; }
+  .qrwrap .stamp { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(-18deg); background:rgba(200,30,30,.92); color:#fff; font-weight:700;
+    font-size:.95rem; padding:.2rem .7rem; border-radius:4px; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.25); }
+  .qrcard .amt { font-size:1.25rem; font-weight:700; margin-top:.35rem; }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:.1rem .8rem; font-size:.95rem; }
+  .kv dt { color:var(--muted); } .kv dd { margin:0; font-weight:600; word-break:break-all; }
+  .addrbox { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:.7rem .9rem; margin-bottom:.7rem; }
+
+  /* import */
+  .importlog { list-style:none; margin:.6rem 0 0; padding:0; font-size:.92rem; }
+  .importlog li { display:flex; gap:.6rem; align-items:center; padding:.4rem .5rem; border-bottom:1px solid var(--line); animation:slidein .25s ease; flex-wrap:wrap; }
+  .importlog li .st { min-width:7.5rem; }
+  @keyframes slidein { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+  .spinner { display:inline-block; width:.9em; height:.9em; border:2px solid #f3c9a4; border-top-color:var(--brand); border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .progress { height:8px; border-radius:99px; background:#f1e6db; overflow:hidden; margin-top:.6rem; }
+  .progress > div { height:100%; background:var(--brand-2); width:0; transition:width .2s; }
+  .filebox { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; background:var(--bg); border:1px dashed #d8c5b3; border-radius:8px; padding:.7rem .9rem; }
+  .filebox code { background:#fff; border:1px solid var(--line); border-radius:5px; padding:.1rem .45rem; font-size:.88rem; }
+
+  /* dialog */
+  dialog { border:0; border-radius:12px; padding:0; width:min(920px, calc(100vw - 24px)); max-height:calc(100vh - 24px); box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  dialog::backdrop { background:rgba(20,20,30,.5); }
+  .dlg-head { display:flex; align-items:center; gap:.5rem; padding:.7rem 1rem; border-bottom:1px solid var(--line); position:sticky; top:0; background:#fff; z-index:2; flex-wrap:wrap; }
+  .dlg-head h2 { margin:0; flex:1 1 auto; font-size:1.05rem; }
+  .dlg-body { padding:1rem; background:#eceae7; }
+  .dlg-body.plain { background:#fff; }
+
+  /* A4 receipt */
+  .a4 { background:#fff; width:100%; max-width:794px; margin:0 auto; padding:34px 40px 28px; box-shadow:0 2px 10px rgba(0,0,0,.15); font-size:12.5px; color:#111; line-height:1.45; }
+  .a4-scroll { overflow:auto; }
+  .fit-hint { text-align:center; margin:0 0 .5rem; font-size:.85rem; }
+  .a4-scroll .a4 { width:794px; max-width:none; }
+  .r-head { display:flex; align-items:flex-start; gap:10px; }
+  .r-logo { width:62px; height:62px; border-radius:10px; background:var(--brand-2); color:#fff; font-weight:800; font-size:26px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .r-co { font-size:10.5px; color:#333; }
+  .r-co .th { font-size:13.5px; font-weight:700; color:#1a3c6e; }
+  .r-co .en { font-size:11px; font-weight:700; color:#1a3c6e; }
+  .r-stamp { border:2px solid #b00; color:#b00; border-radius:6px; padding:5px 14px; font-size:13.5px; text-align:center; margin-left:auto; line-height:1.6; white-space:nowrap; }
+  .a4 h3 { font-size:15px; text-align:center; margin:8px 0 6px; }
+  .a4 table { font-size:12.5px; }
+  .a4 table td, .a4 table th { border-bottom:0; padding:2px 6px; vertical-align:top; background:none; }
+  .r-items th { background:#46627f !important; color:#fff; padding:5px 8px !important; }
+  .r-items td { border-bottom:1px solid #ccc !important; padding:5px 8px !important; }
+  .r-baht { background:#dceaf7 !important; font-weight:700; }
+  .r-sign { display:flex; justify-content:flex-end; margin-top:14px; }
+  .r-sign div { width:220px; text-align:center; font-size:12px; color:#333; }
+  .r-sign .line { border-top:1px dotted #555; margin-top:28px; padding-top:3px; }
+  .r-sign .sig { font-family:'Brush Script MT',cursive; font-size:20px; color:#243f8f; height:0; position:relative; top:-2px; }
+  .r-dashed { border-top:2px dashed #666; margin:14px 0 10px; }
+  .r-banner { display:flex; background:#1f95a8; color:#fff; border-radius:3px; padding:6px 14px; align-items:center; }
+  .r-banner .t { font-size:20px; font-weight:700; }
+  .r-banner .p { margin-left:auto; font-weight:700; text-align:right; }
+  .r-slip { display:flex; gap:14px; margin-top:8px; align-items:flex-end; }
+  .r-slip .fields { flex:1; }
+  .r-slip .fields td.v { border-bottom:1px solid #999 !important; font-weight:700; }
+  .r-bar { height:34px; margin-top:8px; background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 8px,#111 8px 11px,#fff 11px 12px); }
+  .r-warn { border:2px solid #b00; color:#b00; padding:5px 10px; margin-top:8px; font-size:12.5px; text-align:center; }
+  .watermark { text-align:center; color:#b00; font-weight:700; font-size:11px; margin-top:8px; letter-spacing:.5px; }
+
+  .toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#1f2430; color:#fff; padding:.6rem 1.1rem; border-radius:8px; z-index:500; box-shadow:0 6px 20px rgba(0,0,0,.25); font-size:.93rem; max-width:calc(100vw - 32px); }
+
+  #printRoot { display:none; }
+  @media print {
+    body > *:not(#printRoot) { display:none !important; }
+    #printRoot { display:block; }
+    #printRoot .a4 { box-shadow:none; padding:0; max-width:none; min-width:0; }
+    @page { size:A4; margin:12mm 14mm; }
+  }
+  @media (max-width:640px) {
+    main { padding:0 12px; margin-top:.9rem; }
+    .card { padding:.9rem .9rem; }
+    header.app { padding:.45rem 12px; }
+    header.app .user { display:none; }
+    .demo-bar { padding:.4rem 12px; font-size:.82rem; }
+    .stats { grid-template-columns:1fr 1fr; gap:.6rem; }
+    .stat .n { font-size:1.45rem; }
+    .searchbar select { flex:1 1 100%; }
+  }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:.01ms !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="demo-bar" id="demoBar" role="region" aria-label="แถบเดโม">
+  <span><strong>เดโม</strong> · ข้อมูลตัวอย่างทั้งหมด ไม่เชื่อมต่อระบบจริง</span>
+  <a href="../../#sbk-parking">← กลับไปหน้าผลงาน</a>
+  <span class="sp">
+    <span class="viewtoggle" role="group" aria-label="เลือกมุมมอง">
+      <button type="button" data-view="customer" aria-pressed="false">ลูกค้า</button>
+      <button type="button" data-view="staff" aria-pressed="false">เจ้าหน้าที่</button>
+    </span>
+    <button type="button" class="linkish" id="resetBtn">รีเซ็ตข้อมูลเดโม</button>
+  </span>
+</div>
+
+<header class="app">
+  <span class="brand"><span class="logo" aria-hidden="true">SBK<small>PARKING</small></span>ที่จอดรถรายเดือน</span>
+  <nav id="nav" aria-label="เมนูหลัก"></nav>
+  <span class="user" id="userLabel"></span>
+</header>
+
+<main id="main" tabindex="-1"></main>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <h2 id="dlgTitle">รายละเอียด</h2>
+    <span id="dlgActions"></span>
+    <button type="button" class="btn small secondary" id="dlgClose">ปิด</button>
+  </div>
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="printRoot"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------- constants ---------- */
+var FEE = 1000;                     // ค่าบริการตัวอย่าง (บาท/คัน/เดือน รวม VAT)
+var TODAY = '2026-09-25';           // วันที่สมมติของเดโม
+var CUR = '2026-10';                // รอบที่กำลังเก็บ (ชำระ 16 ก.ย. – 15 ต.ค.)
+var PREV = '2026-09';
+var KEY = 'sbkParkingDemo.v1';
+var COMPANY = { th:'บริษัท ตัวอย่าง จำกัด', en:'EXAMPLE COMPANY LTD.', addr:'99/9 ถนนตัวอย่าง แขวงตัวอย่าง เขตตัวอย่าง กรุงเทพฯ 10000',
+  tel:'0-0000-0000', tax:'0-0000-00000-00-0' };
+var TH_MONTH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var coll = new Intl.Collator('th');
+
+function periodTH(p) { var a = p.split('-'); return TH_MONTH[+a[1] - 1] + ' ' + a[0]; }
+function dmy(d) { var a = d.split('-'); return a[2] + '/' + a[1] + '/' + a[0].slice(2); }
+function dmyLong(d) { var a = d.split('-'); return (+a[2]) + '/' + (+a[1]) + '/' + a[0]; }
+function money(n) { return n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+function fmtTax(t) { return t.length === 13 ? t[0] + '-' + t.slice(1,5) + '-' + t.slice(5,10) + '-' + t.slice(10,12) + '-' + t[12] : t; }
+
+function bahtText(num) {
+  var nums = ['ศูนย์','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+  var units = ['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+  function read(n) {
+    var s = String(n), out = '';
+    if (s.length > 6) return read(+s.slice(0, s.length - 6)) + 'ล้าน' + read(+s.slice(-6));
+    for (var i = 0; i < s.length; i++) {
+      var d = +s[i], pos = s.length - i - 1;
+      if (!d) continue;
+      if (pos === 1 && d === 1) out += 'สิบ';
+      else if (pos === 1 && d === 2) out += 'ยี่สิบ';
+      else if (pos === 0 && d === 1 && s.length > 1) out += 'เอ็ด';
+      else out += nums[d] + units[pos];
+    }
+    return out;
+  }
+  var baht = Math.floor(num), sat = Math.round((num - baht) * 100);
+  return (baht ? read(baht) + 'บาท' : '') + (sat ? read(sat) + 'สตางค์' : 'ถ้วน');
+}
+
+/* ---------- seeded random ---------- */
+function rng(seed) { var s = seed >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+/* ---------- seed data (fake) ---------- */
+var FIRST = ['สมชาย','สมหญิง','วิชัย','ปราณี','กิตติ','อรทัย','ธนพล','สุนิสา','ชัยวัฒน์','นภัสสร','ประเสริฐ','วรรณา','ศักดิ์ชัย','ดวงใจ','ธีรวัฒน์','พรทิพย์','อนุชา','กมลวรรณ','เอกชัย','รัตนา','ภานุวัฒน์','สุดารัตน์','ไพโรจน์','จิราพร','วีระพงษ์'];
+var LAST = ['ใจดี','ทองคำ','มั่นคง','สุขสันต์','ศรีสมบูรณ์','แก้วมณี','บุญเรือง','รักงาน','พึ่งบุญ','ประเสริฐวงศ์','นาคสวัสดิ์','คงเจริญ','ทรัพย์มาก','สุวรรณรัตน์','อ่อนศรี','ชัยมงคล','หอมจันทร์','วัฒนกุล','ภักดี','อุดมสุข'];
+var CONS = ['กข','ขค','ฆง','จฉ','ชซ','ญฐ','ฒณ','ดต','ถท','นบ','ปผ','พฟ','ภม','ยร','ลว','ศษ','สห','ฬอ','1กข','2ขค','3กง','4กก','5กต','6กฮ','7กร'];
+var PROV = ['กรุงเทพมหานคร','กรุงเทพมหานคร','กรุงเทพมหานคร','กรุงเทพมหานคร','นนทบุรี','สมุทรปราการ','นครปฐม','สมุทรสาคร'];
+var CARS = ['Toyota Yaris','Toyota Vios','Toyota Camry','Toyota Corolla Cross','Honda City','Honda Civic','Honda HR-V','Honda Jazz','Mazda 2','Mazda CX-3','Nissan Almera','Nissan Kicks','MG ZS','MG 5','Isuzu D-Max','Ford Ranger','Mitsubishi Xpander','Suzuki Swift','BYD Atto 3','Hyundai Creta'];
+var COLORS = ['ขาว','ดำ','เทา','เงิน','แดง','น้ำเงิน','ขาวมุก','น้ำตาล'];
+var CORP = ['บริษัท ตัวอย่างการค้า จำกัด','ห้างหุ้นส่วน ทดสอบ'];
+
+function seed() {
+  var r = rng(20260925), vehicles = [], receipts = [], seqByMonth = {};
+  function pick(a) { return a[Math.floor(r() * a.length)]; }
+  function nextNo(month) { seqByMonth[month] = (seqByMonth[month] || 0) + 1; return month.slice(2,4) + month.slice(5,7) + String(seqByMonth[month]).padStart(4, '0'); }
+  var usedPlates = {};
+  for (var i = 0; i < 25; i++) {
+    var plate;
+    do { plate = pick(CONS) + ' ' + (1000 + Math.floor(r() * 9000)); } while (usedPlates[plate]);
+    usedPlates[plate] = 1;
+    var name = FIRST[i] + ' ' + pick(LAST);
+    var tax = '99' + String(10000000000 + Math.floor(r() * 89999999999)).slice(0, 11);
+    var corp = i === 6 || i === 17;
+    var hasEmail = i % 7 !== 3;
+    vehicles.push({
+      id: 'v' + (i + 1), pk: 'PK' + String(101 + i * 3).padStart(4, '0'), plate: plate, province: pick(PROV),
+      name: name, tax: tax, phone: '08' + Math.floor(r() * 10) + '-' + String(Math.floor(r() * 900) + 100) + '-' + String(Math.floor(r() * 9000) + 1000),
+      email: hasEmail ? 'customer' + (i + 1) + '@example.com' : '',
+      addr: (10 + i) + '/' + (1 + (i % 9)) + ' ซอยตัวอย่าง ' + (i + 1) + ' แขวงตัวอย่าง เขตตัวอย่าง กรุงเทพฯ 10000',
+      car: pick(CARS), color: pick(COLORS), payer: corp ? pick(CORP) : 'เจ้าของ', created: '2026-0' + (3 + (i % 5)) + '-1' + (i % 9), paid: {}
+    });
+  }
+  // รอบ ก.ย. 2026: ทุกคันจ่ายช่วง 16 ส.ค. – 15 ก.ย.
+  var rows = [];
+  vehicles.forEach(function (v) {
+    var day = 16 + Math.floor(r() * 30); var date = day <= 31 ? '2026-08-' + String(day).padStart(2,'0') : '2026-09-' + String(day - 31).padStart(2,'0');
+    rows.push({ v: v, date: date, period: PREV });
+  });
+  // รอบ ต.ค. 2026: 17 คันแรกจ่ายแล้ว (16–24 ก.ย.) ที่เหลือรอชำระ
+  vehicles.forEach(function (v, i) {
+    if ([2, 5, 9, 12, 15, 19, 21, 24].indexOf(i) >= 0) return;
+    rows.push({ v: v, date: '2026-09-' + String(16 + Math.floor(r() * 9)).padStart(2, '0'), period: CUR });
+  });
+  rows.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  rows.forEach(function (x) {
+    var no = nextNo(x.date.slice(0, 7));
+    receipts.push(mkReceipt(no, x.v, x.date, x.period, x.v.email ? 'sent' : 'none'));
+    x.v.paid[x.period] = no;
+  });
+  return {
+    v: 1, view: 'customer', staffTab: 'home', custTab: 'register', me: null, vehicles: vehicles, receipts: receipts,
+    seq: seqByMonth, nextPk: 101 + 25 * 3, batches: [
+      { id: 'b1', at: '2026-09-18 09:12', file: 'BILLPAY_20260918.txt', count: 9, total: 9000, matched: 9, unmatched: 0 },
+      { id: 'b2', at: '2026-09-23 09:05', file: 'BILLPAY_20260923.txt', count: 8, total: 8000, matched: 8, unmatched: 0 }
+    ], unmatched: [], guide: {}
+  };
+}
+function mkReceipt(no, v, date, period, mail) {
+  return { no: no, vid: v.id, date: date, period: period, amount: FEE, mail: mail,
+    snap: { name: v.payer !== 'เจ้าของ' ? v.payer : v.name, addr: v.addr, tax: v.tax, email: v.email, plate: v.plate + ' ' + v.province } };
+}
+
+/* ---------- state + storage ---------- */
+var S;
+function load() {
+  try { var raw = localStorage.getItem(KEY); if (raw) { var p = JSON.parse(raw); if (p && p.v === 1 && p.vehicles) return p; } } catch (e) {}
+  return seed();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+S = load();
+
+function byId(id) { for (var i = 0; i < S.vehicles.length; i++) if (S.vehicles[i].id === id) return S.vehicles[i]; return null; }
+function receiptByNo(no) { for (var i = 0; i < S.receipts.length; i++) if (S.receipts[i].no === no) return S.receipts[i]; return null; }
+function isPaid(v, p) { return !!v.paid[p || CUR]; }
+function myVehicles() { return S.me ? S.vehicles.filter(function (v) { return v.tax === S.me; }) : []; }
+
+/* ---------- UI helpers ---------- */
+var $ = function (s, el) { return (el || document).querySelector(s); };
+var mainEl = $('#main'), navEl = $('#nav'), dlg = $('#dlg');
+var toastTimer;
+function toast(msg) { var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 2600); }
+function setBarH() { document.documentElement.style.setProperty('--bar-h', $('#demoBar').offsetHeight + 'px'); }
+window.addEventListener('resize', setBarH);
+
+/* generic sortable + paginated table */
+var tableState = {};
+function dataTable(id, cols, rows, opts) {
+  opts = opts || {};
+  var st = tableState[id] || (tableState[id] = { key: opts.sortKey || null, dir: opts.sortDir || 1, page: 1 });
+  if (opts.resetPage) st.page = 1;
+  var sorted = rows.slice();
+  if (st.key) {
+    var col = cols.filter(function (c) { return c.key === st.key; })[0];
+    var getter = col.sortVal || function (r) { return r[col.key]; };
+    sorted.sort(function (a, b) {
+      var x = getter(a), y = getter(b);
+      var c = (typeof x === 'number' && typeof y === 'number') ? x - y : coll.compare(String(x), String(y));
+      return c * st.dir;
+    });
+  }
+  var size = opts.pageSize || 10, pages = Math.max(1, Math.ceil(sorted.length / size));
+  if (st.page > pages) st.page = pages;
+  var slice = sorted.slice((st.page - 1) * size, st.page * size);
+  var h = '<div class="tablewrap"><table><caption class="sr-only">' + esc(opts.caption || '') + '</caption><thead><tr>';
+  cols.forEach(function (c) {
+    var aria = st.key === c.key ? (st.dir === 1 ? 'ascending' : 'descending') : 'none';
+    h += '<th scope="col"' + (c.num ? ' class="num"' : '') + ' aria-sort="' + aria + '">' +
+      (c.sort === false ? esc(c.label) : '<button type="button" class="sort" data-t="' + id + '" data-k="' + c.key + '">' + esc(c.label) +
+      '<span class="ar" aria-hidden="true">' + (st.key === c.key ? (st.dir === 1 ? '▲' : '▼') : '⇅') + '</span></button>') + '</th>';
+  });
+  h += '</tr></thead><tbody>';
+  if (!slice.length) h += '<tr><td colspan="' + cols.length + '" class="muted">' + esc(opts.empty || 'ไม่มีข้อมูล') + '</td></tr>';
+  slice.forEach(function (r) {
+    h += '<tr' + (opts.rowAttr ? opts.rowAttr(r) : '') + '>';
+    cols.forEach(function (c) { h += '<td' + (c.num ? ' class="num"' : '') + '>' + (c.html ? c.html(r) : esc(r[c.key])) + '</td>'; });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  if (pages > 1) {
+    h += '<nav class="pager" aria-label="แบ่งหน้า"><span class="muted">' + sorted.length + ' รายการ · หน้า ' + st.page + '/' + pages + '</span>';
+    h += '<button type="button" class="btn small ghost" data-pg="' + id + '" data-p="' + (st.page - 1) + '"' + (st.page === 1 ? ' disabled' : '') + ' aria-label="หน้าก่อน">‹</button>';
+    for (var p = 1; p <= pages; p++) h += '<button type="button" class="btn small ' + (p === st.page ? '' : 'ghost') + '" data-pg="' + id + '" data-p="' + p + '"' + (p === st.page ? ' aria-current="page"' : '') + '>' + p + '</button>';
+    h += '<button type="button" class="btn small ghost" data-pg="' + id + '" data-p="' + (st.page + 1) + '"' + (st.page === pages ? ' disabled' : '') + ' aria-label="หน้าถัดไป">›</button></nav>';
+  }
+  return h;
+}
+document.addEventListener('click', function (e) {
+  var s = e.target.closest('button.sort');
+  if (s) { var st = tableState[s.dataset.t]; if (st.key === s.dataset.k) st.dir = -st.dir; else { st.key = s.dataset.k; st.dir = 1; } st.page = 1; render(); focusSel('button.sort[data-t="' + s.dataset.t + '"][data-k="' + s.dataset.k + '"]'); return; }
+  var pg = e.target.closest('[data-pg]');
+  if (pg) { tableState[pg.dataset.pg].page = +pg.dataset.p; render(); return; }
+});
+function focusSel(sel) { var el = $(sel); if (el) el.focus(); }
+
+/* fake QR — random modules + finder squares, deliberately NOT a valid code */
+function fakeQR(seedStr, px) {
+  var n = 29, r = rng(hash(seedStr)), cells = '';
+  function finder(x, y) { return '<rect x="' + x + '" y="' + y + '" width="7" height="7" fill="#111"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" fill="#111"/>'; }
+  for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+    var inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
+    if (!inF && r() < 0.47) cells += 'M' + x + ' ' + y + 'h1v1h-1z';
+  }
+  return '<svg viewBox="-2 -2 ' + (n + 4) + ' ' + (n + 4) + '" ' + (px ? 'width="' + px + '" height="' + px + '" ' : '') + 'role="img" aria-label="ภาพ QR ตัวอย่าง (ไม่ใช่ QR จริง ห้ามสแกน)" shape-rendering="crispEdges"><rect x="-2" y="-2" width="' + (n + 4) + '" height="' + (n + 4) + '" fill="#fff"/><path d="' + cells + '" fill="#111"/>' + finder(0, 0) + finder(n - 7, 0) + finder(0, n - 7) + '</svg>';
+}
+function qrCard(v) {
+  return '<div class="qrcard"><div class="hdr">THAI QR PAYMENT · ตัวอย่าง</div><div class="qrwrap">' + fakeQR(v.pk + v.tax) +
+    '<span class="stamp" aria-hidden="true">ตัวอย่าง ห้ามสแกน</span></div>' +
+    '<div class="amt">' + money(FEE) + ' บาท</div><div class="muted">REF1 ' + esc(v.tax) + '<br>REF2 ' + esc(v.pk) + '</div></div>';
+}
+
+/* ---------- receipt (A4) ---------- */
+function receiptHTML(r) {
+  var v = byId(r.vid) || {}, base = +(r.amount / 1.07).toFixed(2), vat = +(r.amount - base).toFixed(2);
+  var np = nextPeriod(r.period);
+  return '<article class="a4" aria-label="ใบเสร็จรับเงิน ' + esc(r.no) + '">' +
+    '<div class="r-head"><div class="r-logo" aria-hidden="true">P</div><div class="r-co"><div class="th">' + COMPANY.th + ' (สำนักงานใหญ่)</div><div class="en">' + COMPANY.en + ' (HEAD OFFICE)</div>' +
+    COMPANY.addr + '<br>โทร. ' + COMPANY.tel + ' เลขประจำตัวผู้เสียภาษี ' + COMPANY.tax + '</div>' +
+    '<div class="r-stamp">เดือน ' + periodTH(r.period) + '<br>วันที่ ' + dmyLong(r.date) + '<br>ทะเบียนรถ ' + esc(v.plate || '') + '</div></div>' +
+    '<h3>ใบเสร็จรับเงิน/ใบกำกับภาษี</h3>' +
+    '<table><tr><td style="width:56%"><strong>ชื่อและที่อยู่ลูกค้า / Customer\'s Name and address</strong><br>' + esc(r.snap.name) + '<br>' + esc(r.snap.addr) +
+    '<br>TAX ID No. : ' + esc(r.snap.tax) + (r.snap.email ? '<br>Email : ' + esc(r.snap.email) : '') + '</td>' +
+    '<td style="width:24%">Tax Receipt No.<br>วันที่/Date<br>รหัสลูกค้า/Customer Code<br>ทะเบียนรถยนต์</td>' +
+    '<td><strong>' + r.no + '</strong><br><strong>' + dmyLong(r.date) + '</strong><br><strong>' + esc(r.snap.tax) + '</strong><br><strong>' + esc(r.snap.plate) + '</strong></td></tr></table>' +
+    '<table class="r-items" style="margin-top:6px"><tr><th style="width:13%">ลำดับ/Item</th><th>รายการ/Description</th><th style="width:24%;text-align:right">จำนวนเงินรวม/Amount</th></tr>' +
+    '<tr><td style="text-align:right">1</td><td>ค่าบริการที่จอดรถรายเดือน ประจำเดือน ' + periodTH(r.period) + '</td><td style="text-align:right">' + money(base) + '</td></tr>' +
+    '<tr><td style="height:40px"></td><td></td><td></td></tr></table>' +
+    '<table style="margin-top:4px"><tr><td style="width:12%;font-size:11px">จำนวนเงิน<br>ตัวอักษร</td><td style="width:43%" class="r-baht">(' + bahtText(r.amount) + ')</td><td>จำนวนเงิน/Amount</td><td style="text-align:right;width:15%">' + money(base) + '</td></tr>' +
+    '<tr><td></td><td></td><td>ภาษีมูลค่าเพิ่ม/Vat 7%</td><td style="text-align:right">' + money(vat) + '</td></tr>' +
+    '<tr><td></td><td></td><td><strong>จำนวนเงินรวมทั้งสิ้น/Total</strong></td><td style="text-align:right"><strong>' + money(r.amount) + '</strong></td></tr></table>' +
+    '<div style="font-size:11px;color:#333;margin-top:6px"><strong>หมายเหตุ</strong> ชำระผ่าน Bill Payment วันที่ ' + dmyLong(r.date) + ' · สิทธิ์จอดรถรอบเดือน ' + periodTH(r.period) + ' (16 ของเดือนก่อน – 15 ของเดือน)</div>' +
+    '<div class="r-sign"><div><div class="sig" aria-hidden="true">Example</div><div class="line">ผู้รับเงิน / Collector</div></div></div>' +
+    '<div class="r-dashed" role="separator"></div>' +
+    '<div class="r-banner"><div class="t">ใบแจ้งการชำระเงิน</div><div class="p">เดือน ' + periodTH(np) + '<br><span style="font-size:12px">ชำระได้ 16/' + r.period.slice(5) + ' – 15/' + np.slice(5) + '</span></div></div>' +
+    '<div class="r-slip"><div class="fields"><table><tr><td style="width:24%">ชื่อลูกค้า</td><td class="v">' + esc(v.name || r.snap.name) + '</td></tr>' +
+    '<tr><td>REF1 (เลขบัตร)</td><td class="v">' + esc(r.snap.tax) + '</td></tr><tr><td>REF2 (รหัสรถ)</td><td class="v">' + esc(v.pk || '') + '</td></tr>' +
+    '<tr><td>จำนวนเงิน</td><td class="v">' + money(FEE) + ' บาท</td></tr></table><div class="r-bar" aria-hidden="true"></div></div>' +
+    '<div style="text-align:center;position:relative">' + fakeQR('slip' + r.no, 104) + '<div style="font-size:10px;color:#b00;font-weight:700">ตัวอย่าง ห้ามสแกน</div></div></div>' +
+    '<div class="r-warn">กรุณาชำระภายในวันที่ 15 ของเดือน หากเลยกำหนด รถจะไม่มีสิทธิ์ผ่านไม้กั้นในรอบถัดไป</div>' +
+    '<div class="watermark">เอกสารตัวอย่างสำหรับเดโม — ไม่ใช่ใบเสร็จจริง</div></article>';
+}
+function nextPeriod(p) { var y = +p.slice(0, 4), m = +p.slice(5) + 1; if (m > 12) { m = 1; y++; } return y + '-' + String(m).padStart(2, '0'); }
+
+function openDialog(title, bodyHTML, actionsHTML, plain) {
+  $('#dlgTitle').textContent = title;
+  $('#dlgBody').innerHTML = bodyHTML;
+  $('#dlgBody').className = 'dlg-body' + (plain ? ' plain' : '');
+  $('#dlgActions').innerHTML = actionsHTML || '';
+  if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
+  $('#dlgBody').scrollTop = 0;
+  fitA4();
+}
+function fitA4() {
+  var wrap = $('#dlgBody .a4-scroll'); if (!wrap) return;
+  var a4 = $('.a4', wrap), avail = wrap.clientWidth, z = Math.min(1, avail / 794);
+  var hint = $('#dlgBody .fit-hint');
+  if (z < 1 && !wrap.dataset.full) { a4.style.zoom = z; hint.hidden = false; hint.firstChild.textContent = 'ดูขนาดจริง (เลื่อนซ้าย-ขวา)'; }
+  else { a4.style.zoom = ''; hint.hidden = z >= 1; hint.firstChild.textContent = 'ย่อให้พอดีจอ'; }
+}
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('.fit-hint button')) return;
+  var wrap = $('#dlgBody .a4-scroll');
+  if (wrap.dataset.full) delete wrap.dataset.full; else wrap.dataset.full = '1';
+  fitA4();
+});
+window.addEventListener('resize', function () { if (dlg.open) fitA4(); });
+$('#dlgClose').addEventListener('click', function () { dlg.close(); });
+dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+function openReceipt(no) {
+  var r = receiptByNo(no); if (!r) return;
+  openDialog('ใบเสร็จ ' + r.no, '<p class="fit-hint" hidden><button type="button" class="btn small ghost">ดูขนาดจริง</button></p><div class="a4-scroll">' + receiptHTML(r) + '</div>',
+    '<button type="button" class="btn small" data-act="print" data-no="' + r.no + '">พิมพ์ / PDF</button> ' +
+    (S.view === 'staff' ? '<button type="button" class="btn small ghost" data-act="resend" data-no="' + r.no + '">ส่งเมลซ้ำ</button>' : ''));
+}
+
+/* ---------- navigation ---------- */
+var STAFF_TABS = [['home','หน้าหลัก'],['vehicles','รถ active'],['import','นำเข้าเงิน'],['receipts','ใบเสร็จ'],['salestax','ภาษีขาย']];
+var CUST_TABS = [['register','ฟอร์มลูกค้า'],['mycars','รถของฉัน / QR'],['myreceipts','ใบเสร็จของฉัน']];
+function tabs() { return S.view === 'staff' ? STAFF_TABS : CUST_TABS; }
+function curTab() { return S.view === 'staff' ? S.staffTab : S.custTab; }
+function go(tab) { if (S.view === 'staff') S.staffTab = tab; else S.custTab = tab; save(); render(); mainEl.focus({ preventScroll:true }); window.scrollTo(0, 0); }
+
+function renderChrome() {
+  document.querySelectorAll('.viewtoggle button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.view === S.view ? 'true' : 'false'); });
+  navEl.innerHTML = tabs().map(function (t) {
+    return '<button type="button" data-tab="' + t[0] + '"' + (curTab() === t[0] ? ' aria-current="page"' : '') + '>' + t[1] + '</button>';
+  }).join('');
+  var me = myVehicles()[0];
+  $('#userLabel').textContent = S.view === 'staff' ? 'finance.demo 🔑' : (me ? 'ลูกค้า: ' + me.name : 'ผู้เยี่ยมชม');
+  document.title = 'SBK Parking เดโม';
+  setBarH();
+}
+navEl.addEventListener('click', function (e) { var b = e.target.closest('[data-tab]'); if (b) go(b.dataset.tab); });
+document.querySelectorAll('.viewtoggle button').forEach(function (b) {
+  b.addEventListener('click', function () { S.view = b.dataset.view; save(); render(); toast(S.view === 'staff' ? 'สลับเป็นมุมมองเจ้าหน้าที่' : 'สลับเป็นมุมมองลูกค้า'); });
+});
+$('#resetBtn').addEventListener('click', function () {
+  if (!confirm('รีเซ็ตข้อมูลเดโมกลับเป็นค่าเริ่มต้น?')) return;
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  S = seed(); tableState = {}; save(); render(); toast('รีเซ็ตข้อมูลเดโมแล้ว');
+});
+
+function guideHTML() {
+  var g = S.guide, hasMine = myVehicles().length > 0, mineReceipt = hasMine && myVehicles().some(function (v) { return isPaid(v); });
+  return '<div class="guide"><strong>ลองเล่นทั้งวงจร:</strong><ol>' +
+    '<li class="' + (hasMine ? 'done' : '') + '">มุมมอง <b>ลูกค้า</b> → กรอกฟอร์มลงทะเบียนรถ → ได้ QR สำหรับชำระ</li>' +
+    '<li class="' + (g.sawStaff && hasMine ? 'done' : '') + '">สลับเป็น <b>เจ้าหน้าที่</b> → เมนู "รถ active" จะเห็นรถคันใหม่เป็น <span class="badge pending">รอชำระ</span></li>' +
+    '<li class="' + (g.imported ? 'done' : '') + '">เมนู "นำเข้าเงิน" → กดนำเข้าไฟล์ธนาคารตัวอย่าง → ระบบจับคู่และออกใบเสร็จ</li>' +
+    '<li class="' + (mineReceipt ? 'done' : '') + '">กลับมามุมมองลูกค้า → "ใบเสร็จของฉัน" เปิดดูใบเสร็จแบบ A4</li></ol></div>';
+}
+
+/* ---------- CUSTOMER VIEWS ---------- */
+var formDraft = null, formErrors = {};
+function vRegister() {
+  var me = myVehicles()[0], d = formDraft || {};
+  function fld(id, label, type, extra) {
+    return '<div><label class="f" for="f_' + id + '">' + label + '</label><input type="' + (type || 'text') + '" id="f_' + id + '" name="' + id + '" value="' + esc(d[id] || '') + '"' +
+      (formErrors[id] ? ' aria-invalid="true" aria-describedby="e_' + id + '"' : '') + (extra || '') + '>' + (formErrors[id] ? '<div class="err" id="e_' + id + '">' + esc(formErrors[id]) + '</div>' : '') + '</div>';
+  }
+  var h = guideHTML() + '<div class="cust"><div class="card"><h1>' + (me ? 'เพิ่มรถอีกคัน' : 'ลงทะเบียนจอดรถยนต์รายเดือน') + '</h1>' +
+    '<p class="muted">ค่าบริการ ' + FEE.toLocaleString() + ' บาท/คัน/เดือน (ตัวเลขสมมติ รวม VAT) — ชำระช่วง 16 ของเดือนก่อน – 15 ของเดือน = สิทธิ์จอดรอบเดือนนั้น</p>';
+  if (me) h += '<div class="addrbox"><strong>' + esc(me.name) + '</strong><div class="muted">เลขบัตร ' + esc(fmtTax(me.tax)) + ' · 📞 ' + esc(me.phone) + '</div></div>';
+  h += '<form id="regForm" novalidate>';
+  if (!me) {
+    h += '<h2>ข้อมูลผู้ใช้บริการ</h2>' + fld('name', 'ชื่อ-นามสกุล *', 'text', ' autocomplete="off" required') +
+      '<div class="grid2">' + fld('tax', 'เลขบัตรประชาชน / เลขผู้เสียภาษี (13 หลัก) *', 'text', ' inputmode="numeric" maxlength="17" required') +
+      fld('phone', 'เบอร์โทร *', 'tel', ' required') + '</div>' + fld('email', 'อีเมล (รับใบเสร็จ)', 'email') + fld('addr', 'ที่อยู่ (แสดงบนใบเสร็จ)', 'text');
+  }
+  h += '<h2 style="margin-top:1rem">ข้อมูลรถ</h2><div class="grid2">' + fld('plate', 'ทะเบียนรถ *', 'text', ' placeholder="เช่น กข 1234" required') +
+    '<div><label class="f" for="f_province">จังหวัด</label><select id="f_province" name="province">' +
+    ['กรุงเทพมหานคร','นนทบุรี','สมุทรปราการ','นครปฐม','สมุทรสาคร','ปทุมธานี'].map(function (p) { return '<option' + (d.province === p ? ' selected' : '') + '>' + p + '</option>'; }).join('') +
+    '</select></div>' + fld('car', 'ยี่ห้อ / รุ่น *', 'text', ' placeholder="เช่น Honda City" required') + fld('color', 'สี', 'text') + '</div>' +
+    '<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem"><button class="btn" type="submit">ส่งข้อมูลลงทะเบียน</button>' +
+    '<button class="btn ghost" type="button" id="fillDemo">กรอกข้อมูลตัวอย่างให้</button></div></form></div>';
+  if (!me) {
+    h += '<div class="card"><h2>ลูกค้าเดิม? ค้นด้วยเลขบัตร + เบอร์โทร</h2><form id="lookupForm" class="searchbar" style="margin:0" novalidate>' +
+      '<label class="sr-only" for="lk_tax">เลขบัตร</label><input type="text" id="lk_tax" placeholder="เลขบัตร 13 หลัก" inputmode="numeric">' +
+      '<label class="sr-only" for="lk_phone">เบอร์โทร</label><input type="tel" id="lk_phone" placeholder="เบอร์โทร"><button class="btn" type="submit">ค้นหา</button></form>' +
+      '<p class="muted" style="margin:.5rem 0 0">หรือ <button type="button" class="btn small ghost" id="asSample">เข้าดูเป็นลูกค้าตัวอย่าง</button></p></div>';
+  } else {
+    h += '<p class="muted" style="text-align:center"><button type="button" class="btn small ghost" id="logoutMe">ออกจากบัญชีลูกค้านี้</button></p>';
+  }
+  return h + '</div>';
+}
+function bindRegister() {
+  var f = $('#regForm'); if (!f) return;
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var me = myVehicles()[0], d = {}; Array.prototype.forEach.call(f.elements, function (el) { if (el.name) d[el.name] = el.value.trim(); });
+    formDraft = d; formErrors = {};
+    if (!me) {
+      if (!d.name) formErrors.name = 'กรุณากรอกชื่อ-นามสกุล';
+      var tax = (d.tax || '').replace(/\D/g, '');
+      if (tax.length !== 13) formErrors.tax = 'เลขบัตรต้องมี 13 หลัก';
+      else if (S.vehicles.some(function (v) { return v.tax === tax; })) formErrors.tax = 'เลขบัตรนี้มีบัญชีแล้ว — ใช้ "ลูกค้าเดิม" ด้านล่าง';
+      if (!/^0\d{8,9}$/.test((d.phone || '').replace(/\D/g, ''))) formErrors.phone = 'รูปแบบเบอร์โทรไม่ถูกต้อง';
+      if (d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) formErrors.email = 'รูปแบบอีเมลไม่ถูกต้อง';
+      d.tax = tax;
+    }
+    var plate = (d.plate || '').replace(/\s+/g, ' ');
+    if (!plate) formErrors.plate = 'กรุณากรอกทะเบียน';
+    else if (S.vehicles.some(function (v) { return v.plate === plate && v.province === d.province; })) formErrors.plate = 'ทะเบียนนี้มีในระบบแล้ว (ระบบกันทะเบียนซ้ำ)';
+    if (!d.car) formErrors.car = 'กรุณากรอกยี่ห้อ/รุ่น';
+    if (Object.keys(formErrors).length) { render(); var first = $('[aria-invalid="true"]'); if (first) first.focus(); return; }
+    var base = me || { name: d.name, tax: d.tax, phone: d.phone, email: d.email, addr: d.addr || '— ไม่ระบุที่อยู่ —' };
+    var v = { id: 'v' + Date.now(), pk: 'PK' + String(S.nextPk).padStart(4, '0'), plate: plate, province: d.province, name: base.name, tax: base.tax, phone: base.phone,
+      email: base.email, addr: base.addr, car: d.car, color: d.color || '-', payer: 'เจ้าของ', created: TODAY, paid: {}, isNew: true };
+    S.nextPk += 3; S.vehicles.push(v); S.me = v.tax; formDraft = null; S.custTab = 'mycars'; save(); render(); window.scrollTo(0, 0);
+    toast('ลงทะเบียนสำเร็จ — รหัสชำระเงิน ' + v.pk);
+  });
+  $('#fillDemo').addEventListener('click', function () {
+    var r = rng(Date.now() & 0xffffffff), me = myVehicles()[0];
+    formDraft = me ? {} : { name: 'ทดลอง ' + LAST[Math.floor(r() * LAST.length)], tax: '99' + String(Math.floor(r() * 1e11)).padStart(11, '0'), phone: '089-000-' + String(1000 + Math.floor(r() * 8999)),
+      email: 'demo.user@example.com', addr: '1/1 ถนนตัวอย่าง แขวงตัวอย่าง เขตตัวอย่าง กรุงเทพฯ 10000' };
+    formDraft.plate = CONS[Math.floor(r() * 18)] + ' ' + (1000 + Math.floor(r() * 9000)); formDraft.province = 'กรุงเทพมหานคร';
+    formDraft.car = CARS[Math.floor(r() * CARS.length)]; formDraft.color = COLORS[Math.floor(r() * COLORS.length)];
+    formErrors = {}; render(); $('#regForm button[type=submit]').focus();
+  });
+  var lf = $('#lookupForm');
+  if (lf) lf.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var tax = $('#lk_tax').value.replace(/\D/g, ''), ph = $('#lk_phone').value.replace(/\D/g, '');
+    var v = S.vehicles.filter(function (x) { return x.tax === tax && x.phone.replace(/\D/g, '') === ph; })[0];
+    if (!v) { toast('ไม่พบข้อมูล — ตรวจเลขบัตรและเบอร์โทรอีกครั้ง'); return; }
+    S.me = v.tax; S.custTab = 'mycars'; save(); render();
+  });
+  var as = $('#asSample');
+  if (as) as.addEventListener('click', function () { S.me = S.vehicles[2].tax; S.custTab = 'mycars'; save(); render(); toast('เข้าดูในฐานะ ' + S.vehicles[2].name); });
+  var lo = $('#logoutMe');
+  if (lo) lo.addEventListener('click', function () { S.me = null; save(); render(); });
+}
+
+function vMyCars() {
+  var cars = myVehicles();
+  if (!cars.length) return guideHTML() + '<div class="cust card"><h1>รถของฉัน</h1><p>ยังไม่ได้ลงทะเบียน — <button type="button" class="btn small" data-go="register">ไปที่ฟอร์มลูกค้า</button></p></div>';
+  var me = cars[0];
+  var h = guideHTML() + '<div class="cust"><div class="card"><h1>ข้อมูลสมาชิกจอดรถของคุณ</h1><div class="addrbox"><div style="font-size:1.1rem;font-weight:700">' + esc(me.name) + '</div>' +
+    '<div>' + esc(me.addr) + '</div><div class="muted">📞 ' + esc(me.phone) + (me.email ? ' · ✉️ ' + esc(me.email) : '') + '</div></div>' +
+    '<p class="muted" style="margin:0">สแกน QR ของคันที่ต้องการด้วยแอปธนาคารได้ทุกธนาคาร — <strong>ในเดโมนี้ QR เป็นภาพตัวอย่าง ห้ามสแกน</strong> ให้สลับไปมุมมองเจ้าหน้าที่แล้วกด "นำเข้าเงิน" แทน</p></div>';
+  cars.forEach(function (v) {
+    var paid = isPaid(v);
+    h += '<div class="card"><div class="carcard"><div class="info"><h2 style="margin-top:0">🚗 ' + esc(v.plate) + ' <span class="muted" style="font-weight:400">' + esc(v.province) + '</span></h2>' +
+      '<p class="muted" style="margin:.2rem 0 .6rem">' + esc(v.car) + ' ' + esc(v.color) + '</p><dl class="kv"><dt>รหัสชำระเงิน (REF2)</dt><dd>' + esc(v.pk) + '</dd><dt>เลขอ้างอิง (REF1)</dt><dd>' + esc(v.tax) + '</dd>' +
+      '<dt>รอบ ' + periodTH(CUR) + '</dt><dd>' + (paid ? '<span class="badge paid">ชำระแล้ว</span> <button type="button" class="btn small ghost" data-receipt="' + v.paid[CUR] + '">ดูใบเสร็จ</button>' : '<span class="badge pending">รอชำระ</span> <span class="muted">ภายใน 15/10/2026</span>') + '</dd></dl></div>' +
+      qrCard(v) + '</div></div>';
+  });
+  h += '<p style="text-align:center"><button type="button" class="btn ghost" data-go="register">+ เพิ่มรถอีกคัน</button></p>';
+  return h + '</div>';
+}
+
+function vMyReceipts() {
+  var cars = myVehicles();
+  if (!cars.length) return guideHTML() + '<div class="cust card"><h1>ใบเสร็จของฉัน</h1><p>ยังไม่ได้ลงทะเบียน — <button type="button" class="btn small" data-go="register">ไปที่ฟอร์มลูกค้า</button></p></div>';
+  var ids = cars.map(function (v) { return v.id; });
+  var rs = S.receipts.filter(function (r) { return ids.indexOf(r.vid) >= 0; }).sort(function (a, b) { return a.no < b.no ? 1 : -1; });
+  var h = guideHTML() + '<div class="cust"><div class="card"><h1>ใบเสร็จของฉัน</h1>';
+  if (!rs.length) h += '<p class="muted">ยังไม่มีใบเสร็จ — ใบเสร็จจะออกอัตโนมัติเมื่อเจ้าหน้าที่นำเข้ายอดเงินจากธนาคาร และส่งเข้าอีเมลของคุณ</p>';
+  else h += dataTable('myr', [
+    { key: 'no', label: 'เลขใบเสร็จ', html: function (r) { return '<a href="#" data-receipt="' + r.no + '">' + r.no + '</a>'; } },
+    { key: 'date', label: 'วันที่', html: function (r) { return '<span class="nowrap">' + dmy(r.date) + '</span>'; } },
+    { key: 'period', label: 'รอบจอด', html: function (r) { return periodTH(r.period); } },
+    { key: 'plate', label: 'ทะเบียน', sortVal: function (r) { return byId(r.vid).plate; }, html: function (r) { return '<span class="plate">' + esc(byId(r.vid).plate) + '</span>'; } },
+    { key: 'amount', label: 'ยอด', num: true, html: function (r) { return money(r.amount); } }
+  ], rs, { caption: 'ใบเสร็จของฉัน', rowAttr: function (r) { return ' class="click" data-receipt="' + r.no + '"'; } });
+  return h + '</div></div>';
+}
+
+/* ---------- STAFF VIEWS ---------- */
+function vHome() {
+  var act = S.vehicles, custs = {}, pend = act.filter(function (v) { return !isPaid(v); });
+  act.forEach(function (v) { custs[v.tax] = 1; });
+  var thisMonth = S.receipts.filter(function (r) { return r.date.slice(0, 7) === TODAY.slice(0, 7); });
+  var h = guideHTML() + '<h1>ภาพรวมระบบ</h1><div class="stats">' +
+    '<button type="button" class="stat" data-go="vehicles"><div class="n">' + Object.keys(custs).length + '</div><div class="l">ลูกค้า active</div></button>' +
+    '<button type="button" class="stat" data-go="vehicles"><div class="n">' + act.length + '</div><div class="l">รถ active</div></button>' +
+    '<button type="button" class="stat' + (pend.length ? ' alert' : '') + '" data-go="vehicles" data-filter="pending"><div class="n">' + pend.length + '</div><div class="l">รอชำระ รอบ ' + periodTH(CUR) + '</div></button>' +
+    '<button type="button" class="stat" data-go="receipts"><div class="n">' + thisMonth.length + '</div><div class="l">ใบเสร็จเดือนนี้</div></button></div>';
+  var newOnes = act.filter(function (v) { return v.isNew; });
+  if (newOnes.length) h += '<div class="card" style="border-left:4px solid var(--brand-2)"><strong>🆕 ลงทะเบียนใหม่จากฟอร์มลูกค้า ' + newOnes.length + ' คัน</strong>' +
+    newOnes.map(function (v) { return '<div style="margin-top:.3rem">🚗 <strong>' + esc(v.plate) + '</strong> — ' + esc(v.name) + ' <span class="muted">' + esc(v.pk) + '</span> ' + (isPaid(v) ? '<span class="badge paid">ชำระแล้ว</span>' : '<span class="badge pending">รอชำระ</span>') + '</div>'; }).join('') + '</div>';
+  h += '<div class="card"><h2>นำเข้าเงินล่าสุด</h2>' + batchTable() + '</div>';
+  return h;
+}
+function batchTable() {
+  return dataTable('batches', [
+    { key: 'at', label: 'เมื่อ', html: function (b) { var a = b.at.split(' '); return '<span class="nowrap">' + dmy(a[0]) + ' ' + a[1] + '</span>'; } },
+    { key: 'file', label: 'ไฟล์' },
+    { key: 'count', label: 'รายการ', num: true, sortVal: function (b) { return b.count; } },
+    { key: 'total', label: 'ยอดรวม', num: true, sortVal: function (b) { return b.total; }, html: function (b) { return money(b.total); } },
+    { key: 'matched', label: 'จับคู่ได้', num: true, sortVal: function (b) { return b.matched; }, html: function (b) { return b.matched + (b.unmatched ? ' <span class="badge warn">รอจับคู่ ' + b.unmatched + '</span>' : ''); } }
+  ], S.batches, { caption: 'ไฟล์ที่นำเข้าแล้ว', sortKey: 'at', sortDir: -1, empty: 'ยังไม่มี' });
+}
+
+var vehQuery = '', vehFilter = '';
+function vVehicles() {
+  var q = vehQuery.toLowerCase();
+  var rows = S.vehicles.filter(function (v) {
+    if (vehFilter === 'pending' && isPaid(v)) return false;
+    if (!q) return true;
+    return (v.plate + ' ' + v.pk + ' ' + v.name + ' ' + v.tax + ' ' + v.car).toLowerCase().indexOf(q) >= 0;
+  });
+  var h = '<h1>🚗 รถ active (' + S.vehicles.length + ' คัน)</h1><form class="searchbar" id="vehSearch" role="search">' +
+    '<label class="sr-only" for="vq">ค้นหารถ</label><input type="search" id="vq" placeholder="ค้นทะเบียน / PK / ชื่อลูกค้า / เลขบัตร" value="' + esc(vehQuery) + '">' +
+    '<label class="sr-only" for="vf">กรองสถานะ</label><select id="vf"><option value="">ทุกสถานะ</option><option value="pending"' + (vehFilter === 'pending' ? ' selected' : '') + '>เฉพาะรอชำระ</option></select></form>' +
+    '<div class="card">' + dataTable('veh', [
+      { key: 'plate', label: 'ทะเบียน', html: function (v) { return '<span class="plate">' + esc(v.plate) + '</span>' + (v.isNew ? ' <span class="badge corp">ใหม่</span>' : ''); } },
+      { key: 'province', label: 'จังหวัด', html: function (v) { return '<span class="muted nowrap">' + esc(v.province) + '</span>'; } },
+      { key: 'pk', label: 'PK' },
+      { key: 'name', label: 'ลูกค้า', html: function (v) { return '<span class="nowrap">' + esc(v.name) + '</span>'; } },
+      { key: 'car', label: 'ยี่ห้อ/รุ่น/สี', html: function (v) { return '<span class="muted nowrap">' + esc(v.car + ' ' + v.color) + '</span>'; } },
+      { key: 'prev', label: 'จ่ายรอบ ' + periodTH(PREV), sortVal: function (v) { return isPaid(v, PREV) ? 1 : 0; }, html: function (v) { return isPaid(v, PREV) ? '<span class="badge paid">ชำระแล้ว</span>' : '—'; } },
+      { key: 'cur', label: 'รอบ ' + periodTH(CUR), sortVal: function (v) { return isPaid(v) ? 1 : 0; }, html: function (v) { return isPaid(v) ? '<span class="badge paid">ชำระแล้ว</span>' : '<span class="badge pending">รอชำระ</span>'; } },
+      { key: 'payer', label: 'ผู้ชำระ', html: function (v) { return v.payer === 'เจ้าของ' ? 'เจ้าของ' : '<span class="badge corp">นิติบุคคล</span>'; } }
+    ], rows, { caption: 'รายการรถ active', sortKey: 'plate', empty: 'ไม่พบรถที่ค้นหา', rowAttr: function (v) { return ' class="click' + (v.flash ? ' flash' : '') + '" data-veh="' + v.id + '" tabindex="0"'; } }) + '</div>';
+  return h;
+}
+function bindVehicles() {
+  var q = $('#vq'); if (!q) return;
+  $('#vehSearch').addEventListener('submit', function (e) { e.preventDefault(); });
+  q.addEventListener('input', function () { vehQuery = q.value; tableState.veh.page = 1; var pos = q.selectionStart; render(); var n = $('#vq'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} });
+  $('#vf').addEventListener('change', function (e) { vehFilter = e.target.value; tableState.veh.page = 1; render(); $('#vf').focus(); });
+}
+function openVehicle(id) {
+  var v = byId(id); if (!v) return;
+  var rs = S.receipts.filter(function (r) { return r.vid === id; }).sort(function (a, b) { return a.no < b.no ? 1 : -1; });
+  var body = '<div class="carcard"><div class="info"><dl class="kv"><dt>ทะเบียน</dt><dd>' + esc(v.plate + ' ' + v.province) + '</dd><dt>รหัส (REF2)</dt><dd>' + esc(v.pk) + '</dd>' +
+    '<dt>ลูกค้า</dt><dd>' + esc(v.name) + '</dd><dt>เลขบัตร</dt><dd>' + esc(fmtTax(v.tax)) + '</dd><dt>โทร</dt><dd>' + esc(v.phone) + '</dd><dt>อีเมล</dt><dd>' + (esc(v.email) || '<span class="muted">— ไม่มี —</span>') + '</dd>' +
+    '<dt>รถ</dt><dd>' + esc(v.car + ' ' + v.color) + '</dd><dt>ผู้ชำระ</dt><dd>' + esc(v.payer) + '</dd><dt>รอบ ' + periodTH(CUR) + '</dt><dd>' + (isPaid(v) ? '<span class="badge paid">ชำระแล้ว</span>' : '<span class="badge pending">รอชำระ</span>') + '</dd></dl></div>' + qrCard(v) + '</div>' +
+    '<h2 style="margin-top:1rem">ใบเสร็จของคันนี้</h2>' + (rs.length ? '<ul style="margin:0;padding-left:1.1rem">' + rs.map(function (r) { return '<li><a href="#" data-receipt="' + r.no + '">' + r.no + '</a> — ' + dmy(r.date) + ' · รอบ ' + periodTH(r.period) + ' · ' + money(r.amount) + '</li>'; }).join('') + '</ul>' : '<p class="muted">ยังไม่มี</p>');
+  openDialog('🚗 ' + v.plate, body, '<button type="button" class="btn small ghost" data-asCustomer="' + v.tax + '">ดูมุมมองลูกค้า</button>', true);
+}
+
+/* import bank statement (mock) */
+var importing = false;
+function vImport() {
+  var pend = S.vehicles.filter(function (v) { return !isPaid(v); });
+  var h = '<h1>นำเข้าไฟล์ bill payment จากธนาคาร</h1><div class="card"><div class="filebox"><span aria-hidden="true">📄</span><div style="flex:1 1 200px"><div>ไฟล์ตัวอย่าง <code>BILLPAY_' + TODAY.replace(/-/g, '') + '.txt</code></div>' +
+    '<div class="muted">จำลองไฟล์ธนาคาร: มีรายการโอนของรถที่รอชำระ ' + pend.length + ' คัน + รายการอ้างอิงผิด 1 รายการ</div></div>' +
+    '<button type="button" class="btn" id="doImport"' + (importing ? ' disabled' : '') + '>นำเข้าไฟล์ตัวอย่าง</button></div>' +
+    '<p class="muted" style="margin:.6rem 0 0">ระบบจับคู่ REF1 (เลขบัตร) + REF2 (รหัสรถ) → ออกใบเสร็จ/ใบกำกับภาษีอัตโนมัติ → ส่งอีเมลให้ลูกค้า · ระบบกันรายการซ้ำ นำเข้าไฟล์เดิมซ้ำได้ไม่พัง</p>' +
+    '<div id="importRun" aria-live="polite"></div></div>';
+  if (S.unmatched.length) h += '<div class="card" style="border-left:4px solid #e8a020">⚠️ มีรายการ<strong>รอจับคู่ ' + S.unmatched.length + ' รายการ</strong> (REF ไม่ตรงกับรถในระบบ) — ในระบบจริงการเงินจับคู่เองได้จากหน้ารายการรอจับคู่' +
+    '<ul style="margin:.4rem 0 0">' + S.unmatched.map(function (u) { return '<li>' + dmy(u.date) + ' · REF1 ' + esc(u.ref1) + ' · REF2 ' + esc(u.ref2) + ' · ' + money(u.amount) + '</li>'; }).join('') + '</ul></div>';
+  h += '<div class="card"><h2>ไฟล์ที่นำเข้าแล้ว <span class="muted">(' + S.batches.length + ' ไฟล์)</span></h2>' + batchTable() + '</div>';
+  return h;
+}
+function bindImport() {
+  var b = $('#doImport'); if (!b) return;
+  b.addEventListener('click', runImport);
+}
+function runImport() {
+  if (importing) return;
+  importing = true;
+  var btn = $('#doImport'); btn.disabled = true;
+  var pend = S.vehicles.filter(function (v) { return !isPaid(v); });
+  var already = S.unmatched.some(function (u) { return u.batchDay === TODAY; });
+  var lines = pend.map(function (v) { return { v: v, ref1: v.tax, ref2: v.pk }; });
+  if (!already) lines.splice(Math.min(2, lines.length), 0, { v: null, ref1: '9900000000000', ref2: 'PK9999' });
+  var run = $('#importRun');
+  run.innerHTML = '<p style="margin:.8rem 0 0"><span class="spinner" aria-hidden="true"></span> กำลังอ่านไฟล์… พบ ' + lines.length + ' รายการ</p><div class="progress" role="progressbar" aria-label="ความคืบหน้าการจับคู่" aria-valuemin="0" aria-valuemax="' + Math.max(lines.length, 1) + '" aria-valuenow="0"><div></div></div><ul class="importlog"></ul>';
+  var log = $('.importlog', run), bar = $('.progress', run), i = 0, matched = 0, unmatched = 0, time = new Date().toTimeString().slice(0, 5);
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var delay = reduce ? 30 : 380;
+  function step() {
+    if (i >= lines.length) return finish();
+    var L = lines[i++], li = document.createElement('li');
+    li.innerHTML = '<span class="st"><span class="spinner" aria-hidden="true"></span> กำลังจับคู่</span><span>REF1 ' + esc(L.ref1) + ' · REF2 ' + esc(L.ref2) + ' · ' + money(FEE) + '</span>';
+    log.appendChild(li);
+    setTimeout(function () {
+      if (L.v) {
+        var mon = TODAY.slice(0, 7); S.seq[mon] = (S.seq[mon] || 0) + 1;
+        var no = mon.slice(2, 4) + mon.slice(5, 7) + String(S.seq[mon]).padStart(4, '0');
+        S.receipts.push(mkReceipt(no, L.v, TODAY, CUR, L.v.email ? 'sent' : 'none'));
+        L.v.paid[CUR] = no; L.v.flash = true; matched++;
+        li.innerHTML = '<span class="st"><span class="badge paid">✓ จับคู่แล้ว</span></span><span><strong>' + esc(L.v.plate) + '</strong> · ' + esc(L.v.name) + ' → ออกใบเสร็จ <a href="#" data-receipt="' + no + '">' + no + '</a>' + (L.v.email ? ' · ✉️ ส่งเมลแล้ว (จำลอง)' : ' · ไม่มีอีเมล') + '</span>';
+      } else {
+        unmatched++; S.unmatched.push({ date: TODAY, ref1: L.ref1, ref2: L.ref2, amount: FEE, batchDay: TODAY });
+        li.innerHTML = '<span class="st"><span class="badge warn">⚠ รอจับคู่</span></span><span>REF1 ' + esc(L.ref1) + ' · REF2 ' + esc(L.ref2) + ' — ไม่พบรถในระบบ</span>';
+      }
+      bar.firstChild.style.width = (i / lines.length * 100) + '%'; bar.setAttribute('aria-valuenow', i);
+      save(); step();
+    }, delay);
+  }
+  function finish() {
+    importing = false;
+    var p = $('p', run);
+    if (!lines.length) {
+      p.innerHTML = 'ไม่มีรายการใหม่ในไฟล์ — ทุกรายการเคยนำเข้าแล้ว (ระบบกันรายการซ้ำ)'; bar.firstChild.style.width = '100%';
+    } else {
+      S.batches.push({ id: 'b' + Date.now(), at: TODAY + ' ' + time, file: 'BILLPAY_' + TODAY.replace(/-/g, '') + (S.batches.length > 2 ? '_' + S.batches.length : '') + '.txt', count: lines.length, total: lines.length * FEE, matched: matched, unmatched: unmatched });
+      p.innerHTML = '✅ นำเข้าเสร็จ — จับคู่ได้ <strong>' + matched + '</strong> รายการ ออกใบเสร็จ ' + matched + ' ใบ' + (unmatched ? ' · รอจับคู่ ' + unmatched + ' รายการ' : '') +
+        ' <button type="button" class="btn small ghost" data-go="receipts">ดูใบเสร็จ</button> <button type="button" class="btn small ghost" data-go="vehicles">ดูรายการรถ</button>';
+    }
+    S.guide.imported = true; save();
+    var b = $('#doImport'); if (b) b.disabled = false;
+    toast(lines.length ? 'นำเข้าเสร็จ จับคู่ได้ ' + matched + ' รายการ' : 'ไม่มีรายการใหม่');
+    setTimeout(function () { S.vehicles.forEach(function (v) { delete v.flash; }); save(); }, 50);
+  }
+  step();
+}
+
+var recMonth = null, recQuery = '';
+function vReceipts() {
+  var months = {}; S.receipts.forEach(function (r) { months[r.date.slice(0, 7)] = 1; });
+  var ms = Object.keys(months).sort().reverse();
+  if (!recMonth || !months[recMonth]) recMonth = ms[0];
+  var q = recQuery.toLowerCase();
+  var inMonth = S.receipts.filter(function (r) { return r.date.slice(0, 7) === recMonth; });
+  var rows = inMonth.filter(function (r) { var v = byId(r.vid) || {}; return !q || (r.no + ' ' + r.snap.name + ' ' + (v.plate || '') + ' ' + r.snap.tax).toLowerCase().indexOf(q) >= 0; });
+  var sent = inMonth.filter(function (r) { return r.mail === 'sent'; }).length, none = inMonth.filter(function (r) { return r.mail === 'none'; }).length;
+  var h = '<h1>🧾 ใบเสร็จ — ' + periodTH(recMonth) + '</h1><form class="searchbar" id="recSearch" role="search"><label class="sr-only" for="rm">เดือน</label><select id="rm">' +
+    ms.map(function (m) { return '<option value="' + m + '"' + (m === recMonth ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select>' +
+    '<label class="sr-only" for="rq">ค้นหาใบเสร็จ</label><input type="search" id="rq" placeholder="พิมพ์เพื่อค้น เลขใบเสร็จ / ชื่อ / ทะเบียน / เลขบัตร" value="' + esc(recQuery) + '"></form>' +
+    '<div class="stats"><div class="stat"><div class="n">' + inMonth.length + '</div><div class="l">ใบเสร็จเดือนนี้</div></div><div class="stat"><div class="n">' + sent + '</div><div class="l">✉️ ส่งเมลแล้ว</div></div>' +
+    '<div class="stat"><div class="n">' + (inMonth.length - sent - none) + '</div><div class="l">⏳ ยังไม่ส่ง (มีเมล)</div></div><div class="stat"><div class="n">' + none + '</div><div class="l">ไม่มีเมล</div></div></div>' +
+    '<div class="card">' + dataTable('rec', [
+      { key: 'no', label: 'เลขใบเสร็จ', html: function (r) { return '<a href="#" data-receipt="' + r.no + '">' + r.no + '</a>'; } },
+      { key: 'date', label: 'วันที่', html: function (r) { return '<span class="nowrap">' + dmy(r.date) + '</span>'; } },
+      { key: 'name', label: 'ลูกค้า', sortVal: function (r) { return r.snap.name; }, html: function (r) { return '<span class="nowrap">' + esc(r.snap.name) + '</span>'; } },
+      { key: 'plate', label: 'ทะเบียน', sortVal: function (r) { return (byId(r.vid) || {}).plate || ''; }, html: function (r) { return '<span class="nowrap">' + esc((byId(r.vid) || {}).plate || '') + '</span>'; } },
+      { key: 'period', label: 'รอบจอด' },
+      { key: 'amount', label: 'ยอด', num: true, html: function (r) { return money(r.amount); } },
+      { key: 'mail', label: 'เมล', html: function (r) {
+        return '<span class="nowrap">' + (r.mail === 'sent' ? '<span class="badge paid">✉️ ส่งแล้ว</span> <button type="button" class="btn small secondary" data-act="resend" data-no="' + r.no + '">ส่งซ้ำ</button>' : '<span class="badge none">ไม่มีอีเมล</span>') + '</span>'; } }
+    ], rows, { caption: 'รายการใบเสร็จ', sortKey: 'no', sortDir: -1, empty: 'ไม่พบใบเสร็จ', rowAttr: function (r) { return ' class="click" data-receipt="' + r.no + '"'; } }) + '</div>';
+  return h;
+}
+function bindReceipts() {
+  var rm = $('#rm'); if (!rm) return;
+  $('#recSearch').addEventListener('submit', function (e) { e.preventDefault(); });
+  rm.addEventListener('change', function () { recMonth = rm.value; tableState.rec.page = 1; render(); $('#rm').focus(); });
+  $('#rq').addEventListener('input', function (e) { recQuery = e.target.value; tableState.rec.page = 1; var pos = e.target.selectionStart; render(); var n = $('#rq'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (x) {} });
+}
+
+function vSalesTax() {
+  var byMonth = {};
+  S.receipts.forEach(function (r) { var m = r.date.slice(0, 7); var o = byMonth[m] || (byMonth[m] = { m: m, n: 0, total: 0 }); o.n++; o.total += r.amount; });
+  var rows = Object.keys(byMonth).map(function (k) { var o = byMonth[k]; o.base = +(o.total / 1.07).toFixed(2); o.vat = +(o.total - o.base).toFixed(2); return o; });
+  return '<h1>รายงานภาษีขาย</h1><p class="muted">สรุปตามเดือนที่ออกใบกำกับภาษี · ในระบบจริง export เป็น Excel ให้ฝ่ายบัญชี</p><div class="card">' + dataTable('tax', [
+    { key: 'm', label: 'เดือนภาษี', html: function (o) { return periodTH(o.m); } },
+    { key: 'n', label: 'จำนวนใบ', num: true, sortVal: function (o) { return o.n; } },
+    { key: 'base', label: 'มูลค่าสินค้า/บริการ', num: true, sortVal: function (o) { return o.base; }, html: function (o) { return money(o.base); } },
+    { key: 'vat', label: 'ภาษีมูลค่าเพิ่ม', num: true, sortVal: function (o) { return o.vat; }, html: function (o) { return money(o.vat); } },
+    { key: 'total', label: 'รวม', num: true, sortVal: function (o) { return o.total; }, html: function (o) { return '<strong>' + money(o.total) + '</strong>'; } }
+  ], rows, { caption: 'สรุปภาษีขายรายเดือน', sortKey: 'm', sortDir: -1 }) + '</div>';
+}
+
+/* ---------- render ---------- */
+function render() {
+  renderChrome();
+  var t = curTab(), h;
+  if (S.view === 'staff') {
+    if (!S.guide.sawStaff) { S.guide.sawStaff = true; save(); }
+    h = t === 'vehicles' ? vVehicles() : t === 'import' ? vImport() : t === 'receipts' ? vReceipts() : t === 'salestax' ? vSalesTax() : vHome();
+  } else {
+    h = t === 'mycars' ? vMyCars() : t === 'myreceipts' ? vMyReceipts() : vRegister();
+  }
+  mainEl.innerHTML = h;
+  if (S.view === 'customer' && t === 'register') bindRegister();
+  if (S.view === 'staff') { if (t === 'vehicles') bindVehicles(); if (t === 'import') bindImport(); if (t === 'receipts') bindReceipts(); }
+}
+
+/* delegated actions */
+document.addEventListener('click', function (e) {
+  var el;
+  if ((el = e.target.closest('[data-act="print"]'))) {
+    var r = receiptByNo(el.dataset.no); $('#printRoot').innerHTML = receiptHTML(r); window.print(); return;
+  }
+  if ((el = e.target.closest('[data-act="resend"]'))) { e.stopPropagation(); toast('ส่งใบเสร็จ ' + el.dataset.no + ' เข้าอีเมลลูกค้าอีกครั้งแล้ว (จำลอง)'); return; }
+  if ((el = e.target.closest('[data-ascustomer]'))) { S.me = el.getAttribute('data-ascustomer'); S.view = 'customer'; S.custTab = 'mycars'; save(); dlg.close(); render(); toast('มุมมองลูกค้า (ตัวอย่าง)'); return; }
+  if ((el = e.target.closest('[data-receipt]'))) { e.preventDefault(); openReceipt(el.dataset.receipt); return; }
+  if ((el = e.target.closest('[data-veh]'))) { openVehicle(el.dataset.veh); return; }
+  if ((el = e.target.closest('[data-go]'))) {
+    if (el.dataset.filter) { vehFilter = el.dataset.filter; if (tableState.veh) tableState.veh.page = 1; }
+    else if (el.dataset.go === 'vehicles') vehFilter = '';
+    go(el.dataset.go); return;
+  }
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  var tr = e.target.closest && e.target.closest('tr[data-veh]');
+  if (tr && e.target === tr) { e.preventDefault(); openVehicle(tr.dataset.veh); }
+});
+
+render();
+setBarH();
+})();
+</script>
+</body>
+</html>

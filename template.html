@@ -133,6 +133,7 @@ dialog::backdrop{background:rgba(10,12,16,.55)}
 .links small{color:var(--ink-3);font-size:13px}
 .catline{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
 .catline i{width:9px;height:9px;border-radius:50%;flex:none}
+.demo-tag{margin-left:auto;font-size:12px;font-weight:600;color:var(--c-line-bot);border:1px solid currentColor;border-radius:999px;padding:0 8px}
 .tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .tools span{font-size:13px;background:var(--surface-2);border-radius:6px;padding:2px 9px}
 .close{position:absolute;top:10px;right:10px;z-index:2;border:0;border-radius:999px;width:36px;height:36px;background:rgba(0,0,0,.55);color:#fff;font-size:20px;cursor:pointer}
@@ -210,7 +211,7 @@ function cover(j, big){
 function card(j){
   return `<button class="card" type="button" data-i="${j._i}" aria-label="ดูรายละเอียด ${esc(j.title)}">
     <div class="cover${j.shots&&j.shots.length?"":" g"}">${cover(j)}</div>
-    <div class="body"><div class="catline"><i style="background:var(--c-${j.category})"></i>${esc(CAT[j.category].th)}</div><h3>${esc(j.title)}</h3><p class="tag">${esc(j.tagline)}</p>
+    <div class="body"><div class="catline"><i style="background:var(--c-${j.category})"></i>${esc(CAT[j.category].th)}${j.demo?`<span class="demo-tag">▶ มีเดโม</span>`:""}</div><h3>${esc(j.title)}</h3><p class="tag">${esc(j.tagline)}</p>
     <div class="meta"><span class="badge b-${coClass(j.company)}">${esc(j.company)}</span>
       <span class="mono">${j.year} ${j.quarter}</span>
       ${j.status!=="done"?`·<span class="st ${j.status}"><i></i>${STATUS[j.status]}</span>`:""}</div></div></button>`;
@@ -239,24 +240,24 @@ drawBars();
 
 
 // filters
-const state={q:"",cat:"",co:"",year:""};
+const state={q:"",cat:"",co:"",year:"",demo:""};
 function chips(){
   const mk=(key,val,label,dot)=>`<button type="button" class="chip" data-k="${key}" data-v="${esc(val)}" aria-pressed="${state[key]===val}">${dot?`<i style="background:${dot}"></i>`:""}${esc(label)}</button>`;
   document.getElementById("fcat").innerHTML=mk("cat","","ทุกประเภท")+CATS.map(c=>mk("cat",c,CAT[c].th,`var(--c-${c})`)).join("");
   const cos=["SDC","SBK","SDC & SBK","YOYO Land"].filter(c=>JOBS.some(j=>j.company===c));
   const yrs=[...new Set(JOBS.map(j=>String(j.year)))].sort().reverse();
-  document.getElementById("fmore").innerHTML=mk("co","","ทุกบริษัท")+cos.map(c=>mk("co",c,c)).join("")+`<span style="width:8px"></span>`+mk("year","","ทุกปี")+yrs.map(y=>mk("year",y,y)).join("");
+  document.getElementById("fmore").innerHTML=mk("co","","ทุกบริษัท")+cos.map(c=>mk("co",c,c)).join("")+`<span style="width:8px"></span>`+mk("year","","ทุกปี")+yrs.map(y=>mk("year",y,y)).join("")+(JOBS.some(j=>j.demo)?`<span style="width:8px"></span>`+mk("demo","1","▶ มีเดโม"):"");
 }
 function render(){
   const q=state.q.trim().toLowerCase();
-  const list=sorted.filter(j=>(!state.cat||state.cat.split(",").includes(j.category))&&(!state.co||j.company===state.co)&&(!state.year||String(j.year)===state.year)&&(!q||j._t.includes(q)));
+  const list=sorted.filter(j=>(!state.cat||state.cat.split(",").includes(j.category))&&(!state.co||j.company===state.co)&&(!state.year||String(j.year)===state.year)&&(!q||j._t.includes(q))&&(!state.demo||j.demo));
   document.getElementById("all").innerHTML=list.length?list.map(card).join(""):`<div class="empty">ไม่พบผลงานที่ตรงกับตัวกรอง</div>`;
   document.getElementById("count").textContent=`${list.length} / ${JOBS.length} ผลงาน`;
   document.querySelectorAll(".stat").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===state.cat));
   document.getElementById("allH").textContent=state.cat?"ผลงานหมวด "+state.cat.split(",").map(c=>CAT[c].th).join(" + "):"ผลงานทั้งหมด";
   chips();
 }
-document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;state[b.dataset.k]=b.dataset.v;render();});
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;state[b.dataset.k]=b.dataset.k==="demo"&&state.demo?"":b.dataset.v;render();});
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
 document.getElementById("stats").addEventListener("click",e=>{const b=e.target.closest(".stat");if(!b)return;state.cat=b.dataset.cat;render();document.getElementById("allH").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});});
 render();
@@ -276,7 +277,7 @@ function open(i){
       <h4>สิ่งที่ทำ</h4><p>${esc(j.solution)}</p>
       ${(j.features||[]).length?`<h4>ความสามารถหลัก</h4><ul>${j.features.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
       <h4>เครื่องมือ</h4><div class="tools">${(j.tools||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div>
-      ${(j.links||[]).length?`<div class="links">${j.links.map((l,k)=>`<a class="${k?"":"pri"}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}${j.login?`<small>ต้องล็อกอินด้วยบัญชีพนักงาน</small>`:""}</div>`:""}
+      ${(j.demo||(j.links||[]).length)?`<div class="links">${j.demo?`<a class="pri" href="${esc(j.demo)}">▶ ลองเดโม</a>`:""}${(j.links||[]).map((l,k)=>`<a class="${k||j.demo?"":"pri"}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}${j.login?`<small>${j.demo?"ระบบจริงต้องล็อกอินด้วยบัญชีพนักงาน · เดโมใช้ข้อมูลตัวอย่าง":"ต้องล็อกอินด้วยบัญชีพนักงาน"}</small>`:""}</div>`:""}
     </div>`;
   dlg.showModal();
   history.replaceState(null,"","#"+j.slug);
