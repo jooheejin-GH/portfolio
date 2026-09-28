@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;font-family:Anuphan,sans-serif;background:#0b0a14;color:#fff;position:relative}
+.room{position:absolute;inset:0;background:radial-gradient(900px 500px at 40% 110%,#2a1446 0%,transparent 70%),linear-gradient(#07060d,#120c20)}
+.label{position:absolute;left:56px;top:34px;font-size:13px;letter-spacing:.22em;color:#9b93b8;font-family:"Space Grotesk";}
+.label b{color:#ff4d8d}
+/* stage screen */
+.stage{position:absolute;left:56px;top:62px;width:930px;height:560px;border-radius:14px;overflow:hidden;
+ background:radial-gradient(600px 380px at 30% 30%,#5b21b6 0%,transparent 70%),radial-gradient(520px 360px at 80% 75%,#db2777 0%,transparent 70%),radial-gradient(400px 300px at 85% 10%,#0ea5e9 0%,transparent 70%),#140a2c;
+ box-shadow:0 0 0 8px #1b1a24,0 0 0 9px #2c2a38,0 40px 120px rgba(120,60,255,.35)}
+.parts{position:absolute;inset:0}
+.st-h{position:absolute;left:44px;top:34px;right:44px;display:flex;align-items:flex-start;justify-content:space-between}
+.brand{font-family:"Space Grotesk";font-weight:700;font-size:54px;letter-spacing:-1.5px;line-height:1}
+.brand span{background:linear-gradient(90deg,#fde68a,#f472b6,#a78bfa);-webkit-background-clip:text;color:transparent}
+.brand small{display:block;font-size:17px;font-weight:500;letter-spacing:.3em;color:#e9d5ff;margin-top:10px}
+.live{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 14px;font-size:15px;font-weight:600;backdrop-filter:blur(6px)}
+.live i{width:10px;height:10px;border-radius:50%;background:#ff3b6b;box-shadow:0 0 12px #ff3b6b}
+.msg{position:absolute;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:14px 20px;backdrop-filter:blur(10px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.msg p{font-size:22px;font-weight:600;line-height:1.35}
+.msg .n{font-size:14px;color:#f5d0fe;margin-top:6px;font-weight:500}
+.msg.hot{background:rgba(255,255,255,.95);color:#1e0b3a;border:0;box-shadow:0 0 0 6px rgba(244,114,182,.35),0 0 60px rgba(244,114,182,.7)}
+.msg.hot .n{color:#a21caf}
+.msg.fade{opacity:.45;transform:scale(.92)}
+.cnt{position:absolute;left:44px;bottom:28px;font-size:15px;color:#e9d5ff;display:flex;gap:18px;align-items:center}
+.cnt b{font-size:28px;font-family:"Space Grotesk";color:#fff}
+.bar{position:absolute;right:44px;bottom:34px;width:300px;height:6px;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.bar i{display:block;height:100%;width:80%;background:linear-gradient(90deg,#fde68a,#f472b6)}
+.barl{position:absolute;right:44px;bottom:48px;font-size:13px;color:#e9d5ff}
+/* flow arrow */
+.flow{position:absolute;left:1000px;top:300px;width:90px;text-align:center;font-size:12px;color:#a78bfa;letter-spacing:.1em}
+.flow svg{display:block;margin:6px auto}
+/* phone */
+.phone{position:absolute;left:1100px;top:40px;width:290px;height:600px;border-radius:44px;background:#1c1b22;padding:10px;box-shadow:0 0 0 2px #34323f,0 40px 90px rgba(0,0,0,.6)}
+.scr{width:100%;height:100%;border-radius:36px;overflow:hidden;background:linear-gradient(170deg,#faf5ff,#fce7f3);color:#1e0b3a;position:relative}
+.notch{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:90px;height:24px;border-radius:14px;background:#000}
+.ph{padding:52px 20px 0}
+.ph .t{font-family:"Space Grotesk";font-weight:700;font-size:22px}
+.ph .t span{color:#db2777}
+.ph .s{font-size:13px;color:#6b5a86;margin-top:2px}
+.me{margin-top:18px;display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 4px 14px rgba(120,60,200,.12)}
+.me .a{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#f472b6);display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px}
+.me b{font-size:14px;display:block}.me span{font-size:12px;color:#7c6f93}
+.lab{font-size:13px;font-weight:600;margin:18px 0 6px}
+.ta{background:#fff;border:2px solid #c084fc;border-radius:16px;padding:12px 14px;font-size:16px;line-height:1.45;height:124px;position:relative}
+.ta:after{content:"";display:inline-block;width:2px;height:18px;background:#7c3aed;vertical-align:-3px;margin-left:2px}
+.cc{text-align:right;font-size:11px;color:#8b7ca3;margin-top:4px}
+.send{margin-top:14px;border-radius:14px;padding:13px;text-align:center;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(90deg,#7c3aed,#db2777);box-shadow:0 10px 24px rgba(219,39,119,.35)}
+.sent{margin-top:14px;font-size:12px;color:#15803d;background:#dcfce7;border-radius:10px;padding:8px 10px}
+.foot{position:absolute;left:56px;right:56px;top:660px;display:flex;gap:12px;font-size:14px;color:#b7aed0}
+.chip{border:1px solid #2f2945;background:#15121f;border-radius:999px;padding:6px 14px}
+.chip b{color:#fff;font-weight:600}
+</style></head><body>
+<div class="room"></div>
+<div class="label">STAGE BACKDROP · <b>● LIVE</b></div>
+<div class="stage">
+ <svg class="parts" viewBox="0 0 930 560" preserveAspectRatio="none">
+  <defs><radialGradient id="g"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <g fill="url(#g)">
+   <circle cx="120" cy="420" r="6"/><circle cx="210" cy="300" r="3"/><circle cx="330" cy="160" r="4"/><circle cx="470" cy="90" r="5"/><circle cx="600" cy="220" r="3"/><circle cx="700" cy="140" r="6"/><circle cx="820" cy="260" r="4"/><circle cx="880" cy="420" r="3"/><circle cx="760" cy="470" r="5"/><circle cx="540" cy="500" r="4"/><circle cx="410" cy="440" r="3"/><circle cx="260" cy="500" r="5"/><circle cx="60" cy="250" r="3"/><circle cx="160" cy="130" r="4"/><circle cx="640" cy="380" r="8"/><circle cx="660" cy="360" r="3"/><circle cx="615" cy="395" r="4"/><circle cx="680" cy="400" r="2.5"/><circle cx="600" cy="360" r="2"/><circle cx="700" cy="370" r="2"/><circle cx="650" cy="420" r="3"/><circle cx="625" cy="340" r="2"/>
+  </g>
+  <g stroke="#f9a8d4" stroke-width="1.2" opacity=".5" fill="none"><path d="M640 380 C 560 330, 520 300, 470 280"/><path d="M640 380 C 700 330, 760 300, 800 250"/></g>
+ </svg>
+ <div class="st-h"><div class="brand"><span>SEDTalks</span> 2026<small>OPENING CEREMONY</small></div><div class="live"><i></i>ข้อความจากแขกผู้มีเกียรติ</div></div>
+ <div class="msg fade" style="left:44px;top:170px;width:300px"><p>ขอให้เวทีนี้จุดประกายไอเดียใหม่ ๆ ✨</p><div class="n">— คุณวรเชษฐ์ ท.</div></div>
+ <div class="msg" style="left:380px;top:150px;width:330px"><p>ยินดีด้วยกับทุกทีม! พลังคนรุ่นใหม่คืออนาคตของเรา</p><div class="n">— ดร.อรนุช ก.</div></div>
+ <div class="msg fade" style="left:740px;top:170px;width:170px"><p style="font-size:20px">สู้ ๆ นะครับ 🙌</p><div class="n">— คุณปกรณ์ ส.</div></div>
+ <div class="msg hot" style="left:190px;top:300px;width:470px"><p style="font-size:28px">ขอให้ SEDTalks ปีนี้เป็นพื้นที่แบ่งปันแรงบันดาลใจให้ทุกคน 🎉</p><div class="n" style="font-size:15px">— คุณศิริพร ม. · เพิ่งส่งเมื่อสักครู่</div></div>
+ <div class="msg" style="left:676px;top:320px;width:236px"><p style="font-size:20px">ขอบคุณผู้จัดทุกคน 💜</p><div class="n">— คุณธนากร ว.</div></div>
+ <div class="cnt"><span><b>24</b> / 30 ข้อความ</span><span>VIP ออนไลน์ 27 คน</span></div>
+ <div class="barl">ครบ 30 ข้อความ → เล่นวิดีโอเปิดงาน</div><div class="bar"><i></i></div>
+</div>
+<div class="flow">REALTIME<svg width="70" height="20" viewBox="0 0 70 20"><path d="M68 10H6M14 2L4 10l10 8" stroke="#a78bfa" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>&lt; 1 วินาที</div>
+<div class="phone"><div class="scr"><div class="notch"></div>
+ <div class="ph">
+  <div class="t"><span>SEDTalks</span> 2026</div>
+  <div class="s">ส่งข้อความขึ้นจอเวทีพิธีเปิด</div>
+  <div class="me"><div class="a">ศม</div><div><b>คุณศิริพร ม.</b><span>แขกผู้มีเกียรติ · โต๊ะ VIP 3</span></div></div>
+  <div class="lab">ข้อความของคุณ</div>
+  <div class="ta">ขอให้ SEDTalks ปีนี้เป็นพื้นที่แบ่งปันแรงบันดาลใจให้ทุกคน 🎉</div>
+  <div class="cc">58 / 80</div>
+  <div class="send">ส่งขึ้นจอ ✦</div>
+  <div class="sent">✓ ข้อความของคุณขึ้นจอแล้ว</div>
+ </div>
+</div></div>
+<div class="foot"><span class="chip">📱 มือถือ VIP <b>→</b> จอ backdrop</span><span class="chip">✨ Particle animation</span><span class="chip">🎬 ครบแล้วเล่นวิดีโอต่ออัตโนมัติ</span><span class="chip">↺ ปุ่มรีเซ็ตสำหรับซ้อม</span></div>
+<script>
+(function(){var g=document.querySelector('.parts g');var ns='http://www.w3.org/2000/svg';var seed=7;function r(){seed=(seed*9301+49297)%233280;return seed/233280}
+for(var i=0;i<140;i++){var c=document.createElementNS(ns,'circle');var a=r()*Math.PI*2,d=Math.pow(r(),.6)*430;
+c.setAttribute('cx',425+Math.cos(a)*d*1.1);c.setAttribute('cy',360+Math.sin(a)*d*.55);c.setAttribute('r',(r()*2.6+.8).toFixed(1));c.setAttribute('opacity',(r()*.7+.3).toFixed(2));g.appendChild(c)}
+})();
+</script></body></html>

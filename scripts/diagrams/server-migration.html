@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ย้ายแอปภายในขึ้นเซิร์ฟเวอร์ใหม่</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f2f2f2;}
+body{width:1440px;height:800px;overflow:hidden}
+svg{display:block}
+</style>
+</head>
+<body>
+<svg role="img" aria-labelledby="server-migration-title server-migration-desc" viewBox="0 0 1440 800" width="1440" height="800" xmlns="http://www.w3.org/2000/svg">
+<title id="server-migration-title">ย้ายแอปภายในขึ้นเซิร์ฟเวอร์ใหม่</title>
+<desc id="server-migration-desc">Before/after: internal apps moved off the critical-system server onto a new app server in one day.</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#666666"/></marker>
+<marker id="arrow-accent" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#fc574a"/></marker>
+<marker id="arrow-link" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#003681"/></marker>
+</defs>
+<rect width="1440" height="800" fill="#f2f2f2"/>
+<text x="64" y="76" fill="#666666" font-size="22" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.16em">INFRA · MIGRATION</text>
+<text x="64" y="140" fill="#313131" font-size="56" font-family="'Instrument Serif', 'Noto Serif Thai', serif">ย้ายแอปภายในขึ้นเซิร์ฟเวอร์ใหม่</text>
+<rect x="64" y="180" width="520" height="520" rx="12" fill="rgba(49,49,49,0.025)" stroke="rgba(49,49,49,0.25)" stroke-width="1.4" stroke-dasharray="8,6"/>
+<text x="88" y="220" fill="#666666" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif">ก่อน</text>
+<rect x="856" y="180" width="520" height="520" rx="12" fill="rgba(49,49,49,0.025)" stroke="rgba(49,49,49,0.25)" stroke-width="1.4" stroke-dasharray="8,6"/>
+<text x="880" y="220" fill="#666666" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif">หลังย้าย</text>
+<path d="M552,460 L880,460" fill="none" stroke="#fc574a" stroke-width="2.4" marker-end="url(#arrow-accent)"/>
+<rect x="609.5" y="412" width="213" height="36" rx="4" fill="#f2f2f2"/>
+<text x="716.0" y="438" fill="#fc574a" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ย้ายเสร็จใน 1 วัน</text>
+<g>
+<rect x="96" y="244" width="456" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="96" y="244" width="456" height="128" rx="10" fill="rgba(49,49,49,0.05)" stroke="#666666" stroke-width="1.6"/>
+<text x="324.0" y="320" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ระบบสำคัญ</text>
+</g>
+<g>
+<rect x="96" y="396" width="456" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="96" y="396" width="456" height="128" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="324.0" y="472" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน 8 แอป</text>
+</g>
+<text x="324" y="588" fill="#fc574a" font-size="28" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">รวมเครื่องเดียว</text>
+<text x="324" y="632" fill="#fc574a" font-size="28" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เสี่ยงกระทบกัน</text>
+<g>
+<rect x="888" y="244" width="456" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="888" y="244" width="456" height="128" rx="10" fill="rgba(49,49,49,0.05)" stroke="#666666" stroke-width="1.6"/>
+<text x="1116.0" y="297" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ระบบสำคัญ</text>
+<text x="1116.0" y="341" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เซิร์ฟเวอร์เดิม</text>
+</g>
+<g>
+<rect x="888" y="396" width="456" height="280" rx="10" fill="#f2f2f2"/>
+<rect x="888" y="396" width="456" height="280" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<rect x="904" y="412" width="63" height="28" rx="4" fill="none" stroke="#fc574a" stroke-opacity="0.5" stroke-width="1"/>
+<text x="935.5" y="432" fill="#fc574a" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">NEW</text>
+<text x="1116.0" y="510" fill="#313131" font-size="40" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">App Server ใหม่</text>
+<text x="1116.0" y="557" fill="#666666" font-size="26" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน 8 แอป</text>
+<text x="1116.0" y="592" fill="#666666" font-size="26" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">systemd · nginx · firewall</text>
+<text x="1116.0" y="627" fill="#666666" font-size="26" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">cron · timezone ครบ</text>
+</g>
+<line x1="64" y1="728" x2="1376" y2="728" stroke="rgba(49,49,49,0.12)" stroke-width="1"/>
+<text x="64" y="760" fill="#8a8a8a" font-size="20" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.14em">INFRA · SDC &amp; SBK</text>
+
+</svg>
+</body>
+</html>

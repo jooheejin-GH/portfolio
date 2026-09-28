@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;font-family:Sarabun,sans-serif;background:#eaeef4;color:#0c1826}
+.mono{font-family:"IBM Plex Mono",monospace}
+.nav{height:58px;display:flex;align-items:center;padding:0 72px;gap:28px;border-bottom:1px solid #d5dfec;background:rgba(255,255,255,.7);font-size:15px;color:#41526a}
+.nav .b{font-weight:800;color:#0c1826;font-size:17px;display:flex;align-items:center;gap:10px;margin-right:18px}
+.nav .b i{width:26px;height:26px;border-radius:7px;background:#1877b0;display:inline-block}
+.nav .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.sso{font-size:12.5px;border:1px solid #cdd8e6;border-radius:999px;padding:3px 11px;background:#fff}
+.hero{position:relative;padding:40px 72px 0;display:grid;grid-template-columns:1fr 540px;gap:44px;
+ background-image:linear-gradient(#d5dfec55 1px,transparent 1px),linear-gradient(90deg,#d5dfec55 1px,transparent 1px);background-size:32px 32px}
+.eyebrow{font-size:15px;letter-spacing:.04em;color:#1877b0;font-weight:600}
+h1{font-size:54px;line-height:1.14;letter-spacing:-.03em;font-weight:800;margin-top:18px}
+h1 em{font-style:normal;color:#1877b0}
+.lede{font-size:18px;color:#41526a;line-height:1.6;margin-top:18px;max-width:34em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.chip{background:#fff;border:1px solid #d5dfec;border-radius:999px;padding:6px 14px;font-size:14.5px;box-shadow:0 1px 2px rgba(12,24,38,.05)}
+.chip b{font-family:"IBM Plex Mono";font-weight:600;color:#0f5a86}
+.term{background:#0c1826;border-radius:16px;box-shadow:0 30px 70px -30px rgba(12,24,38,.6);overflow:hidden;margin-top:6px}
+.tb{display:flex;align-items:center;gap:7px;padding:12px 16px;background:#13243a}
+.tb i{width:11px;height:11px;border-radius:50%}
+.tb span{margin-left:12px;font-family:"IBM Plex Mono";font-size:12.5px;color:#7286a2}
+.code{white-space:pre;font-family:"IBM Plex Mono";font-size:14px;line-height:1.75;color:#adbdd2;padding:16px 20px}
+.c1{color:#4bb4e8}.c2{color:#40cd86}.c3{color:#f2ab26}.c4{color:#9b8cf0}.dim{color:#51647e}.w{color:#e8eff8}
+.cur{display:inline-block;width:8px;height:16px;background:#e8eff8;vertical-align:-3px}
+.sec{padding:30px 72px 0}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.sh .n{font-family:"IBM Plex Mono";color:#1877b0;font-size:14px;font-weight:600}
+.sh h2{font-size:22px;font-weight:800}
+.sh small{margin-left:auto;color:#6d7d95;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid #d5dfec;border-radius:14px;padding:16px 18px;box-shadow:0 12px 30px -18px rgba(12,24,38,.28);position:relative;overflow:hidden}
+.card .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:19px;margin-bottom:10px}
+.card b{font-size:17px;display:block}
+.card p{font-size:14px;color:#6d7d95;line-height:1.5;margin-top:3px}
+.card .t{display:flex;gap:6px;margin-top:10px}
+.card .t span{font-family:"IBM Plex Mono";font-size:11.5px;background:#eef3f9;color:#41526a;border-radius:6px;padding:2px 8px}
+.stats{display:flex;gap:30px;margin-top:24px;padding-top:18px;border-top:1px solid #d5dfec}.stats div b{display:block;font-size:28px;font-weight:800;line-height:1.1}.stats div span{font-size:13.5px;color:#6d7d95}
+.card:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--a)}
+</style></head><body>
+<div class="nav"><span class="b"><i></i>บรีฟทีม IT</span><span>01 เครื่องมือ</span><span>02 แนวคิด</span><span>03 แผนที่ระบบ</span><span>04 ตัวอย่างงาน</span><span>05 Deploy</span><div class="r"><span class="sso">🔒 เฉพาะพนักงาน · SSO</span><span class="sso">▶ โหมดพรีเซนต์</span></div></div>
+<div class="hero">
+ <div>
+  <div class="eyebrow">บรีฟทีม IT · สอนใช้ CLAUDE CODE</div>
+  <h1>ทำงานกับ <em>Claude Code</em><br>แล้วสร้างระบบทั้งหมดนี้</h1>
+  <p class="lede">หัวใจไม่ได้อยู่ที่ "สั่งเก่ง" แต่อยู่ที่ <b>ให้บริบทถูก</b> ผ่านไฟล์ <span class="mono">.md</span> และ <b>จ่ายงานให้ถูกตัว</b> ผ่าน subagent กับ skills — จากนั้นมาดูระบบที่สร้างขึ้นจริง</p>
+  <div class="chips"><span class="chip">📄 <b>CLAUDE.md</b> คู่มือโปรเจกต์</span><span class="chip">🤖 <b>subagents</b> ผู้ช่วยเฉพาะทาง</span><span class="chip">🧩 <b>skills</b> ขั้นตอนสำเร็จรูป</span></div>
+  <div class="stats"><div><b>11+</b><span>ระบบใช้งานจริง</span></div><div><b>8</b><span>subagents เฉพาะแอป</span></div><div><b>12</b><span>skills ใช้ซ้ำได้</span></div><div><b>1</b><span>ล็อกอินเดียว (SSO)</span></div></div>
+ </div>
+ <div class="term"><div class="tb"><i style="background:#f0716a"></i><i style="background:#f2ab26"></i><i style="background:#40cd86"></i><span>~/projects/my-app — claude</span></div>
+ <div class="code"><span class="dim">my-app/</span>
+├─ <span class="c3">CLAUDE.md</span>          <span class="dim"># กติกา + บริบทโปรเจกต์</span>
+├─ <span class="c3">CONTEXT.md</span>         <span class="dim"># สถานะงานล่าสุด</span>
+└─ .claude/
+   ├─ agents/<span class="c4">store-app.md</span>  <span class="dim"># subagent</span>
+   └─ skills/<span class="c4">deploy/SKILL.md</span>
+
+<span class="c2">❯</span> <span class="w">เพิ่มหน้าอนุมัติใบเบิก 3 ขั้น แล้ว deploy</span>
+<span class="c1">●</span> อ่าน CLAUDE.md + CONTEXT.md
+<span class="c1">●</span> ส่งต่อ <span class="c4">store-app</span> agent · แก้ 6 ไฟล์
+<span class="c2">✓</span> รันเทส 48 passed
+<span class="c2">✓</span> /deploy สำเร็จ · อัปเดต CONTEXT.md
+<span class="c2">❯</span> <span class="cur"></span> </div></div>
+</div>
+<div class="sec">
+ <div class="sh"><span class="n">04</span><h2>ตัวอย่างระบบที่สร้างด้วย Claude Code</h2><small>ใช้งานจริงในองค์กร 11+ ระบบ</small></div>
+ <div class="cards">
+  <div class="card" style="--a:#1877b0"><div class="ic" style="background:#e3f0f9">📦</div><b>ระบบเบิกของออนไลน์</b><p>ใบเบิก → อนุมัติหลายขั้น → จ่ายของ → export บัญชี</p><div class="t"><span>Django</span><span>SSO</span></div></div>
+  <div class="card" style="--a:#0e9a97"><div class="ic" style="background:#dff5f4">🏦</div><b>สหกรณ์ออมทรัพย์</b><p>หุ้น เงินกู้ ปันผล รอบหักเงินเดือน และรายงาน</p><div class="t"><span>Django</span><span>PDF</span></div></div>
+  <div class="card" style="--a:#c07d00"><div class="ic" style="background:#fbf0d9">📝</div><b>ประเมินทดลองงาน</b><p>แบบฟอร์มออนไลน์ ลายเซ็น และแจ้งเตือนทางอีเมล</p><div class="t"><span>Web</span><span>Email</span></div></div>
+  <div class="card" style="--a:#6a5acd"><div class="ic" style="background:#ecebfa">⚔️</div><b>สนามฝึก AI</b><p>โจทย์ + กรรมการ AI ให้คะแนนตาม rubric</p><div class="t"><span>Node.js</span><span>Claude API</span></div></div>
+ </div>
+</div>
+</body></html>

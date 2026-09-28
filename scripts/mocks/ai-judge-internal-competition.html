@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<title>AI Judge mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:#f5f3ff;font-family:Inter,'Noto Sans Thai',sans-serif;color:#1e1b4b;font-size:14px}
+.top{height:56px;background:#1e1b4b;color:#fff;display:flex;align-items:center;padding:0 24px;gap:10px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;margin-right:18px}
+.logo .ic{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ec4899);display:grid;place-items:center}
+.top a{color:#c7d2fe;font-size:14px;padding:7px 12px;border-radius:8px}
+.top a.on{background:#312e81;color:#fff;font-weight:600}
+.sp{flex:1}
+.pillq{background:#312e81;border-radius:999px;padding:6px 12px;font-size:12.5px;color:#c7d2fe}
+.wrap{padding:20px 24px;display:grid;grid-template-columns:1fr 430px;gap:20px}
+.hd{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.team{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#a855f7);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+.hd h1{font-size:22px;font-weight:800}
+.hd .sub{font-size:13.5px;color:#6b7280;margin-top:2px}
+.tag{font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px}
+.pass{background:#dcfce7;color:#15803d}
+.row{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.card{background:#fff;border:1px solid #e9e5ff;border-radius:16px;padding:18px 20px;box-shadow:0 1px 2px #1e1b4b08}
+.score{display:flex;flex-direction:column;align-items:center;text-align:center}
+.score .lbl{font-size:13px;color:#6b7280;margin-top:8px}
+.score .rank{margin-top:10px;font-size:13px;font-weight:600;color:#7c3aed;background:#f3e8ff;border-radius:999px;padding:5px 12px}
+.checks{margin-top:14px;width:100%;text-align:left;font-size:12.5px;color:#374151}
+.checks div{display:flex;gap:8px;align-items:center;padding:4px 0}
+.checks i{width:16px;height:16px;border-radius:50%;background:#22c55e;display:grid;place-items:center;color:#fff;font-style:normal;font-size:10px;font-weight:700}
+h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center}
+h3 small{margin-left:auto;font-weight:500;color:#9ca3af;font-size:12px}
+.dim{display:grid;grid-template-columns:190px 1fr 62px 48px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6}
+.dim:last-child{border-bottom:0}
+.dim .n{font-size:14px;font-weight:600}
+.dim .n small{display:block;font-size:11.5px;color:#9ca3af;font-weight:400}
+.bar{height:10px;border-radius:99px;background:#f1f0fb;overflow:hidden}
+.bar b{display:block;height:100%;border-radius:99px}
+.dim .s{font-weight:700;font-size:15px;text-align:right}
+.dim .s span{color:#9ca3af;font-weight:500;font-size:12px}
+.dim .w{font-size:12px;color:#6b7280;text-align:right;font-family:'JetBrains Mono',monospace}
+.fb{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.fb .card{padding:18px 20px 22px}
+.fb ul{list-style:none}
+.fb li{font-size:13.5px;line-height:1.55;padding:5px 0 5px 22px;position:relative;color:#374151}
+.fb li:before{position:absolute;left:0;top:5px;font-weight:700}
+.good li:before{content:"✓";color:#16a34a}
+.imp li:before{content:"↗";color:#d97706}
+.good h3{color:#15803d}.imp h3{color:#b45309}
+.json{background:#0f0d24;border-radius:16px;padding:0;color:#e0e7ff;overflow:hidden;border:1px solid #2e2a5c}
+.jh{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #2e2a5c;font-size:13px;color:#a5b4fc}
+.jh .d{width:10px;height:10px;border-radius:50%}
+.jh .f{margin-left:8px;font-family:'JetBrains Mono',monospace}
+.jh .cp{margin-left:auto;background:#312e81;color:#c7d2fe;border-radius:6px;padding:3px 9px;font-size:11.5px}
+pre{font-family:'JetBrains Mono',monospace;font-size:12.6px;line-height:1.62;padding:14px 18px;white-space:pre}
+.k{color:#93c5fd}.str{color:#86efac}.num{color:#fbbf24}.b{color:#f472b6}.c{color:#6b7280}
+.meta{display:flex;gap:10px;margin-top:14px}
+.meta div{flex:1;background:#fff;border:1px solid #e9e5ff;border-radius:12px;padding:10px 14px;font-size:12px;color:#6b7280}
+.meta b{display:block;font-size:17px;color:#1e1b4b}
+</style></head><body>
+<div class="top">
+ <div class="logo"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0zM8 21h8"/></svg></span>AI Judge</div>
+ <a>ภาพรวม</a><a class="on">ผลตรวจรายทีม</a><a>Rubric 8 โจทย์</a><a>ตารางคะแนน</a>
+ <span class="sp"></span><span class="pillq">รอบคัดเลือก · ตรวจแล้ว 24/32 ทีม</span>
+</div>
+<div class="wrap">
+ <div>
+  <div class="hd"><div class="team">นฮ</div>
+   <div><h1>ทีมนกฮูกขยัน</h1><div class="sub">โจทย์ 3 · ออกแบบเมนูร้านอาหาร · ส่งเมื่อ 14:32 น.</div></div>
+   <span class="tag pass">ผ่านเกณฑ์ขั้นต่ำ</span></div>
+  <div class="row">
+   <div class="card score">
+    <svg width="170" height="170" viewBox="0 0 170 170">
+     <defs><linearGradient id="gr" x1="0" x2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs>
+     <circle cx="85" cy="85" r="70" fill="none" stroke="#f1f0fb" stroke-width="14"/>
+     <circle cx="85" cy="85" r="70" fill="none" stroke="url(#gr)" stroke-width="14" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="65.1" transform="rotate(-90 85 85)"/>
+     <text x="85" y="88" text-anchor="middle" font-size="42" font-weight="800" fill="#1e1b4b" font-family="Inter">85.2</text>
+     <text x="85" y="112" text-anchor="middle" font-size="13" fill="#9ca3af" font-family="Inter">/ 100</text>
+    </svg>
+    <div class="lbl">คะแนนถ่วงน้ำหนัก</div>
+    <div class="rank">อันดับ 2 จาก 8 ทีมในโจทย์นี้</div>
+    <div class="checks">
+     <div><i>✓</i>ไม่เข้าเงื่อนไขตกอัตโนมัติ</div>
+     <div><i>✓</i>ส่งครบทุกหัวข้อที่โจทย์กำหนด</div>
+     <div><i>✓</i>รูปแบบ JSON ถูกต้อง</div>
+    </div>
+   </div>
+   <div class="card">
+    <h3>คะแนนตาม Rubric<small>คะแนน · น้ำหนัก</small></h3>
+    <div class="dim"><div class="n">ตรงโจทย์<small>ครบตามเงื่อนไขที่กำหนด</small></div><div class="bar"><b style="width:90%;background:#6366f1"></b></div><div class="s">9<span>/10</span></div><div class="w">×25%</div></div>
+    <div class="dim"><div class="n">ความคิดสร้างสรรค์<small>แนวคิดเมนูแตกต่าง</small></div><div class="bar"><b style="width:85%;background:#8b5cf6"></b></div><div class="s">8.5<span>/10</span></div><div class="w">×20%</div></div>
+    <div class="dim"><div class="n">ใช้งานได้จริง<small>ต้นทุน / วัตถุดิบ / เวลา</small></div><div class="bar"><b style="width:80%;background:#a855f7"></b></div><div class="s">8<span>/10</span></div><div class="w">×20%</div></div>
+    <div class="dim"><div class="n">การใช้ AI อย่างมีชั้นเชิง<small>prompt และการตรวจทาน</small></div><div class="bar"><b style="width:92%;background:#d946ef"></b></div><div class="s">9.2<span>/10</span></div><div class="w">×20%</div></div>
+    <div class="dim"><div class="n">การนำเสนอ<small>อ่านง่าย เป็นระบบ</small></div><div class="bar"><b style="width:75%;background:#ec4899"></b></div><div class="s">7.5<span>/10</span></div><div class="w">×15%</div></div>
+   </div>
+  </div>
+  <div class="fb">
+   <div class="card good"><h3>จุดเด่น</h3><ul>
+    <li>เมนูแบ่งกลุ่มชัด มีราคาและต้นทุนต่อจานครบทุกรายการ</li>
+    <li>ใช้ AI ช่วยคิดชื่อเมนูหลายรอบ แล้วคัดเลือกด้วยเหตุผล</li>
+    <li>คำนวณราคาขายจากต้นทุนได้สมเหตุสมผล</li></ul></div>
+   <div class="card imp"><h3>ควรปรับปรุง</h3><ul>
+    <li>หน้านำเสนอมีข้อความแน่น ควรเพิ่มภาพหรือไอคอนประกอบ</li>
+    <li>ยังไม่ระบุเมนูสำหรับผู้แพ้อาหารตามที่โจทย์แนะนำ</li>
+    <li>ควรทดสอบสูตรจริงอย่างน้อย 1 เมนูก่อนสรุป</li></ul></div>
+  </div>
+ </div>
+ <div>
+  <div class="json">
+   <div class="jh"><span class="d" style="background:#f87171"></span><span class="d" style="background:#fbbf24"></span><span class="d" style="background:#4ade80"></span><span class="f">judge_result.json</span><span class="cp">คัดลอก</span></div>
+<pre>{
+  <span class="k">"team"</span>: <span class="str">"นกฮูกขยัน"</span>,
+  <span class="k">"task_id"</span>: <span class="str">"T03-menu-design"</span>,
+  <span class="k">"auto_fail"</span>: <span class="b">false</span>,
+  <span class="k">"scores"</span>: {
+    <span class="k">"relevance"</span>:  { <span class="k">"score"</span>: <span class="num">9.0</span>, <span class="k">"w"</span>: <span class="num">0.25</span> },
+    <span class="k">"creativity"</span>: { <span class="k">"score"</span>: <span class="num">8.5</span>, <span class="k">"w"</span>: <span class="num">0.20</span> },
+    <span class="k">"practical"</span>:  { <span class="k">"score"</span>: <span class="num">8.0</span>, <span class="k">"w"</span>: <span class="num">0.20</span> },
+    <span class="k">"ai_usage"</span>:   { <span class="k">"score"</span>: <span class="num">9.2</span>, <span class="k">"w"</span>: <span class="num">0.20</span> },
+    <span class="k">"present"</span>:    { <span class="k">"score"</span>: <span class="num">7.5</span>, <span class="k">"w"</span>: <span class="num">0.15</span> }
+  },
+  <span class="k">"weighted_total"</span>: <span class="num">85.2</span>,
+  <span class="k">"tie_breaker"</span>: {
+    <span class="k">"rule"</span>: <span class="str">"ai_usage &gt; relevance"</span>,
+    <span class="k">"value"</span>: <span class="num">9.2</span>
+  },
+  <span class="k">"strengths"</span>: [
+    <span class="str">"เมนูแบ่งกลุ่มชัด มีต้นทุนต่อจาน"</span>
+  ],
+  <span class="k">"improvements"</span>: [
+    <span class="str">"เพิ่มภาพประกอบ ลดข้อความแน่น"</span>
+  ]
+}</pre>
+  </div>
+  <div class="meta"><div>เวลาตรวจ<b>21 วินาที</b></div><div>ตรวจซ้ำ (consistency)<b>±0.4</b></div></div>
+ </div>
+</div>
+</body></html>

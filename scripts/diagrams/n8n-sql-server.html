@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ย้ายข้อมูลก้อนใหญ่ จากชีทสู่ SQL Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f2f2f2;}
+body{width:1440px;height:800px;overflow:hidden}
+svg{display:block}
+</style>
+</head>
+<body>
+<svg role="img" aria-labelledby="n8n-sql-server-title n8n-sql-server-desc" viewBox="0 0 1440 800" width="1440" height="800" xmlns="http://www.w3.org/2000/svg">
+<title id="n8n-sql-server-title">ย้ายข้อมูลก้อนใหญ่ จากชีทสู่ SQL Server</title>
+<desc id="n8n-sql-server-desc">Data flow from NetSuite through n8n, replacing Google Sheets with SQL Server for high-volume data.</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#666666"/></marker>
+<marker id="arrow-accent" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#fc574a"/></marker>
+<marker id="arrow-link" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#003681"/></marker>
+</defs>
+<rect width="1440" height="800" fill="#f2f2f2"/>
+<text x="64" y="76" fill="#666666" font-size="22" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.16em">INFRA · DATA</text>
+<text x="64" y="140" fill="#313131" font-size="56" font-family="'Instrument Serif', 'Noto Serif Thai', serif">ย้ายข้อมูลก้อนใหญ่ จากชีทสู่ SQL Server</text>
+
+<path d="M344,412 L488,412" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<rect x="363.5" y="364" width="105" height="36" rx="4" fill="#f2f2f2"/>
+<text x="416.0" y="390" fill="#666666" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ดึงข้อมูล</text>
+<path d="M776,380 L856,380 Q872,380 872,364 L872,292 Q872,276 888,276 L960,276" fill="none" stroke="#666666" stroke-width="2.4" stroke-dasharray="10,8" marker-end="url(#arrow)"/>
+<path d="M776,444 L856,444 Q872,444 872,460 L872,548 Q872,564 888,564 L960,564" fill="none" stroke="#fc574a" stroke-width="2.4" marker-end="url(#arrow-accent)"/>
+<rect x="742" y="522" width="118" height="36" rx="4" fill="#f2f2f2"/>
+<text x="801.0" y="548" fill="#fc574a" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เขียนตรง</text>
+<g>
+<rect x="64" y="332" width="280" height="160" rx="10" fill="#f2f2f2"/>
+<rect x="64" y="332" width="280" height="160" rx="10" fill="rgba(49,49,49,0.03)" stroke="rgba(49,49,49,0.35)" stroke-width="1.6"/>
+<rect x="80" y="348" width="102" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="131.0" y="368" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">SOURCE</text>
+<text x="204.0" y="421" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">NetSuite</text>
+<text x="204.0" y="465" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ข้อมูลปริมาณมาก</text>
+</g>
+<g>
+<rect x="496" y="332" width="280" height="160" rx="10" fill="#f2f2f2"/>
+<rect x="496" y="332" width="280" height="160" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<rect x="512" y="348" width="63" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="543.5" y="368" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">ETL</text>
+<text x="636.0" y="421" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">n8n</text>
+<text x="636.0" y="465" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">workflow</text>
+</g>
+<g opacity="0.55">
+<rect x="968" y="188" width="408" height="176" rx="10" fill="#f2f2f2"/>
+<rect x="968" y="188" width="408" height="176" rx="10" fill="rgba(49,49,49,0.02)" stroke="rgba(49,49,49,0.25)" stroke-width="1.6" stroke-dasharray="8,6"/>
+<rect x="984" y="204" width="102" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="1035.0" y="224" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">BEFORE</text>
+<text x="1172.0" y="285" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Google Sheets</text>
+<text x="1172.0" y="329" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ช้า · ติดลิมิต</text>
+</g>
+<g>
+<rect x="968" y="452" width="408" height="224" rx="10" fill="#f2f2f2"/>
+<rect x="968" y="452" width="408" height="224" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<rect x="984" y="468" width="89" height="28" rx="4" fill="none" stroke="#fc574a" stroke-opacity="0.5" stroke-width="1"/>
+<text x="1028.5" y="488" fill="#fc574a" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">AFTER</text>
+<text x="1172.0" y="558" fill="#313131" font-size="40" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">SQL Server</text>
+<text x="1172.0" y="604" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">สร้าง · แก้ · ลบตาราง</text>
+<text x="1172.0" y="636" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ได้จาก workflow</text>
+</g>
+<g stroke="#fc574a" stroke-width="5" stroke-linecap="round"><line x1="1336" y1="204" x2="1360" y2="228"/><line x1="1360" y1="204" x2="1336" y2="228"/></g>
+<line x1="64" y1="728" x2="1376" y2="728" stroke="rgba(49,49,49,0.12)" stroke-width="1"/>
+<text x="64" y="760" fill="#8a8a8a" font-size="20" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.14em">INFRA · SDC &amp; SBK</text>
+
+</svg>
+</body>
+</html>

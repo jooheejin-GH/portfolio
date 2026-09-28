@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<title>LightRAG mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:#0b1020;font-family:Inter,'Noto Sans Thai',sans-serif;color:#e2e8f0;font-size:14px}
+.top{height:54px;display:flex;align-items:center;padding:0 22px;gap:6px;border-bottom:1px solid #1e2740;background:#0e1428}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;margin-right:22px}
+.logo .ic{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#22d3ee);display:grid;place-items:center}
+.tab{padding:7px 14px;border-radius:8px;color:#94a3b8;font-size:14px}
+.tab.on{background:#1c2542;color:#fff;font-weight:600}
+.sp{flex:1}
+.ok{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;background:#111a33;border:1px solid #1e2740;padding:6px 12px;border-radius:999px}
+.ok i{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e}
+.body{display:flex;height:746px}
+.graph{flex:1;position:relative;background:radial-gradient(circle at 45% 45%,#131c38 0,#0b1020 70%)}
+.gtool{position:absolute;top:16px;left:18px;display:flex;gap:8px;align-items:center}
+.search{background:#111a33;border:1px solid #243052;border-radius:9px;padding:8px 12px;width:260px;color:#64748b;font-size:13px}
+.gbtn{background:#111a33;border:1px solid #243052;border-radius:9px;padding:8px 12px;font-size:13px;color:#cbd5e1}
+.gstat{position:absolute;top:18px;right:18px;display:flex;gap:10px}
+.gstat div{background:#111a33cc;border:1px solid #243052;border-radius:10px;padding:7px 12px;font-size:11.5px;color:#94a3b8}
+.gstat b{display:block;font-size:17px;color:#fff}
+.legend{position:absolute;left:18px;bottom:62px;background:#111a33cc;border:1px solid #243052;border-radius:10px;padding:10px 14px;font-size:12px;color:#cbd5e1;display:flex;gap:14px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.panel{width:470px;background:#0e1428;border-left:1px solid #1e2740;display:flex;flex-direction:column;padding:18px 20px}
+.ph{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.mode{margin-left:auto;display:flex;background:#111a33;border:1px solid #243052;border-radius:8px;padding:3px}
+.mode span{font-size:11.5px;padding:4px 9px;border-radius:6px;color:#94a3b8;font-family:'JetBrains Mono',monospace}
+.mode span.on{background:#8b5cf6;color:#fff}
+.q{align-self:flex-end;background:#312e81;border-radius:14px 14px 4px 14px;padding:11px 14px;max-width:88%;font-size:14.5px;line-height:1.55;margin-bottom:14px}
+.a{background:#111a33;border:1px solid #243052;border-radius:14px 14px 14px 4px;padding:14px 16px;font-size:14px;line-height:1.7;color:#dbe3f0}
+.a b{color:#fff}
+.a ul{padding-left:18px;margin:6px 0}
+.cite{display:inline-block;background:#22d3ee22;color:#67e8f9;font-size:11px;font-weight:600;border-radius:5px;padding:0 5px;margin-left:2px;vertical-align:1px}
+.meta{font-size:11.5px;color:#64748b;margin-top:10px;display:flex;gap:14px}
+.src{margin-top:14px}
+.src h4{font-size:12.5px;color:#94a3b8;font-weight:600;margin-bottom:8px}
+.s{display:flex;gap:10px;align-items:center;background:#111a33;border:1px solid #1e2740;border-radius:10px;padding:8px 12px;margin-bottom:7px;font-size:13px}
+.s .n{background:#22d3ee22;color:#67e8f9;font-weight:700;font-size:11px;border-radius:5px;padding:2px 6px}
+.s .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s .sc{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#a78bfa}
+.input{margin-top:auto;display:flex;gap:8px;align-items:center;background:#111a33;border:1px solid #2b3760;border-radius:12px;padding:10px 12px;color:#64748b;font-size:13.5px}
+.input .go{margin-left:auto;background:#8b5cf6;color:#fff;border-radius:8px;padding:6px 12px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:7px}.chips span{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--c);color:var(--c);background:#111a33}.chips .more{--c:#64748b}
+svg text{font-family:'Noto Sans Thai',Inter,sans-serif}
+</style></head><body>
+<div class="top">
+ <div class="logo"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8 7l8 1M7 8l2 8M16 10l-5 6"/></svg></span>LightRAG</div>
+ <span class="tab">เอกสาร</span><span class="tab on">Knowledge Graph</span><span class="tab">ค้นหา (Retrieval)</span><span class="tab">API</span>
+ <span class="sp"></span><span class="ok"><i></i>พร้อมใช้งาน · คลังความรู้ AIR (ทดสอบ)</span>
+</div>
+<div class="body">
+ <div class="graph">
+  <svg width="970" height="746" id="svg"></svg>
+  <div class="gtool"><div class="search">🔍 ค้นหา entity…</div><span class="gbtn">ความลึก: 2</span><span class="gbtn">จัดวางอัตโนมัติ</span></div>
+  <div class="gstat"><div><b>1,284</b>Entities</div><div><b>3,907</b>Relations</div><div><b>146</b>เอกสาร</div></div>
+  <div class="legend"><span><i style="background:#a78bfa"></i>หน่วยงาน</span><span><i style="background:#22d3ee"></i>นโยบาย/ระเบียบ</span><span><i style="background:#34d399"></i>สิทธิ์/สวัสดิการ</span><span><i style="background:#fbbf24"></i>แบบฟอร์ม/ขั้นตอน</span></div>
+ </div>
+ <div class="panel">
+  <div class="ph">ถามคลังความรู้<div class="mode"><span>local</span><span>global</span><span class="on">hybrid</span></div></div>
+  <div class="q">ถ้าพนักงานต้องการลาพักร้อน ต้องยื่นล่วงหน้ากี่วัน และใช้แบบฟอร์มอะไร?</div>
+  <div class="a">
+   ตามเอกสารตัวอย่างในคลัง <b>การลาพักร้อนควรยื่นล่วงหน้าอย่างน้อย 7 วันทำการ</b> <span class="cite">1</span> ผ่านแบบฟอร์มลาออนไลน์ โดยมีขั้นตอนดังนี้
+   <ul><li>กรอก <b>แบบฟอร์มขอลางาน</b> ในระบบ <span class="cite">2</span></li>
+   <li>หัวหน้างานอนุมัติ แล้วส่งต่อ <b>ฝ่ายบุคคล</b> บันทึกวันลา <span class="cite">1</span></li>
+   <li>วันลาที่เหลือสะสมตามเงื่อนไข <b>สวัสดิการ</b> ประจำปี <span class="cite">3</span></li></ul>
+   <div class="meta"><span>⚡ 1.8 วิ</span><span>12 entities · 9 relations · 4 chunks</span></div>
+  </div>
+  <div class="src"><h4>แหล่งอ้างอิง</h4>
+   <div class="s"><span class="n">1</span><span class="t">คู่มือพนักงาน (ตัวอย่าง) — หมวดการลา.pdf</span><span class="sc">0.91</span></div>
+   <div class="s"><span class="n">2</span><span class="t">ขั้นตอนยื่นแบบฟอร์มออนไลน์ (ตัวอย่าง).docx</span><span class="sc">0.86</span></div>
+   <div class="s"><span class="n">3</span><span class="t">สรุปสวัสดิการพนักงาน (ตัวอย่าง).md</span><span class="sc">0.79</span></div>
+  </div>
+  <div class="src"><h4>Entities ที่ใช้ตอบ</h4><div class="chips">
+   <span style="--c:#22d3ee">นโยบายการลา</span><span style="--c:#34d399">ลาพักร้อน</span><span style="--c:#fbbf24">แบบฟอร์มขอลางาน</span><span style="--c:#a78bfa">ฝ่ายบุคคล</span><span style="--c:#a78bfa">หัวหน้างาน</span><span style="--c:#34d399">สวัสดิการ</span><span style="--c:#22d3ee">วันหยุดประจำปี</span><span class="more">+5</span></div></div>
+  <div class="input">พิมพ์คำถาม…<span class="go">ถาม ↵</span></div>
+ </div>
+</div>
+<script>
+const C={org:'#a78bfa',pol:'#22d3ee',ben:'#34d399',form:'#fbbf24'};
+const N=[
+ ['a','นโยบายการลา','pol',440,330,34],
+ ['b','ฝ่ายบุคคล','org',250,220,30],
+ ['c','สวัสดิการ','ben',640,210,30],
+ ['d','ลาพักร้อน','ben',590,420,24],
+ ['e','ลาป่วย','ben',400,500,22],
+ ['f','แบบฟอร์มขอลางาน','form',230,430,24],
+ ['g','หัวหน้างาน','org',180,560,20],
+ ['h','ระเบียบการทำงาน','pol',770,330,24],
+ ['i','ประกันสุขภาพกลุ่ม','ben',810,150,20],
+ ['j','วันหยุดประจำปี','pol',720,520,20],
+ ['k','พนักงานใหม่','org',470,140,20],
+ ['l','ทดลองงาน','pol',330,90,18],
+ ['m','ค่ารักษาพยาบาล','ben',870,260,17],
+ ['n','ระบบลาออนไลน์','form',120,330,19],
+ ['o','ใบรับรองแพทย์','form',520,620,17],
+ ['p','การอบรม','pol',860,440,17],
+ ['q','ฝ่ายการเงิน','org',880,580,18],
+ ['r','กองทุนสำรองเลี้ยงชีพ','ben',640,80,18],
+];
+const E=[['a','b','กำกับดูแล'],['a','c',''],['a','d','ประเภท'],['a','e','ประเภท'],['a','f','ใช้'],['f','g','อนุมัติ'],['f','n',''],['b','n','ดูแล'],['c','i',''],['c','r',''],['c','m',''],['a','h','อ้างอิง'],['h','p',''],['h','j',''],['d','j',''],['e','o','แนบ'],['k','l',''],['k','b',''],['k','c','สิทธิ์'],['m','q',''],['b','g',''],['j','q',''],['l','b',''],['i','m','']];
+const P={};N.forEach(n=>P[n[0]]=n);
+let s='<defs><filter id="gl"><feGaussianBlur stdDeviation="6"/></filter></defs>';
+// faint background nodes
+for(let i=0;i<60;i++){const x=(i*137.5)%940+15,y=(i*89.3)%700+30;s+=`<circle cx="${x}" cy="${y}" r="${2+(i%3)}" fill="#334155" opacity=".5"/>`}
+const hi=new Set(['a','d','f','b','c']);
+E.forEach(e=>{const A=P[e[0]],B=P[e[1]];const h=hi.has(e[0])&&hi.has(e[1]);
+ s+=`<line x1="${A[3]}" y1="${A[4]}" x2="${B[3]}" y2="${B[4]}" stroke="${h?'#8b5cf6':'#334466'}" stroke-width="${h?2.4:1.3}" opacity="${h?.95:.8}"/>`;
+ if(e[2]){const mx=(A[3]+B[3])/2,my=(A[4]+B[4])/2;s+=`<rect x="${mx-e[2].length*3.6-6}" y="${my-10}" width="${e[2].length*7.2+12}" height="19" rx="9" fill="#0e1428" stroke="#243052"/><text x="${mx}" y="${my+4}" text-anchor="middle" font-size="11" fill="#94a3b8">${e[2]}</text>`}
+});
+N.forEach(n=>{const c=C[n[2]];const h=hi.has(n[0]);
+ if(h)s+=`<circle cx="${n[3]}" cy="${n[4]}" r="${n[5]+8}" fill="${c}" opacity=".25" filter="url(#gl)"/>`;
+ s+=`<circle cx="${n[3]}" cy="${n[4]}" r="${n[5]}" fill="${c}22" stroke="${c}" stroke-width="${n[0]=='a'?3:2}"/>`;
+ s+=`<circle cx="${n[3]}" cy="${n[4]}" r="${n[5]*0.35}" fill="${c}"/>`;
+ s+=`<text x="${n[3]}" y="${n[4]+n[5]+17}" text-anchor="middle" font-size="${n[5]>=28?15:13}" font-weight="${n[5]>=28?700:500}" fill="${h?'#fff':'#cbd5e1'}">${n[1]}</text>`;
+});
+document.getElementById('svg').innerHTML=s;
+</script>
+</body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โดเมนกลาง + SSL + ลิงก์สั้น</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f2f2f2;}
+body{width:1440px;height:800px;overflow:hidden}
+svg{display:block}
+</style>
+</head>
+<body>
+<svg role="img" aria-labelledby="domain-ssl-short-url-title domain-ssl-short-url-desc" viewBox="0 0 1440 800" width="1440" height="800" xmlns="http://www.w3.org/2000/svg">
+<title id="domain-ssl-short-url-title">โดเมนกลาง + SSL + ลิงก์สั้น</title>
+<desc id="domain-ssl-short-url-desc">Architecture: employees open short links, a reverse proxy with wildcard SSL routes them to internal apps or redirects.</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#666666"/></marker>
+<marker id="arrow-accent" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#fc574a"/></marker>
+<marker id="arrow-link" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#003681"/></marker>
+</defs>
+<rect width="1440" height="800" fill="#f2f2f2"/>
+<text x="64" y="76" fill="#666666" font-size="22" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.16em">INFRA · DOMAIN + SSL</text>
+<text x="64" y="140" fill="#313131" font-size="56" font-family="'Instrument Serif', 'Noto Serif Thai', serif">โดเมนกลาง + SSL + ลิงก์สั้น</text>
+
+<path d="M304,404 L416,404" fill="none" stroke="#fc574a" stroke-width="2.4" marker-end="url(#arrow-accent)"/>
+<path d="M880,320 L944,320 Q960,320 960,304 L960,268 Q960,252 976,252 L1032,252" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M880,404 L1032,404" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M880,488 L944,488 Q960,488 960,504 L960,540 Q960,556 976,556 L1032,556" fill="none" stroke="#666666" stroke-width="2.4" stroke-dasharray="10,8" marker-end="url(#arrow)"/>
+<g>
+<rect x="64" y="316" width="240" height="176" rx="10" fill="#f2f2f2"/>
+<rect x="64" y="316" width="240" height="176" rx="10" fill="rgba(102,102,102,0.10)" stroke="#8a8a8a" stroke-width="1.6"/>
+<rect x="80" y="332" width="76" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="118.0" y="352" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+<text x="184.0" y="413" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">พนักงาน</text>
+<text x="184.0" y="457" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เปิดลิงก์สั้น</text>
+</g>
+<g>
+<rect x="424" y="256" width="456" height="296" rx="10" fill="#f2f2f2"/>
+<rect x="424" y="256" width="456" height="296" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<rect x="440" y="272" width="89" height="28" rx="4" fill="none" stroke="#fc574a" stroke-opacity="0.5" stroke-width="1"/>
+<text x="484.5" y="292" fill="#fc574a" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">NGINX</text>
+<text x="652.0" y="374" fill="#313131" font-size="40" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Reverse Proxy</text>
+<text x="652.0" y="423" fill="#666666" font-size="28" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Wildcard SSL</text>
+<text x="652.0" y="461" fill="#666666" font-size="28" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ทุก subdomain</text>
+<text x="652.0" y="499" fill="#666666" font-size="28" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">+ Short URL (slug)</text>
+</g>
+<g>
+<rect x="1040" y="188" width="336" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="1040" y="188" width="336" height="128" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="1208.0" y="241" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน A</text>
+<text x="1208.0" y="285" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">HTTPS</text>
+</g>
+<g>
+<rect x="1040" y="340" width="336" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="1040" y="340" width="336" height="128" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="1208.0" y="393" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน B</text>
+<text x="1208.0" y="437" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">HTTPS</text>
+</g>
+<g>
+<rect x="1040" y="492" width="336" height="128" rx="10" fill="#f2f2f2"/>
+<rect x="1040" y="492" width="336" height="128" rx="10" fill="rgba(49,49,49,0.03)" stroke="rgba(49,49,49,0.35)" stroke-width="1.6"/>
+<text x="1208.0" y="545" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ลิงก์ปลายทางอื่น</text>
+<text x="1208.0" y="589" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">redirect 301/302</text>
+</g>
+<text x="652" y="620" fill="#666666" font-size="26" font-weight="400" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">โดเมนกลางเดียว · ใบรับรองเดียว</text>
+<line x1="64" y1="728" x2="1376" y2="728" stroke="rgba(49,49,49,0.12)" stroke-width="1"/>
+<text x="64" y="760" fill="#8a8a8a" font-size="20" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.14em">INFRA · SDC &amp; SBK</text>
+
+</svg>
+</body>
+</html>

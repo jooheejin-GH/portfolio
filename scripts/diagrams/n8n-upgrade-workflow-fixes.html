@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>อัปเกรด n8n อย่างปลอดภัย</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f2f2f2;}
+body{width:1440px;height:800px;overflow:hidden}
+svg{display:block}
+</style>
+</head>
+<body>
+<svg role="img" aria-labelledby="n8n-upgrade-workflow-fixes-title n8n-upgrade-workflow-fixes-desc" viewBox="0 0 1440 800" width="1440" height="800" xmlns="http://www.w3.org/2000/svg">
+<title id="n8n-upgrade-workflow-fixes-title">อัปเกรด n8n อย่างปลอดภัย</title>
+<desc id="n8n-upgrade-workflow-fixes-desc">Process: backup, upgrade n8n 2.17 to 2.32, test; plus workflow fixes with retry, blacklist filter and error alerts.</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#666666"/></marker>
+<marker id="arrow-accent" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#fc574a"/></marker>
+<marker id="arrow-link" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#003681"/></marker>
+</defs>
+<rect width="1440" height="800" fill="#f2f2f2"/>
+<text x="64" y="76" fill="#666666" font-size="22" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.16em">INFRA · n8n OPS</text>
+<text x="64" y="140" fill="#313131" font-size="56" font-family="'Instrument Serif', 'Noto Serif Thai', serif">อัปเกรด n8n อย่างปลอดภัย</text>
+<rect x="64" y="440" width="1312" height="256" rx="12" fill="rgba(49,49,49,0.025)" stroke="rgba(49,49,49,0.25)" stroke-width="1.4" stroke-dasharray="8,6"/>
+<text x="88" y="480" fill="#313131" font-size="24" font-weight="600" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif">แก้ workflow ที่ล้มให้เสถียร</text>
+<path d="M432,284 L528,284" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M904,284 L1000,284" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<g>
+<rect x="64" y="196" width="368" height="176" rx="10" fill="#f2f2f2"/>
+<rect x="64" y="196" width="368" height="176" rx="10" fill="rgba(49,49,49,0.05)" stroke="#666666" stroke-width="1.6"/>
+<rect x="80" y="212" width="37" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="98.5" y="232" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">1</text>
+<text x="248.0" y="293" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Backup ฐานข้อมูล</text>
+<text x="248.0" y="337" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ก่อนอัปเกรดทุกครั้ง</text>
+</g>
+<g>
+<rect x="536" y="196" width="368" height="176" rx="10" fill="#f2f2f2"/>
+<rect x="536" y="196" width="368" height="176" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<rect x="552" y="212" width="37" height="28" rx="4" fill="none" stroke="#fc574a" stroke-opacity="0.5" stroke-width="1"/>
+<text x="570.5" y="232" fill="#fc574a" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">2</text>
+<text x="720.0" y="292" fill="#313131" font-size="40" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">อัปเกรด n8n</text>
+<text x="720.0" y="341" fill="#666666" font-size="28" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">2.17 → 2.32</text>
+</g>
+<g>
+<rect x="1008" y="196" width="368" height="176" rx="10" fill="#f2f2f2"/>
+<rect x="1008" y="196" width="368" height="176" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<rect x="1024" y="212" width="37" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="1042.5" y="232" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">3</text>
+<text x="1192.0" y="293" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ทดสอบ workflow</text>
+<text x="1192.0" y="337" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ครบทุกตัวก่อนเปิดใช้</text>
+</g>
+<g>
+<rect x="96" y="508" width="400" height="160" rx="10" fill="#f2f2f2"/>
+<rect x="96" y="508" width="400" height="160" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="296.0" y="576" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Retry อัตโนมัติ</text>
+<text x="296.0" y="619" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">+ แจ้งลูกค้าเมื่อชีทล่ม</text>
+</g>
+<g>
+<rect x="520" y="508" width="400" height="160" rx="10" fill="#f2f2f2"/>
+<rect x="520" y="508" width="400" height="160" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="720.0" y="576" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ตัวกรอง Blacklist</text>
+<text x="720.0" y="619" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">+ backfill ข้อมูลย้อนหลัง</text>
+</g>
+<g>
+<rect x="944" y="508" width="400" height="160" rx="10" fill="#f2f2f2"/>
+<rect x="944" y="508" width="400" height="160" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<text x="1144.0" y="576" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Error Alert</text>
+<text x="1144.0" y="619" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">รู้ทันทีเมื่อ workflow ล้ม</text>
+</g>
+<line x1="64" y1="728" x2="1376" y2="728" stroke="rgba(49,49,49,0.12)" stroke-width="1"/>
+<text x="64" y="760" fill="#8a8a8a" font-size="20" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.14em">INFRA · SDC &amp; SBK</text>
+
+</svg>
+</body>
+</html>

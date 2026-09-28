@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:#fff;color:#111;font-family:Sarabun,sans-serif}
+.top{height:64px;border-bottom:1px solid #e6e6e6;display:flex;align-items:center;padding:0 64px;gap:22px}
+.logo{font-family:"Archivo Black",sans-serif;font-size:26px;letter-spacing:-.5px}
+.sub{font-size:14px;font-weight:600;letter-spacing:.12em;color:#555}
+.top .who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:15px;color:#333}
+.av{width:34px;height:34px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.lock{font-size:12px;border:1px solid #ddd;border-radius:999px;padding:3px 10px;color:#666}
+.main{display:grid;grid-template-columns:1fr 520px;gap:36px;padding:26px 64px 0}
+h1{font-size:34px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+h1 small{font-size:18px;font-weight:400;color:#666;margin-left:8px}
+.prog{margin:16px 0 18px;background:#f4f4f4;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:18px;font-size:16px}
+.bar{flex:1;height:8px;background:#e2e2e2;border-radius:9px;overflow:hidden}.bar i{display:block;width:40%;height:100%;background:#111}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{border:1px solid #ddd;border-radius:999px;padding:6px 14px;font-size:14px}.tab.on{background:#111;color:#fff;border-color:#111}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{border:1px solid #e3e3e3;border-radius:8px;overflow:hidden;background:#fff}
+.card.sel{outline:3px solid #111;outline-offset:-1px}
+.art{height:130px;position:relative;overflow:hidden}
+.cb{padding:10px 12px}
+.cb b{font-size:16px;display:block}
+.cb span{font-size:13px;color:#777}
+.cf{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding:7px 12px;font-size:13px}
+.st{color:#f0a020;letter-spacing:1px;font-size:14px}
+.ok{background:#111;color:#fff;border-radius:999px;padding:1px 9px;font-size:12px}
+.no{color:#999}
+/* panel */
+.panel{border:1px solid #e3e3e3;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(0,0,0,.35)}
+.big{height:250px;position:relative;overflow:hidden}
+.pb{padding:18px 22px}
+.code{font-size:13px;font-weight:700;letter-spacing:.1em;color:#888}
+.pt{font-size:24px;font-weight:800;margin-top:2px}
+.pa{font-size:14px;color:#666;font-style:italic}
+.crit{margin-top:14px;display:flex;flex-direction:column;gap:11px}
+.row{display:flex;align-items:center;gap:12px}
+.row .l{width:170px;font-size:15px;font-weight:600}
+.dots{display:flex;gap:5px}
+.dots i{width:27px;height:27px;border-radius:6px;border:1px solid #ddd;font-style:normal;font-size:13px;display:grid;place-items:center;color:#777}
+.dots i.on{background:#111;color:#fff;border-color:#111}
+.tot{margin-left:auto;font-weight:800;font-size:16px}
+.cm{margin-top:14px;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;color:#333;line-height:1.5;height:64px}
+.act{display:flex;gap:10px;margin-top:14px;align-items:center}
+.btn{background:#111;color:#fff;border-radius:8px;padding:10px 22px;font-weight:700;font-size:15px}
+.btn2{border:1px solid #ccc;border-radius:8px;padding:10px 18px;font-size:15px}
+.saved{margin-left:auto;font-size:13px;color:#1a8a4a}
+</style></head><body>
+<div class="top"><div class="logo">MMAD</div><div class="sub">OPEN CALL · JUDGING</div>
+<div class="who"><span class="lock">🔒 ลิงก์เฉพาะกรรมการ</span><div class="av">พว</div>อ.พิมพ์วลี ศิลปากรณ์</div></div>
+<div class="main">
+<div>
+<h1>ให้คะแนนผลงาน <small>รอบคัดเลือก · 30 ผลงานผ่านการคัดกรอง</small></h1>
+<div class="prog"><span>ให้คะแนนแล้ว <b>12</b> / 30</span><div class="bar"><i></i></div><span style="color:#666;font-size:14px">ปิดลงคะแนน 15 ต.ค.</span></div>
+<div class="tabs"><span class="tab on">ทั้งหมด 30</span><span class="tab">ยังไม่ให้คะแนน 18</span><span class="tab">ให้แล้ว 12</span></div>
+<div class="grid">
+ <div class="card"><div class="art" style="background:#1d3b4a"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><circle cx="70" cy="30" r="60" fill="#e9c46a"/><circle cx="220" cy="100" r="80" fill="#e76f51"/><rect x="120" y="60" width="70" height="90" fill="#2a9d8f"/></svg></div><div class="cb"><b>แสงสุดท้ายของเมือง</b><span>A0003 · จิตรกรรม</span></div><div class="cf"><span class="st">★★★★☆</span><span class="ok">ให้แล้ว</span></div></div>
+ <div class="card sel"><div class="art" style="background:#f3ead8"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><path d="M0 130 L90 20 L150 130Z" fill="#111"/><path d="M110 130 L200 0 L300 130Z" fill="#d62828"/><circle cx="240" cy="40" r="22" fill="#f4a261"/><rect x="30" y="70" width="260" height="6" fill="#111"/></svg></div><div class="cb"><b>จังหวะของเส้น</b><span>A0007 · ศิลปะจัดวาง</span></div><div class="cf"><span class="no">กำลังให้คะแนน</span><span style="font-weight:700">12 / 15</span></div></div>
+ <div class="card"><div class="art" style="background:#b8c0ff"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><circle cx="150" cy="65" r="90" fill="#8187dc" /><circle cx="150" cy="65" r="60" fill="#5e60ce"/><circle cx="150" cy="65" r="30" fill="#ffd6a5"/></svg></div><div class="cb"><b>วงโคจรของความเงียบ</b><span>A0011 · ภาพพิมพ์</span></div><div class="cf"><span class="st">★★★☆☆</span><span class="ok">ให้แล้ว</span></div></div>
+ <div class="card"><div class="art" style="background:#264653"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect x="0" y="80" width="300" height="60" fill="#e9c46a"/><rect x="40" y="20" width="40" height="80" fill="#f4f1de"/><rect x="100" y="40" width="30" height="60" fill="#e07a5f"/><rect x="150" y="10" width="50" height="90" fill="#81b29a"/><rect x="220" y="50" width="36" height="50" fill="#f2cc8f"/></svg></div><div class="cb"><b>ตึกแถวในความทรงจำ</b><span>A0014 · ภาพถ่าย</span></div><div class="cf"><span class="no">ยังไม่ให้คะแนน</span></div></div>
+ <div class="card"><div class="art" style="background:#fefae0"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><path d="M0 90 Q75 20 150 90 T300 90 V130 H0Z" fill="#606c38"/><path d="M0 110 Q75 60 150 110 T300 110 V130 H0Z" fill="#283618"/><circle cx="230" cy="35" r="20" fill="#dda15e"/></svg></div><div class="cb"><b>ลมหายใจของทุ่ง</b><span>A0018 · จิตรกรรม</span></div><div class="cf"><span class="st">★★★★★</span><span class="ok">ให้แล้ว</span></div></div>
+ <div class="card"><div class="art" style="background:#111"><svg width="100%" height="100%" viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#fff" stroke-width="2" opacity=".85"><circle cx="150" cy="65" r="20"/><circle cx="150" cy="65" r="40"/><circle cx="150" cy="65" r="60"/><circle cx="150" cy="65" r="80"/></g><circle cx="190" cy="45" r="14" fill="#ff006e"/></svg></div><div class="cb"><b>คลื่นเสียงในห้องมืด</b><span>A0022 · สื่อผสม</span></div><div class="cf"><span class="no">ยังไม่ให้คะแนน</span></div></div>
+</div>
+</div>
+<div class="panel">
+ <div class="big" style="background:#f3ead8"><svg width="100%" height="100%" viewBox="0 0 520 250" preserveAspectRatio="xMidYMid slice"><path d="M0 250 L150 40 L260 250Z" fill="#111"/><path d="M200 250 L360 0 L520 250Z" fill="#d62828"/><circle cx="420" cy="70" r="38" fill="#f4a261"/><rect x="50" y="140" width="440" height="10" fill="#111"/><rect x="90" y="60" width="4" height="190" fill="#111"/></svg></div>
+ <div class="pb">
+  <div class="code">A0007 · ศิลปะจัดวาง · 2.4 × 1.8 ม.</div>
+  <div class="pt">จังหวะของเส้น</div>
+  <div class="pa">เส้น · จังหวะ · เมือง · การเคลื่อนไหว</div>
+  <div class="crit">
+   <div class="row"><span class="l">ความคิดสร้างสรรค์</span><div class="dots"><i>1</i><i>2</i><i>3</i><i class="on">4</i><i>5</i></div><span class="tot">4</span></div>
+   <div class="row"><span class="l">เทคนิคและการนำเสนอ</span><div class="dots"><i>1</i><i>2</i><i>3</i><i>4</i><i class="on">5</i></div><span class="tot">5</span></div>
+   <div class="row"><span class="l">ความสอดคล้องกับธีม</span><div class="dots"><i>1</i><i>2</i><i class="on">3</i><i>4</i><i>5</i></div><span class="tot">3</span></div>
+  </div>
+  <div class="cm">การใช้สีแดง-ดำตัดกันได้ชัด องค์ประกอบมีพลัง อยากเห็นแผนการติดตั้งในพื้นที่จริงเพิ่มเติม…</div>
+  <div class="act"><span class="btn">บันทึกคะแนน</span><span class="btn2">ถัดไป →</span><span class="saved">✓ บันทึกอัตโนมัติ 14:32</span></div>
+ </div>
+</div>
+</div>
+</body></html>

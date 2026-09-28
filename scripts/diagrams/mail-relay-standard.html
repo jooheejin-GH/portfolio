@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>มาตรฐานส่งเมลของแอปภายใน</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f2f2f2;}
+body{width:1440px;height:800px;overflow:hidden}
+svg{display:block}
+</style>
+</head>
+<body>
+<svg role="img" aria-labelledby="mail-relay-standard-title mail-relay-standard-desc" viewBox="0 0 1440 800" width="1440" height="800" xmlns="http://www.w3.org/2000/svg">
+<title id="mail-relay-standard-title">มาตรฐานส่งเมลของแอปภายใน</title>
+<desc id="mail-relay-standard-desc">Before/after: apps limited to 5 emails per minute are replaced by an outbox queue and an internal relay to Exchange.</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#666666"/></marker>
+<marker id="arrow-accent" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#fc574a"/></marker>
+<marker id="arrow-link" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 12 5, 0 10" fill="#003681"/></marker>
+</defs>
+<rect width="1440" height="800" fill="#f2f2f2"/>
+<text x="64" y="76" fill="#666666" font-size="22" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.16em">INFRA · MAIL STANDARD</text>
+<text x="64" y="140" fill="#313131" font-size="56" font-family="'Instrument Serif', 'Noto Serif Thai', serif">มาตรฐานส่งเมลของแอปภายใน</text>
+
+<path d="M336,300 L512,300" fill="none" stroke="#666666" stroke-width="2.4" stroke-dasharray="10,8" marker-end="url(#arrow)"/>
+<path d="M920,300 L1096,300" fill="none" stroke="#666666" stroke-width="2.4" stroke-dasharray="10,8" marker-end="url(#arrow)"/>
+<path d="M336,576 L416,576" fill="none" stroke="#666666" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M696,576 L776,576" fill="none" stroke="#fc574a" stroke-width="2.4" marker-end="url(#arrow-accent)"/>
+<path d="M1056,576 L1136,576" fill="none" stroke="#fc574a" stroke-width="2.4" marker-end="url(#arrow-accent)"/>
+<text x="64" y="224" fill="#666666" font-size="28" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="start">ก่อน</text>
+<g opacity="0.55">
+<rect x="64" y="244" width="272" height="112" rx="10" fill="#f2f2f2"/>
+<rect x="64" y="244" width="272" height="112" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="200.0" y="310" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน</text>
+</g>
+<g opacity="0.55">
+<rect x="520" y="244" width="400" height="112" rx="10" fill="#f2f2f2"/>
+<rect x="520" y="244" width="400" height="112" rx="10" fill="rgba(49,49,49,0.02)" stroke="rgba(49,49,49,0.25)" stroke-width="1.6" stroke-dasharray="8,6"/>
+<text x="720.0" y="288" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ช่องทางส่งเดิม</text>
+<text x="720.0" y="331" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">จำกัด 5 ฉบับ/นาที</text>
+</g>
+<g opacity="0.55">
+<rect x="1104" y="244" width="272" height="112" rx="10" fill="#f2f2f2"/>
+<rect x="1104" y="244" width="272" height="112" rx="10" fill="rgba(49,49,49,0.02)" stroke="rgba(49,49,49,0.25)" stroke-width="1.6" stroke-dasharray="8,6"/>
+<text x="1240.0" y="310" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เมลตกหล่น</text>
+</g>
+<g stroke="#fc574a" stroke-width="5" stroke-linecap="round"><line x1="1340" y1="256" x2="1364" y2="280"/><line x1="1364" y1="256" x2="1340" y2="280"/></g>
+<text x="64" y="452" fill="#313131" font-size="28" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="start">หลัง — มาตรฐานกลาง</text>
+<g>
+<rect x="64" y="476" width="272" height="200" rx="10" fill="#f2f2f2"/>
+<rect x="64" y="476" width="272" height="200" rx="10" fill="#ffffff" stroke="#313131" stroke-width="1.6"/>
+<text x="200.0" y="565" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">แอปภายใน</text>
+<text x="200.0" y="609" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ทุกแอป</text>
+</g>
+<g>
+<rect x="424" y="476" width="272" height="200" rx="10" fill="#f2f2f2"/>
+<rect x="424" y="476" width="272" height="200" rx="10" fill="rgba(49,49,49,0.05)" stroke="#666666" stroke-width="1.6"/>
+<rect x="440" y="492" width="89" height="28" rx="4" fill="none" stroke="#666666" stroke-opacity="0.5" stroke-width="1"/>
+<text x="484.5" y="512" fill="#666666" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">QUEUE</text>
+<text x="560.0" y="585" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">คิว Outbox</text>
+<text x="560.0" y="629" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ส่งชุดใหญ่ทีละรอบ</text>
+</g>
+<g>
+<rect x="784" y="476" width="272" height="200" rx="10" fill="#f2f2f2"/>
+<rect x="784" y="476" width="272" height="200" rx="10" fill="rgba(252,87,74,0.08)" stroke="#fc574a" stroke-width="2.4"/>
+<rect x="800" y="492" width="89" height="28" rx="4" fill="none" stroke="#fc574a" stroke-opacity="0.5" stroke-width="1"/>
+<text x="844.5" y="512" fill="#fc574a" font-size="18" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">RELAY</text>
+<text x="920.0" y="569" fill="#313131" font-size="36" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Relay ภายใน</text>
+<text x="920.0" y="613" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">เฉพาะ</text>
+<text x="920.0" y="646" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">App Server</text>
+</g>
+<g>
+<rect x="1144" y="476" width="232" height="200" rx="10" fill="#f2f2f2"/>
+<rect x="1144" y="476" width="232" height="200" rx="10" fill="rgba(49,49,49,0.03)" stroke="rgba(49,49,49,0.35)" stroke-width="1.6"/>
+<text x="1260.0" y="545" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">Mail Server</text>
+<text x="1260.0" y="583" fill="#313131" font-size="32" font-weight="700" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">(Exchange)</text>
+<text x="1260.0" y="626" fill="#666666" font-size="24" font-family="Arial, 'Noto Sans Thai', 'Thonburi', sans-serif" text-anchor="middle">ส่งครบ</text>
+</g>
+<line x1="64" y1="728" x2="1376" y2="728" stroke="rgba(49,49,49,0.12)" stroke-width="1"/>
+<text x="64" y="760" fill="#8a8a8a" font-size="20" font-family="'Geist Mono', 'Noto Sans Thai', ui-monospace, monospace" letter-spacing="0.14em">INFRA · SDC &amp; SBK</text>
+<text x="1376" y="760" fill="#8a8a8a" font-size="24" font-family="'Instrument Serif', 'Noto Serif Thai', serif" font-style="italic" text-anchor="end">ไม่ติดลิมิต ส่งชุดใหญ่ได้ครบ</text>
+</svg>
+</body>
+</html>
