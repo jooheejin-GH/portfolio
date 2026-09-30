@@ -19,7 +19,7 @@ body{width:1440px;height:800px;overflow:hidden;background:#f6f7f9;font-family:In
 .main{flex:1;min-width:0}
 .hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 h1{font-size:22px;font-weight:700}
-.badge{background:#fff7ed;color:#c2410c;border:1px dashed #fb923c;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px}
+.badge{background:#ecfdf5;color:#15803d;border:1px solid #86efac;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px}
 .month{margin-left:auto;display:flex;align-items:center;gap:8px}
 .month .arr{width:32px;height:32px;border:1px solid #d9dde3;border-radius:8px;background:#fff;display:grid;place-items:center;color:#64748b}
 .month .m{font-weight:600;font-size:15px;padding:0 6px}
@@ -76,13 +76,13 @@ h1{font-size:22px;font-weight:700}
 </style></head><body>
 <div class="nav">
   <div class="logo"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><span>Media<b>Booking</b></span></div>
-  <a>Dashboard</a><a class="on">ปฏิทินสื่อ</a><a>+ ออกใบจอง</a><a>ใบแจ้งหนี้</a><a>Master สื่อ</a>
+  <a>Dashboard</a><a class="on">ปฏิทินสื่อ</a><a>+ จองสื่อ</a><a>+ จองอุปกรณ์</a><a>ใบแจ้งหนี้</a><a>ตำแหน่งสื่อ</a><a>การเงิน</a>
   <span class="sp"></span><span class="user">demo · <b>admin</b></span><span class="btn-out">ออกจากระบบ</span>
 </div>
 <div class="wrap">
  <div class="main">
-  <div class="hd"><h1>ปฏิทินสื่อโฆษณา</h1><span class="badge">แบบร่าง (Discovery)</span>
-   <div class="month"><span class="arr">‹</span><span class="m">ตุลาคม 2569</span><span class="arr">›</span>
+  <div class="hd"><h1>ปฏิทินสื่อโฆษณา</h1><span class="badge">● LIVE</span>
+   <div class="month"><span class="arr">‹</span><span class="m">ตุลาคม 2026</span><span class="arr">›</span>
     <div class="seg"><span class="on">รายเดือน</span><span>ราย 15 วัน</span></div></div></div>
   <div class="chips"><span class="chip on">ทุกประเภท (137)</span><span class="chip">จอ LED (12)</span><span class="chip">ป้ายเสา (48)</span><span class="chip">แขวนเพดาน (31)</span><span class="chip">ลิฟต์/บันได (26)</span>
    <div class="legend"><span><i style="background:#1f5eff"></i>ยืนยันแล้ว</span><span><i style="background:#ffedd5;border:1px dashed #fb923c"></i>รอยืนยัน</span></div></div>
@@ -90,21 +90,23 @@ h1{font-size:22px;font-weight:700}
  </div>
  <div class="side">
   <div class="panel">
-   <div class="ph"><h2>ใบจอง</h2><span class="st">รอยืนยัน</span></div>
-   <div class="docno">BK-MD-2610-0042</div>
+   <div class="ph"><h2>ใบจองสื่อ</h2><span class="st">รออนุมัติ</span></div>
+   <div class="docno">MD20260042</div>
    <div class="f"><label>ร้านค้า / ผู้จอง</label><div class="v">2F-318 : ร้านชาไข่มุกดาวเหนือ</div></div>
    <div class="f"><label>ตำแหน่งสื่อ</label><div class="v">LED-02 · จอ LED โถงกลาง ชั้น 1</div></div>
    <div class="f"><label>รูปแบบราคา</label><div class="pill"><span>รายเดือน</span><span class="on">ราย 15 วัน</span></div></div>
-   <div class="two"><div class="f"><label>เริ่ม</label><div class="v">16/10/2569</div></div><div class="f"><label>สิ้นสุด</label><div class="v">30/10/2569</div></div></div>
+   <div class="two"><div class="f"><label>เริ่ม</label><div class="v">16/10/2026</div></div><div class="f"><label>สิ้นสุด</label><div class="v">30/10/2026</div></div></div>
    <div class="sum">
-    <div><span>ค่าสื่อ (15 วัน)</span><span>18,000.00</span></div>
-    <div><span>ค่าผลิต/ติดตั้ง</span><span>1,500.00</span></div>
+    <div><span>ค่าเช่าสื่อ (15 วัน)</span><span>18,000.00</span></div>
+    <div><span>ค่าติดตั้ง/รื้อถอน</span><span>1,500.00</span></div>
     <div><span>VAT 7%</span><span>1,365.00</span></div>
-    <div class="tot"><span>ยอดรวม</span><span>20,865.00</span></div>
+    <div><span><b>รวมทั้งสิ้น</b></span><span><b>20,865.00</b></span></div>
+    <div><span>หัก ณ ที่จ่าย 5% / 3%</span><span>-945.00</span></div>
+    <div class="tot"><span>ยอดโอนจริง</span><span style="color:#f07c4b">19,920.00</span></div>
    </div>
-   <div class="acts"><span class="p2">บันทึกร่าง</span><span class="p1">ยืนยัน → ออก INV</span></div>
+   <div class="acts"><span class="p2">ใบจอง PDF</span><span class="p1">ส่งอนุมัติ → เมลผู้จัดการ</span></div>
   </div>
-  <div class="stats"><div class="stat"><div class="k">ว่างเดือนนี้</div><div class="n" style="color:#16a34a">58</div></div><div class="stat"><div class="k">จองแล้ว</div><div class="n" style="color:#1f5eff">79</div></div><div class="stat"><div class="k">รอออก INV</div><div class="n" style="color:#f97316">6</div></div></div>
+  <div class="stats"><div class="stat"><div class="k">ว่างเดือนนี้</div><div class="n" style="color:#16a34a">58</div></div><div class="stat"><div class="k">จองแล้ว</div><div class="n" style="color:#1f5eff">79</div></div><div class="stat"><div class="k">รอชำระ</div><div class="n" style="color:#f97316">6</div></div></div>
  </div>
 </div>
 <script>
