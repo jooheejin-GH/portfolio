@@ -1,0 +1,145 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>New Year party poll mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#fc574a;--accent:#003681;--bg:#f2f2f2;--text:#313131;--muted:#6f6f6f;--border:#e2e2e2;
+--poll:#6d28d9;--poll-bg:#f3edff;--poll-line:#d9c8fb;--ok:#1a9e54;
+--sdc:#1f5eff;--sdc-bg:#e8efff;--sbk:#f97316;--sbk-bg:#fff1e6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans Thai",sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.topbar{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.05);height:60px}
+.in{width:1280px;margin:0 auto;height:100%;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:1.2px;color:var(--accent);font-size:15px}
+.brand .dot{width:12px;height:12px;border-radius:4px;background:var(--primary)}
+.brand small{letter-spacing:0;font-weight:400;color:var(--muted);font-size:12px}
+.nav{display:flex;gap:22px;margin-left:34px;font-size:14px;color:var(--muted)}.nav b{color:var(--accent)}
+.who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.chip{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;font-weight:700;line-height:21px;white-space:nowrap}
+.chip.sdc{background:var(--sdc-bg);color:var(--sdc)}.chip.sbk{background:var(--sbk-bg);color:#c2560a}
+.chip.new{background:var(--poll);color:#fff}.chip.open{background:#e7f6ee;color:var(--ok);border:1px solid #b6e3c9;line-height:19px}
+.chip.gray{background:#eee;color:#666}
+.banner{background:linear-gradient(90deg,#5b21b6,#7c3aed 60%,#8b5cf6);color:#fff;height:52px}
+.banner .in{gap:12px;font-size:15px}
+.banner .em{font-size:22px}
+.banner b{font-weight:700}
+.banner .go{margin-left:auto;background:#fff;color:var(--poll);font-weight:700;border-radius:999px;padding:5px 16px;font-size:14px}
+.banner .left{opacity:.85;font-size:13.5px}
+.main{width:1280px;margin:26px auto 0;display:grid;grid-template-columns:740px 1fr;gap:22px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.vote{padding:24px 28px;border-top:5px solid var(--poll)}
+.vh{display:flex;gap:14px;align-items:flex-start}
+.ic{width:52px;height:52px;border-radius:14px;background:var(--poll-bg);display:grid;place-items:center;font-size:28px;flex:none}
+.chips{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.vh h1{font-size:22px;line-height:1.38;color:#1f1f1f}
+.meta{font-size:13px;color:var(--muted);margin-top:4px}
+.src{margin:16px 0 14px;background:#faf8ff;border:1px solid var(--poll-line);border-radius:10px;padding:9px 14px;font-size:13.5px;color:#4c3a78;display:flex;justify-content:space-between}
+.src a{color:var(--poll);font-weight:700;text-decoration:none}
+.opt{border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:14px;margin-bottom:10px}
+.opt.on{border-color:var(--poll);background:#fcfaff;box-shadow:0 0 0 3px rgba(109,40,217,.10)}
+.rd{width:22px;height:22px;border-radius:50%;border:2px solid #b9b9b9;flex:none;margin-top:2px;display:grid;place-items:center}
+.on .rd{border-color:var(--poll)}.on .rd:after{content:"";width:11px;height:11px;border-radius:50%;background:var(--poll)}
+.opt .t{font-weight:700;font-size:16.5px}.opt .d{font-size:13.5px;color:var(--muted)}
+.opt .body{flex:1}
+.sug{margin-top:10px}
+.sug label{font-size:13px;font-weight:700;color:#4c3a78}
+.sug .ta{margin-top:4px;border:1px solid var(--poll-line);background:#fff;border-radius:9px;padding:8px 12px;font-size:14px;color:#333;height:44px}
+.sug .hint{font-size:12px;color:var(--muted);margin-top:4px}
+.anon{display:flex;gap:10px;align-items:center;background:#f5f7fb;border-radius:10px;padding:10px 14px;font-size:13.5px;color:#3d4657;margin-top:4px}
+.anon .lk{font-size:18px}
+.anon b{color:#1f2a44}
+.submit{margin-top:14px;display:flex;align-items:center;gap:14px}
+.btn{background:var(--poll);color:#fff;font-weight:700;border-radius:10px;padding:12px 26px;font-size:16px}
+.submit .note{font-size:13px;color:var(--muted)}
+.side{display:flex;flex-direction:column;gap:18px}
+.pad{padding:18px 22px}
+.ch{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.ch h2{font-size:16px;color:#1f1f1f}.ch small{font-size:12.5px;color:var(--muted)}
+.big{font-size:30px;font-weight:700;color:var(--poll);line-height:1.1}.big small{font-size:14px;color:var(--muted);font-weight:400;margin-left:6px}
+.bar{display:grid;grid-template-columns:52px 1fr 64px;gap:10px;align-items:center;margin-top:9px;font-size:13.5px}
+.track{height:10px;border-radius:999px;background:#eef0f4;overflow:hidden}.track i{display:block;height:100%;border-radius:999px}
+.bar .n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.pend{margin-top:14px;padding-top:12px;border-top:1px solid #eee}
+.pend .lbl{font-size:13px;font-weight:700;color:#444;margin-bottom:8px}
+.pp{display:flex;flex-wrap:wrap;gap:6px}
+.p{display:inline-flex;align-items:center;gap:6px;border:1px solid #e6e6e6;border-radius:999px;padding:2px 4px 2px 10px;font-size:13px;background:#fff}
+.p .chip{font-size:11px;line-height:18px;padding:0 7px}
+.more{font-size:13px;color:var(--muted);align-self:center;margin-left:4px}
+.tabs{display:flex;gap:4px;background:#f2f2f6;border-radius:9px;padding:3px;font-size:13px}
+.tabs span{padding:3px 12px;border-radius:7px;color:#666}.tabs .on{background:#fff;color:var(--poll);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.res{position:relative}.grow{flex:1;display:flex;flex-direction:column}.grow .res{flex:1;display:flex;flex-direction:column;justify-content:center}
+.co{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cb{border:1px solid #eee;border-radius:10px;padding:10px 12px}
+.cb .hd{margin-bottom:8px}
+.ghost{display:flex;flex-direction:column;gap:9px;filter:blur(2.5px);opacity:.75}
+.g{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;font-size:12.5px;color:#777}
+.g .track{height:12px}.g .track i{background:#c9b6f5}
+.lock{position:absolute;inset:0;display:grid;place-items:center}
+.lock div{background:rgba(255,255,255,.94);border:1px solid var(--poll-line);border-radius:999px;padding:7px 16px;font-size:13.5px;font-weight:700;color:#4c3a78;box-shadow:0 6px 18px rgba(76,58,120,.12)}
+.admin{display:flex;align-items:center;gap:10px;padding:12px 22px;font-size:13px;color:#555}
+.admin .lbl{font-weight:700;color:var(--accent)}
+.tg{display:inline-flex;align-items:center;gap:6px;border:1px solid #e3e3e3;border-radius:8px;padding:3px 10px;background:#fafafa}
+.tg i{width:26px;height:15px;border-radius:999px;background:#ccc;position:relative}.tg i:after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff}
+.tg.on i{background:var(--ok)}.tg.on i:after{left:13px}
+</style></head><body>
+<div class="topbar"><div class="in">
+ <div class="brand"><span class="dot"></span>SEACON <small>Portal</small></div>
+ <div class="nav"><b>หน้าแรก</b><span>แอปของฉัน</span><span>โหวต</span></div>
+ <div class="who"><span class="chip sdc">SDC</span>คุณตัวอย่าง<span class="avatar">ต</span></div>
+</div></div>
+<div class="banner"><div class="in">
+ <span class="em">🥂</span><b>โหวตรอบ 2 เปิดแล้ว</b><span>ปาร์ตี้ปีใหม่ในบริษัทของคุณ จัดรวมทั้งบริษัท หรือแยกฝ่าย?</span>
+ <span class="left">· ปิดโหวต ศ. 16 ต.ค. 18:00</span><span class="go">ไปโหวต →</span>
+</div></div>
+
+<div class="main">
+ <div class="card vote">
+  <div class="vh"><div class="ic">🥂</div><div>
+   <div class="chips"><span class="chip new">ใหม่</span><span class="chip open">● เปิดโหวต</span><span class="chip gray">รอบ 2</span></div>
+   <h1>ปาร์ตี้ปีใหม่ในบริษัทของคุณ อยากจัดรวมทั้งบริษัท<br>หรือแยกฝ่ายกันจัด?</h1>
+   <div class="meta">สำหรับพนักงานสำนักงาน SDC · SBK · ดูผลได้หลังปิดโหวต</div>
+  </div></div>
+  <div class="src"><span>ต่อจากรอบแรก “รวม 2 บริษัทจัดงานเดียวไหม” ซึ่งปิดโหวตแล้ว</span><a>ดูผลรอบแรก →</a></div>
+  <div class="opt on"><span class="rd"></span><div class="body">
+   <div class="t">รวมทั้งบริษัท</div><div class="d">จัดงานเดียวทั้งบริษัท ทุกฝ่ายมาเจอกัน</div>
+   <div class="sug"><label>แนะนำร้าน (ไม่บังคับ)</label><div class="ta">ร้านอาหารไทยมีห้องจัดเลี้ยง ใกล้ที่ทำงาน เดินทางสะดวก</div>
+   <div class="hint">เลือกร้านที่อยู่ในงบต่อหัวที่บริษัทกำหนด</div></div>
+  </div></div>
+  <div class="opt"><span class="rd"></span><div class="body">
+   <div class="t">แยกฝ่ายกันจัด</div><div class="d">แต่ละฝ่ายเลือกร้านและวันเองได้อิสระ</div>
+  </div></div>
+  <div class="anon"><span class="lk">🔒</span><span><b>ไม่ระบุตัวตน</b> — บัตรโหวตไม่มีรหัสพนักงานและเวลา ระบบจำแค่ว่าคุณโหวตแล้ว</span></div>
+  <div class="submit"><span class="btn">ยืนยันการโหวต</span><span class="note">โหวตแล้วเปลี่ยนไม่ได้ · 1 คน 1 เสียง</span></div>
+ </div>
+
+ <div class="side">
+  <div class="card pad">
+   <div class="ch"><h2>ความคืบหน้า</h2><small>ผู้มีสิทธิ์ = พนักงานสำนักงาน (จากข้อมูล HR)</small></div>
+   <div class="big">62%<small>โหวตแล้ว 50 จาก 80 คน</small></div>
+   <div class="bar"><span class="chip sdc">SDC</span><span class="track"><i style="width:64%;background:var(--sdc)"></i></span><span class="n">35 / 55</span></div>
+   <div class="bar"><span class="chip sbk">SBK</span><span class="track"><i style="width:60%;background:var(--sbk)"></i></span><span class="n">15 / 25</span></div>
+   <div class="pend"><div class="lbl">ยังไม่โหวต (30 คน)</div>
+    <div class="pp">
+     <span class="p">นก<span class="chip sdc">SDC</span></span><span class="p">ปุ้ย<span class="chip sbk">SBK</span></span><span class="p">เอ<span class="chip sdc">SDC</span></span><span class="p">ฟ้า<span class="chip sdc">SDC</span></span><span class="p">โอ๊ต<span class="chip sbk">SBK</span></span><span class="p">หมิว<span class="chip sdc">SDC</span></span>
+     <span class="p">บี<span class="chip sdc">SDC</span></span><span class="p">แจน<span class="chip sbk">SBK</span></span><span class="p">ก้อง<span class="chip sdc">SDC</span></span><span class="p">ปลา<span class="chip sdc">SDC</span></span><span class="p">ตูน<span class="chip sbk">SBK</span></span><span class="more">+19 คน</span>
+    </div></div>
+  </div>
+  <div class="card pad grow">
+   <div class="ch"><h2>ผลโหวต</h2><div class="tabs"><span class="on">แยกตามบริษัท</span><span>รวม</span></div></div>
+   <div class="res">
+    <div class="co">
+     <div class="cb"><div class="hd"><span class="chip sdc">SDC</span></div><div class="ghost">
+      <div class="g"><span>รวมทั้งบริษัท</span><span class="track"><i style="width:70%"></i></span></div>
+      <div class="g"><span>แยกฝ่าย</span><span class="track"><i style="width:45%"></i></span></div></div></div>
+     <div class="cb"><div class="hd"><span class="chip sbk">SBK</span></div><div class="ghost">
+      <div class="g"><span>รวมทั้งบริษัท</span><span class="track"><i style="width:50%"></i></span></div>
+      <div class="g"><span>แยกฝ่าย</span><span class="track"><i style="width:65%"></i></span></div></div></div>
+    </div>
+    <div class="lock"><div>🔒 ผลเปิดให้ดูหลังปิดโหวตเท่านั้น</div></div>
+   </div>
+  </div>
+  <div class="card admin"><span class="lbl">Super-admin</span>
+   <span class="tg on"><i></i>เปิดโหวต</span><span class="tg"><i></i>ปิดโหวต</span><span class="tg"><i></i>ซ่อนจากหน้าแรก</span>
+  </div>
+ </div>
+</div>
+</body></html>
