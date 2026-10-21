@@ -1,0 +1,79 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>Y-Point 2026 mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#ff6b35;--navy:#003681;--bg:#f5f6f8;--card:#fff;--border:#e3e5e8;--text:#2b2f33;--muted:#6f7580;--ok:#1c6b3c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans Thai",sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.topbar{background:var(--navy);color:#fff;height:62px}
+.in{width:1300px;margin:0 auto;height:100%;display:flex;align-items:center;gap:26px}
+.brand{font-weight:800;font-size:17px;white-space:nowrap}
+.nav{display:flex;gap:22px;font-size:14px;color:#dbe6ff}
+.nav b{color:#fff;border-bottom:2px solid var(--brand);padding-bottom:3px}
+.who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px}
+.av{width:32px;height:32px;border-radius:50%;background:#dfe9ff;color:var(--navy);display:grid;place-items:center;font-weight:800}
+.main{width:1300px;margin:20px auto 0}
+.flash{background:#e8f7ee;border:1px solid #b8e5c8;color:var(--ok);border-radius:10px;padding:9px 14px;font-size:14px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px rgba(15,30,60,.04)}
+.top{padding:18px 22px;display:grid;grid-template-columns:1fr 430px;gap:24px;align-items:start}
+h1{font-size:22px;color:#1f2430}
+.hint{color:var(--muted);font-size:13px}
+.tiles{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:14px}
+.tile{border:1px solid var(--border);border-radius:12px;padding:10px 14px}
+.tile .n{font-size:12px;color:var(--muted);font-weight:700}
+.tile .p{font-size:30px;font-weight:800;color:var(--navy);line-height:1.2}
+.tile.y{background:#dcebfc;border:2px solid #9dbfe6}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--muted);font-weight:600;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+td{padding:5px 8px;border-bottom:1px solid var(--border)}
+td.r,th.r{text-align:right}
+tr.tot td{font-weight:800;border-bottom:0}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:16px}
+.rc{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pic{height:150px;display:grid;place-items:center;font-size:64px;background:radial-gradient(circle at 50% 40%,#ff7a59,#c8102e 75%);position:relative}
+.pic .tag{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#fff;color:#1f2430;font-weight:800;font-size:13px;border-radius:8px;padding:2px 10px;white-space:nowrap}
+.body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;flex:1}
+.nm{font-weight:700;font-size:14px;line-height:1.35}
+.cost{font-size:19px;font-weight:800;color:var(--brand)}
+.cost small{font-size:12px;color:var(--muted);font-weight:600}
+.mine{color:var(--ok);font-weight:700;font-size:12.5px}
+.form{display:flex;gap:6px;margin-top:auto;padding-top:6px}
+.qty{width:52px;border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:14px}
+.btn{flex:1;background:var(--brand);color:#fff;border-radius:8px;text-align:center;font-weight:800;font-size:14px;padding:5px 0}
+</style></head><body>
+<div class="topbar"><div class="in">
+  <div class="brand">🎯 Y-Tracking &amp; Proactive</div>
+  <div class="nav"><span>คีย์คะแนน</span><span>คะแนน Y-Tracking</span><span>Rising Star</span><span>คู่มือ</span><b>แต้ม Y แลกของ</b></div>
+  <div class="who"><div class="av">พ</div>พนักงานตัวอย่าง</div>
+</div></div>
+<div class="main">
+  <div class="flash">✅ แลก เครื่องชงกาแฟ 2 สิทธิ์แล้ว (ใช้ 8 แต้ม)</div>
+  <div class="card top">
+    <div>
+      <h1>🎁 แต้ม Y แลกของ</h1>
+      <p class="hint">ใช้แต้ม Y แลก <b>สิทธิ์จับสลาก</b> ของรางวัลที่อยากได้ — แลกชิ้นเดียวกันหลายสิทธิ์ได้ ยิ่งมากยิ่งมีโอกาส · <b>แลกหรือยกเลิกได้ถึงวันปิดแลก</b></p>
+      <div class="tiles">
+        <div class="tile y"><div class="n">แต้มคงเหลือ</div><div class="p">19</div></div>
+        <div class="tile"><div class="n">ได้ทั้งหมด (ปีประเมิน 2026)</div><div class="p">27</div></div>
+        <div class="tile"><div class="n">ใช้แลกไปแล้ว</div><div class="p">8</div></div>
+      </div>
+    </div>
+    <table>
+      <tr><th>ที่มาของแต้ม</th><th class="r">คะแนน</th><th>อัตรา</th><th class="r">แต้ม</th></tr>
+      <tr><td>NEW IDEA</td><td class="r">4</td><td>1 = 1</td><td class="r">4</td></tr>
+      <tr><td>NEW DEVELOPMENT</td><td class="r">42</td><td>4 = 1</td><td class="r">10</td></tr>
+      <tr><td>NEW CONNECTIONS</td><td class="r">7</td><td>2 = 1</td><td class="r">3</td></tr>
+      <tr><td>NEW EXPERIENCE · CONTRIBUTE</td><td class="r">20</td><td>3 = 1</td><td class="r">6</td></tr>
+      <tr><td>ใบเขียว 🍀</td><td class="r">4</td><td>1 = 1</td><td class="r">4</td></tr>
+      <tr class="tot"><td>รวม</td><td></td><td></td><td class="r">27</td></tr>
+    </table>
+  </div>
+  <div class="grid">
+    <div class="rc"><div class="pic">🌀<span class="tag">ใช้ 1 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">พัดลมตั้งโต๊ะ</div><div class="cost">1 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 214 สิทธิ์ · 96 คน</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+    <div class="rc"><div class="pic">🍲<span class="tag">ใช้ 3 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">หม้ออัดแรงดัน</div><div class="cost">3 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 88 สิทธิ์ · 41 คน</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+    <div class="rc"><div class="pic">☕<span class="tag">ใช้ 4 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">เครื่องชงกาแฟ</div><div class="cost">4 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 127 สิทธิ์ · 52 คน</div><div class="mine">ของฉัน 2 สิทธิ์</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+    <div class="rc"><div class="pic">⌚<span class="tag">ใช้ 5 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">สายรัดข้อมืออัจฉริยะ</div><div class="cost">5 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 103 สิทธิ์ · 38 คน</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+    <div class="rc"><div class="pic">📱<span class="tag">ใช้ 8 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">สมาร์ทโฟน</div><div class="cost">8 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 156 สิทธิ์ · 44 คน</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+    <div class="rc"><div class="pic">🤖<span class="tag">ใช้ 10 แต้ม = 1 สิทธิ์</span></div><div class="body"><div class="nm">หุ่นยนต์ดูดฝุ่น</div><div class="cost">10 แต้ม <small>/ 1 สิทธิ์</small></div><div class="hint">แลกไปแล้ว 171 สิทธิ์ · 39 คน</div><div class="form"><span class="qty">1</span><span class="btn">แลก</span></div></div></div>
+  </div>
+</div>
+</body></html>
