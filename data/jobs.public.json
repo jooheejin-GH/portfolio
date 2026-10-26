@@ -2685,7 +2685,7 @@
       "สัมภาษณ์ Persona ต่อ เก็บข้อเสนอ ปรับเป็นเวอร์ชันใหม่ เทียบก่อน/หลัง",
       "รายงาน A4/PDF ลิงก์แชร์ ส่งออก/นำเข้า JSON (ข้อมูลอยู่ในเบราว์เซอร์)",
       "ล็อกอินผ่าน Factory SSO · โควตา AI ต่อคนต่อวัน · Demo Mode เมื่อไม่มีคีย์",
-      "Docker standalone ไม่ใช่ root · เทสอัตโนมัติ 74 รายการ"
+      "Docker standalone ไม่ใช่ root · เทสอัตโนมัติ 80 รายการ · ทดสอบกับ Claude จริงแล้ว"
     ],
     "company": "SDC & SBK",
     "department": "Marketing & Event",
@@ -2698,7 +2698,7 @@
       "Docker",
       "App Factory SSO"
     ],
-    "status": "pilot",
+    "status": "live",
     "highlight": false,
     "login": true
   }
