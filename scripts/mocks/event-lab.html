@@ -1,0 +1,132 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>Event Lab mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0f766e;--brand-dark:#115e59;--soft:#e6f4f1;--bg:#f8fafc;--line:#e2e8f0;--ink:#0f172a;--muted:#475569;--amber:#b45309;--violet:#6d28d9;--rose:#be185d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:"Noto Sans Thai",system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.top{height:56px;background:#fff;border-bottom:1px solid var(--line)}
+.in{width:1300px;margin:0 auto;height:100%;display:flex;align-items:center;gap:22px}
+.portal{font-size:13px;font-weight:600;color:#64748b}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;color:var(--brand-dark)}
+.logo i{width:30px;height:30px;border-radius:8px;background:var(--brand);color:#fff;font-style:normal;font-size:12px;display:grid;place-items:center;font-weight:800}
+.nav{display:flex;gap:4px;font-size:13.5px;font-weight:600}
+.nav span{padding:6px 11px;border-radius:8px;color:#334155}
+.nav b{padding:6px 11px;border-radius:8px;background:var(--soft);color:var(--brand-dark)}
+.who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.pill{border-radius:999px;padding:3px 11px;font-size:12.5px;font-weight:700;background:#d1fae5;color:#065f46}
+.main{width:1300px;margin:16px auto 0}
+.crumb{font-size:13px;font-weight:600;color:var(--brand-dark)}
+h1{font-size:22px;font-weight:800;margin:2px 0 10px}
+h1 small{font-size:15px;font-weight:500;color:var(--muted)}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tab{display:flex;align-items:center;gap:8px;border-radius:12px;padding:8px 13px;font-size:13.5px;font-weight:700;background:#fff;border:1px solid var(--line);color:#1e293b}
+.tab i{width:19px;height:19px;border-radius:50%;background:#e2e8f0;font-style:normal;font-size:11px;display:grid;place-items:center}
+.tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.tab.on i{background:rgba(255,255,255,.28)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.row1{display:grid;grid-template-columns:230px 1fr 1fr;gap:14px}
+.gauge{padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gauge .big{font-size:44px;font-weight:800;line-height:1;color:#047857}
+.gauge .lbl{font-size:11px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;margin-top:6px}
+.b-green{background:#d1fae5;color:#065f46}.b-amber{background:#fef3c7;color:#78350f}.b-slate{background:#f1f5f9;color:#1e293b}.b-violet{background:#ede9fe;color:#4c1d95}.b-red{background:#fee2e2;color:#991b1b}
+.stats{padding:14px 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;align-content:start}
+.stat{background:#f8fafc;border-radius:12px;padding:8px 12px}
+.stat .n{font-size:11px;font-weight:700;color:var(--muted)}
+.stat .v{font-size:24px;font-weight:800}
+.stat .s{font-size:11px;color:var(--muted)}
+.groups{padding:14px 16px}
+.groups h3{font-size:14px;font-weight:800;margin-bottom:8px}
+.g{margin-bottom:9px}
+.g .t{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700}
+.g .t span i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.bar{height:9px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin-top:3px}
+.bar b{display:block;height:100%;border-radius:999px}
+.row2{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px;margin-top:14px}
+.syn{padding:16px 18px}
+.syn h3{font-size:16px;font-weight:800;margin-bottom:6px}
+.syn p{font-size:13.5px}
+.rec{margin-top:10px;background:var(--soft);border-radius:12px;padding:10px 12px}
+.rec h4{font-size:12px;font-weight:800;color:var(--brand-dark)}
+.rec p{font-size:13px}
+.ins{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.i{border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12.5px}
+.i b{display:block;margin-top:3px}
+.pc{padding:14px 16px;display:flex;flex-direction:column}
+.ph{display:flex;gap:10px;align-items:flex-start}
+.av{width:40px;height:40px;border-radius:50%;color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px;flex:none}
+.ph h4{font-size:14.5px;font-weight:800;line-height:1.3}
+.ph h4 span{font-size:12.5px;font-weight:400;color:var(--muted)}
+.sc{margin-left:auto;text-align:right}
+.sc .v{font-size:22px;font-weight:800}
+.sc .s{font-size:10.5px;color:var(--muted)}
+.q{margin-top:10px;font-size:14px}
+.pips{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:12px;color:var(--muted)}
+.pips div{display:flex;justify-content:space-between;align-items:center}
+.pips i{display:flex;gap:2px}
+.pips i b{width:14px;height:9px;border-radius:2px;background:#e2e8f0}
+.pips i b.on{background:var(--brand)}
+.acts{margin-top:auto;padding-top:10px;display:flex;gap:6px}
+.btn{border-radius:10px;padding:6px 11px;font-size:12.5px;font-weight:700;border:1px solid var(--line);background:#fff}
+.btn.p{background:var(--brand);color:#fff;border-color:var(--brand)}
+.disc{margin-top:14px;border:1px solid #fcd34d;background:#fffbeb;color:#78350f;border-radius:12px;padding:8px 14px;font-size:12.5px}
+</style></head><body>
+<div class="top"><div class="in">
+  <span class="portal">← Portal</span>
+  <div class="logo"><i>EL</i>Event Lab</div>
+  <div class="nav"><b>กิจกรรมของฉัน</b><span>คลัง Persona</span><span>ตั้งค่า / ข้อมูล</span></div>
+  <div class="who"><span>สมหญิง รักงาน</span><span class="pill">AI · เหลือ 41/60 หน่วย</span></div>
+</div></div>
+<div class="main">
+  <div class="crumb">← กิจกรรมทั้งหมด</div>
+  <h1>ตลาดนัดงานคราฟต์กลางเมือง <small>· เวอร์ชัน 2</small></h1>
+  <div class="tabs">
+    <div class="tab"><i>1</i>ไอเดีย</div><div class="tab"><i>2</i>เลือกกลุ่มลูกค้า</div><div class="tab on"><i>3</i>ผลและสัมภาษณ์</div><div class="tab"><i>4</i>เวอร์ชัน / เทียบ</div><div class="tab"><i>5</i>รายงาน</div>
+  </div>
+  <div class="row1">
+    <div class="card gauge">
+      <svg viewBox="0 0 140 90" width="170"><path d="M16 74 A54 54 0 0 1 124 74" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/><path d="M16 74 A54 54 0 0 1 124 74" fill="none" stroke="#047857" stroke-width="12" stroke-linecap="round" stroke-dasharray="122 170"/><text x="70" y="64" text-anchor="middle" font-size="28" font-weight="700" fill="#0f172a">72</text><text x="70" y="82" text-anchor="middle" font-size="9" fill="#475569">คะแนนรวม /100</text></svg>
+      <span class="badge b-green">ตอบรับดี</span>
+      <div class="lbl" style="margin-top:6px;max-width:170px">คะแนนความคิดเห็นของ Persona จำลอง ไม่ใช่การพยากรณ์ยอดผู้ร่วมงาน</div>
+    </div>
+    <div class="card stats">
+      <div class="stat"><div class="n">ความสนใจ</div><div class="v">4.1</div><div class="s">เฉลี่ย /5</div></div>
+      <div class="stat"><div class="n">แรงจูงใจมาร่วมงาน</div><div class="v">3.6</div><div class="s">เฉลี่ย /5</div></div>
+      <div class="stat"><div class="n">ตรงความสนใจ</div><div class="v">3.9</div><div class="s">เฉลี่ย /5</div></div>
+      <div class="stat"><div class="n">อยากร่วมกิจกรรม</div><div class="v">4.0</div><div class="s">เฉลี่ย /5</div></div>
+      <div style="grid-column:1/-1;font-size:12.5px;color:var(--muted)">ประเมินสำเร็จ 24 คน · มีแรงจูงใจมางานต่ำ (1–2) 4 คน · ผลจาก AI · claude-haiku-5-5</div>
+    </div>
+    <div class="card groups"><h3>เปรียบเทียบรายกลุ่ม</h3>
+      <div class="g"><div class="t"><span><i style="background:#0f766e"></i>ลูกค้าประจำ (6 คน)</span><span>81/100</span></div><div class="bar"><b style="width:81%;background:#0f766e"></b></div></div>
+      <div class="g"><div class="t"><span><i style="background:#b45309"></i>ลูกค้าเป็นครั้งคราว (6 คน)</span><span>74/100</span></div><div class="bar"><b style="width:74%;background:#b45309"></b></div></div>
+      <div class="g"><div class="t"><span><i style="background:#6d28d9"></i>ลูกค้าใหม่ที่มีโอกาส (6 คน)</span><span>70/100</span></div><div class="bar"><b style="width:70%;background:#6d28d9"></b></div></div>
+      <div class="g"><div class="t"><span><i style="background:#be185d"></i>ลูกค้าที่เลือกไปที่อื่น (6 คน)</span><span>61/100</span></div><div class="bar"><b style="width:61%;background:#be185d"></b></div></div>
+    </div>
+  </div>
+  <div class="row2">
+    <div class="card syn"><h3>สรุปภาพรวม</h3>
+      <p>Persona ส่วนใหญ่สนใจส่วนเวิร์กช็อปลงมือทำและการได้พบผู้สร้างงานโดยตรง กลุ่มที่เลือกไปที่อื่นยังกังวลเรื่องที่จอดรถ เวลารอคิว และราคาเวิร์กช็อปที่ยังไม่ชัด</p>
+      <div class="rec"><h4>คำแนะนำ</h4><p>ตอบรับค่อนข้างดี ควรระบุรอบ/ราคาเวิร์กช็อปและเส้นทางเดินทางให้ชัด แล้วยืนยันกับกลุ่มเป้าหมายจริงก่อนลงทุนเต็มรูปแบบ</p></div>
+      <div class="ins">
+        <div class="i"><span class="badge b-green" style="margin:0">จุดแข็ง</span><b>ได้เห็นกระบวนการทำงานจริงของผู้สร้าง</b></div>
+        <div class="i"><span class="badge b-red" style="margin:0">ข้อกังวล</span><b>ยังไม่รู้ค่าใช้จ่ายรวมต่อครอบครัว</b></div>
+        <div class="i"><span class="badge b-slate" style="margin:0">ข้อเสนอ</span><b>เปิดจองรอบเวิร์กช็อปล่วงหน้าพร้อมบอกเวลารอ</b></div>
+        <div class="i"><span class="badge b-violet" style="margin:0">ต้องพิสูจน์</span><b>คนนอกพื้นที่จะเดินทางมาจริงไหม</b></div>
+      </div>
+    </div>
+    <div class="card pc">
+      <div class="ph"><div class="av" style="background:#0f766e">ม</div><div><h4>มะลิ <span>· 38 ปี · นักบัญชี</span></h4><span class="badge b-slate" style="margin-top:2px">ลูกค้าประจำ</span></div><div class="sc"><div class="v">4.3</div><div class="s">เฉลี่ย /5</div></div></div>
+      <p class="q">“สนใจส่วนเวิร์กช็อปที่ลูกทำเองได้ แต่ขอดูตารางรอบกับที่นั่งพักก่อนตัดสินใจมา”</p>
+      <div class="pips"><div>ความสนใจ<i><b class="on"></b><b class="on"></b><b class="on"></b><b class="on"></b><b class="on"></b></i></div><div>มางาน<i><b class="on"></b><b class="on"></b><b class="on"></b><b class="on"></b><b></b></i></div><div>ตรงกลุ่ม<i><b class="on"></b><b class="on"></b><b class="on"></b><b class="on"></b><b></b></i></div><div>ร่วมทำ<i><b class="on"></b><b class="on"></b><b class="on"></b><b class="on"></b><b></b></i></div></div>
+      <div class="acts"><span class="btn p">สัมภาษณ์ต่อ</span><span class="btn">+ เก็บข้อเสนอ</span></div>
+    </div>
+    <div class="card pc">
+      <div class="ph"><div class="av" style="background:#be185d">อ</div><div><h4>เอก <span>· 40 ปี · ผู้จัดการฝ่ายขาย</span></h4><span class="badge b-slate" style="margin-top:2px">ลูกค้าที่เลือกไปที่อื่น</span></div><div class="sc"><div class="v">2.8</div><div class="s">เฉลี่ย /5</div></div></div>
+      <p class="q">“ถ้ามีของสะสมเฉพาะงานหรือศิลปินที่ชอบจริง ๆ ถึงจะยอมขับมา เรื่องที่จอดรถยังเป็นอุปสรรคหลัก”</p>
+      <div class="pips"><div>ความสนใจ<i><b class="on"></b><b class="on"></b><b class="on"></b><b></b><b></b></i></div><div>มางาน<i><b class="on"></b><b class="on"></b><b></b><b></b><b></b></i></div><div>ตรงกลุ่ม<i><b class="on"></b><b class="on"></b><b class="on"></b><b></b><b></b></i></div><div>ร่วมทำ<i><b class="on"></b><b class="on"></b><b class="on"></b><b></b><b></b></i></div></div>
+      <div class="acts"><span class="btn p">สัมภาษณ์ต่อ</span><span class="btn">+ เก็บข้อเสนอ</span></div>
+    </div>
+  </div>
+  <div class="disc"><b>โปรดทราบ:</b> ผลทั้งหมดมาจาก Persona จำลอง ไม่ใช่ผลสำรวจลูกค้าจริง และไม่ใช่การพยากรณ์จำนวนผู้ร่วมงานหรือยอดขาย ใช้เป็นจุดตั้งต้นให้ตั้งคำถามและเตรียมการวิจัยจริงเท่านั้น</div>
+</div>
+</body></html>
