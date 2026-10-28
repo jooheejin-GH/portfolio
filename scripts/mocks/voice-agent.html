@@ -1,0 +1,143 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>Voice Agent mock</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f2ee;--surface:#fff;--surface-2:#faf8f5;--ink:#1b1d21;--ink-2:#4a4e57;--muted:#8a8f99;--line:#e4e0d8;--accent:#1f6f5c;--call:#18794e;--hang:#c9372c;--warn-bg:#fff4e0;--warn-line:#f0b44c;--ok-bg:#e8f5ee;--run-bg:#e9f0fb;--code-bg:#f1eee8;--shadow:0 1px 2px rgba(20,20,20,.04),0 6px 24px rgba(20,20,20,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",monospace}
+.bar{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--line);background:var(--surface)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.brand strong{font-size:19px}
+.brand .sub{color:var(--muted);font-size:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface-2)}
+.seg span{font-size:14px;padding:6px 15px;border-radius:999px;color:var(--ink-2)}
+.seg span.on{background:var(--ink);color:#fff;font-weight:600}
+.main{display:grid;grid-template-columns:430px 1fr 1.08fr;gap:20px;padding:22px 32px 0;height:740px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.call{height:696px;display:flex;flex-direction:column;align-items:center;padding:34px 28px 26px;text-align:center}
+.orb{position:relative;width:300px;height:300px;display:grid;place-items:center;margin-top:6px}
+.orb .r{position:absolute;border-radius:50%}
+.orb .r1{inset:0;background:radial-gradient(circle,rgba(31,111,92,.20) 0%,rgba(31,111,92,.08) 48%,transparent 70%)}
+.orb .r2{inset:34px;border:2px solid rgba(31,111,92,.16)}
+.orb .r3{inset:62px;border:2px solid rgba(31,111,92,.26)}
+.face{position:relative;width:150px;height:150px;border-radius:50%;display:grid;place-items:center;font-size:46px;font-weight:700;background:var(--accent);color:#fff;box-shadow:0 10px 30px rgba(31,111,92,.35)}
+.wave{display:flex;gap:5px;align-items:center;height:34px;margin:4px 0 10px}
+.wave i{display:block;width:5px;border-radius:3px;background:var(--accent);opacity:.85}
+.state{font-size:26px;font-weight:600}
+.meta{color:var(--muted);font-size:14.5px;margin-top:2px}
+.actions{display:flex;gap:12px;margin-top:22px;align-items:center}
+.btn-hang{min-width:168px;padding:13px 28px;border-radius:999px;font-size:18px;font-weight:700;color:#fff;background:var(--hang)}
+.btn-ghost{padding:10px 18px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);font-size:15px}
+.cost{display:flex;gap:26px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line);width:100%;justify-content:center}
+.cost div{display:grid}
+.cost dt{color:var(--muted);font-size:13px}
+.cost dd{font-family:"IBM Plex Mono",monospace;font-size:15px}
+.cost .total dd{font-family:inherit;font-size:20px;font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;height:696px;display:flex;flex-direction:column}
+.panel h2{font-size:16px;color:var(--ink-2);font-weight:600;margin-bottom:14px}
+.panel h2 .c{color:var(--muted);font-weight:400}
+.tr{display:grid;gap:10px;align-content:start;flex:1}
+.b{max-width:88%;padding:9px 14px;border-radius:14px;font-size:15.5px}
+.b.u{justify-self:end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.b.a{justify-self:start;background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.b.a.live{border-color:var(--accent);box-shadow:0 0 0 3px rgba(31,111,92,.10)}
+.b.s{justify-self:center;color:var(--muted);font-size:13.5px;padding:0 8px}
+.typer{display:flex;gap:8px;margin-top:12px}
+.typer .in{flex:1;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-size:15px}
+.tasks{display:grid;gap:12px;align-content:start}
+.task{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.task.done{background:var(--ok-bg)}
+.task.run{background:var(--run-bg)}
+.head{display:flex;gap:10px;align-items:baseline}
+.num{font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:13px}
+.text{font-weight:600;flex:1}
+.chip{font-size:12.5px;padding:2px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;white-space:nowrap}
+.chip.ok{border-color:#9fd3b6;color:#13603d}
+.chip.go{border-color:#a9c1ea;color:#1d4f9c}
+.spoken{font-size:16px;font-weight:600;color:#13603d}
+.det summary{color:var(--accent);font-size:14px;list-style:none}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;background:var(--surface);border-radius:8px;overflow:hidden}
+td{padding:4px 10px;border-bottom:1px solid var(--line)}
+td:first-child{font-family:"IBM Plex Mono",monospace}
+td:last-child{color:#13603d;text-align:right;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.more{font-size:13px;color:var(--muted);margin-top:4px}
+.foot{color:var(--muted);font-size:13px}
+.prog{list-style:none;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2);display:grid;gap:2px}
+.approval{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.approval h3{font-size:16px}
+.approval .why{color:var(--ink-2);font-size:14px}
+.approval code{display:block;font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--code-bg);border-radius:8px;padding:7px 10px}
+.row{display:flex;gap:10px;align-items:center}
+.ok-btn{padding:8px 20px;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-size:15px}
+.no-btn{padding:7px 18px;border-radius:999px;border:1px solid var(--hang);color:var(--hang);font-weight:600;font-size:15px}
+.left{margin-left:auto;color:var(--muted);font-size:13.5px}
+</style></head><body>
+<header class="bar">
+  <div class="brand"><span class="dot"></span><strong>โกคู</strong><span class="sub">Voice Agent · pilot</span></div>
+  <div class="seg"><span class="on">Gemini Live</span><span>OpenAI Realtime</span></div>
+</header>
+<div class="main">
+  <section class="card call">
+    <div class="orb"><div class="r r1"></div><div class="r r2"></div><div class="r r3"></div><div class="face">โก</div></div>
+    <div class="wave">
+      <i style="height:10px"></i><i style="height:18px"></i><i style="height:28px"></i><i style="height:16px"></i><i style="height:32px"></i><i style="height:22px"></i><i style="height:12px"></i><i style="height:26px"></i><i style="height:34px"></i><i style="height:20px"></i><i style="height:14px"></i><i style="height:24px"></i><i style="height:9px"></i>
+    </div>
+    <p class="state">กำลังพูด…</p>
+    <p class="meta mono">02:47 · Gemini Live</p>
+    <div class="actions"><span class="btn-hang">วางสาย</span><span class="btn-ghost">ปิดไมค์</span></div>
+    <dl class="cost">
+      <div><dt>ชั้นเสียง</dt><dd>$0.021</dd></div>
+      <div><dt>โกคูทำงาน</dt><dd>$0.094</dd></div>
+      <div class="total"><dt>รวมสายนี้</dt><dd>≈ ฿4</dd></div>
+    </dl>
+  </section>
+
+  <section class="panel">
+    <h2>บทสนทนา</h2>
+    <div class="tr">
+      <div class="b u">เช็ก container บน server ให้หน่อย</div>
+      <div class="b a">ได้ครับ ให้โกคูเข้าไปดูให้แล้ว ระหว่างนี้คุยต่อได้เลยครับ</div>
+      <div class="b s">ส่งงาน #1 ให้โกคู</div>
+      <div class="b u">แล้วโปรเจกต์ล่าสุดค้างอะไรอยู่บ้าง</div>
+      <div class="b a">รับทราบครับ ส่งให้อีกงานแล้ว เดี๋ยวสรุปให้ฟังครับ</div>
+      <div class="b s">ส่งงาน #2 ให้โกคู · งาน #1 เสร็จ</div>
+      <div class="b a live">เช็กเสร็จแล้วครับ container ทำงานปกติครบ 13 ตัว ไม่มีตัวไหนรีสตาร์ตวน รายละเอียดอยู่บนจอครับ</div>
+      <div class="b u">โอเค ส่งสรุปนี้เข้าเมลทีมด้วย</div>
+      <div class="b s">งาน #3 รอกดอนุมัติบนจอ</div>
+    </div>
+    <div class="typer"><div class="in">พิมพ์แทนการพูด…</div><span class="btn-ghost">ส่ง</span></div>
+  </section>
+
+  <section class="panel">
+    <h2>งานของโกคู <span class="c">3 งาน</span></h2>
+    <div class="tasks">
+      <div class="task done">
+        <div class="head"><span class="num">#1</span><span class="text">เช็ก container บน server</span><span class="chip ok">เสร็จ</span></div>
+        <p class="spoken">เสร็จ — 13 container ทำงานปกติ</p>
+        <div class="det"><summary>▾ รายละเอียด</summary>
+          <table>
+            <tr><td>portal-web</td><td>Up 6 วัน · healthy</td></tr>
+            <tr><td>factory-app</td><td>Up 2 วัน · healthy</td></tr>
+            <tr><td>tracker-api</td><td>Up 11 วัน</td></tr>
+            <tr><td>assessment-web</td><td>Up 4 วัน</td></tr>
+          </table>
+          <p class="more">+ อีก 9 container สถานะ Up · ไม่มี restart ซ้ำใน 24 ชม.</p>
+        </div>
+        <div class="foot">18 วิ · $0.041</div>
+      </div>
+      <div class="task run">
+        <div class="head"><span class="num">#2</span><span class="text">สรุปงานค้างของโปรเจกต์ล่าสุด</span><span class="chip go">กำลังทำ</span></div>
+        <ul class="prog"><li>Read CONTEXT.md</li><li>Bash git log --oneline -5</li><li>Grep "ค้าง" docs/ …</li></ul>
+      </div>
+      <div class="approval">
+        <h3>ขออนุมัติ · งาน #3 ส่งเมล</h3>
+        <p class="why">ส่งเมลออกนอกเครื่อง ต้องกดยืนยันบนจอ (ไม่รับคำยืนยันด้วยเสียง)</p>
+        <code>ส่งเมล "สรุปสถานะ container วันนี้" → ทีม IT</code>
+        <div class="row"><span class="ok-btn">อนุมัติ</span><span class="no-btn">ไม่อนุมัติ</span><span class="left mono">เหลือ 104 วิ</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+</body></html>
