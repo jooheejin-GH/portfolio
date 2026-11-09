@@ -12,7 +12,7 @@
 :root{
   --bg:#f6f5f1; --surface:#ffffff; --surface-2:#efeee9; --ink:#16181d; --ink-2:#4a4f59; --ink-3:#7c818b;
   --line:#e2e0d8; --focus:#1f5eff;
-  --sdc:#1f5eff; --sbk:#f97316; --yoyo:#d6336c; --both:#6d5bd0;
+  --sdc:#1f5eff; --sbk:#f97316; --yoyo:#d6336c; --both:#6d5bd0; --pxc:#0f766e;
   --c-webapp:#1f5eff; --c-line-bot:#06a94d; --c-automation:#d97706; --c-ai:#8b5cf6; --c-infra:#475569;
   --radius:14px; --shadow:0 1px 2px rgba(20,20,30,.05),0 6px 24px rgba(20,20,30,.06);
 }
@@ -20,13 +20,13 @@
   :root:not([data-theme="light"]){
     --bg:#111317; --surface:#1a1d23; --surface-2:#22262e; --ink:#eceef2; --ink-2:#b3b8c2; --ink-3:#848a95;
     --line:#2c313a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
-    --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595;
+    --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595; --pxc:#2dd4bf;
   }
 }
 :root[data-theme="dark"]{
   --bg:#111317; --surface:#1a1d23; --surface-2:#22262e; --ink:#eceef2; --ink-2:#b3b8c2; --ink-3:#848a95;
   --line:#2c313a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
-  --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595;
+  --sdc:#5b8bff; --c-webapp:#5b8bff; --c-line-bot:#2fcf74; --c-automation:#f0a53a; --c-ai:#a78bfa; --c-infra:#94a3b8; --both:#9a8cf0; --yoyo:#f06595; --pxc:#2dd4bf;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -107,7 +107,7 @@ section{padding:36px 0}
 .card .tag{margin:0;color:var(--ink-2);font-size:15px;line-height:1.5}
 .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto;font-size:12.5px;color:var(--ink-3)}
 .badge{border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:500;border:1px solid currentColor}
-.b-SDC{color:var(--sdc)} .b-SBK{color:var(--sbk)} .b-YOYO{color:var(--yoyo)} .b-BOTH{color:var(--both)}
+.b-SDC{color:var(--sdc)} .b-SBK{color:var(--sbk)} .b-YOYO{color:var(--yoyo)} .b-BOTH{color:var(--both)} .b-PXC{color:var(--pxc)}
 .st{display:inline-flex;align-items:center;gap:5px}
 .st i{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
 .st.live i{background:#16a34a;box-shadow:0 0 0 3px color-mix(in srgb,#16a34a 22%,transparent)}
@@ -199,7 +199,7 @@ const STATUS = {live:"ใช้งานจริง",done:"ส่งมอบ�
 const QORD = j => j.year*10 + +j.quarter.slice(1);
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const coClass = c => c==="SDC"?"SDC":c==="SBK"?"SBK":c==="YOYO Land"?"YOYO":"BOTH";
+const coClass = c => c==="SDC"?"SDC":c==="SBK"?"SBK":c==="YOYO Land"?"YOYO":c==="PXC"?"PXC":"BOTH";
 
 JOBS.forEach((j,i)=>{ j._i=i; j._t=(j.title+" "+j.tagline+" "+j.solution+" "+(j.tools||[]).join(" ")+" "+j.department+" "+j.company).toLowerCase(); });
 const sorted = [...JOBS].sort((a,b)=> QORD(b)-QORD(a) || a._i-b._i);
@@ -248,7 +248,7 @@ const state={q:"",cat:"",co:"",year:"",demo:""};
 function chips(){
   const mk=(key,val,label,dot)=>`<button type="button" class="chip" data-k="${key}" data-v="${esc(val)}" aria-pressed="${state[key]===val}">${dot?`<i style="background:${dot}"></i>`:""}${esc(label)}</button>`;
   document.getElementById("fcat").innerHTML=mk("cat","","ทุกประเภท")+CATS.map(c=>mk("cat",c,CAT[c].th,`var(--c-${c})`)).join("");
-  const cos=["SDC","SBK","SDC & SBK","YOYO Land"].filter(c=>JOBS.some(j=>j.company===c));
+  const cos=["SDC","SBK","SDC & SBK","YOYO Land","PXC"].filter(c=>JOBS.some(j=>j.company===c));
   const yrs=[...new Set(JOBS.map(j=>String(j.year)))].sort().reverse();
   document.getElementById("fmore").innerHTML=mk("co","","ทุกบริษัท")+cos.map(c=>mk("co",c,c)).join("")+`<span style="width:8px"></span>`+mk("year","","ทุกปี")+yrs.map(y=>mk("year",y,y)).join("")+(JOBS.some(j=>j.demo)?`<span style="width:8px"></span>`+mk("demo","1","▶ มีเดโม"):"");
 }
