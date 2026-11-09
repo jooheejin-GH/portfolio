@@ -1,0 +1,115 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>AI Interview mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f1ec;--card:#fff;--ink:#22201d;--ink2:#55504a;--muted:#8d867d;--line:#e8e1d8;--brew:#8a5a3c;--brew2:#c98b5e;--ok:#1f8a5b;--ok-bg:#e7f5ee;--warn:#c2410c;--warn-bg:#fff1e6;--bad:#c9372c;--shadow:0 1px 2px rgba(30,20,10,.04),0 8px 26px rgba(30,20,10,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;background:var(--bg);color:var(--ink);font:16px/1.5 Anuphan,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",monospace}
+.bar{height:62px;display:flex;align-items:center;gap:18px;padding:0 30px;background:var(--card);border-bottom:1px solid var(--line)}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--brew);display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px}
+.brand strong{font-size:19px;display:block;line-height:1.1}.brand span{font-size:13px;color:var(--muted)}
+.scn{margin-left:22px;display:flex;align-items:center;gap:8px;background:var(--warn-bg);color:var(--warn);border:1px solid #f6c9a6;border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.sp{flex:1}
+.timer{font-size:20px;color:var(--ink2)}
+.rec{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--bad);font-weight:600}.rec i{width:9px;height:9px;border-radius:50%;background:var(--bad)}
+.end{background:var(--ink);color:#fff;border-radius:10px;padding:9px 16px;font-weight:600;font-size:14px}
+.main{display:grid;grid-template-columns:400px 1fr 400px;gap:20px;padding:20px 30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.cust{height:698px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.face{width:250px;height:250px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fbe3cf,#f3cfb2);display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 6px #fff,0 0 0 2px #f2c7a4}
+.speak{display:flex;gap:4px;align-items:center;height:28px;margin:14px 0 6px}.speak i{display:block;width:5px;border-radius:3px;background:var(--brew2)}
+.who{font-size:20px;font-weight:700}.who small{display:block;font-size:14px;font-weight:500;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 18px}.tags span{font-size:13px;background:#f4eee7;color:var(--ink2);border-radius:999px;padding:3px 10px}
+.mood{width:100%;text-align:left}.mood .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.mood .lbl b{color:var(--warn);font-weight:700}
+.meter{height:12px;border-radius:999px;background:linear-gradient(90deg,#d9473b,#f08a3c 35%,#f2c14e 60%,#4caf7a);position:relative}
+.meter .pin{position:absolute;left:58%;top:-5px;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translateX(-50%)}
+.trend{font-size:13px;color:var(--ok);margin-top:8px;font-weight:600}
+.self{margin-top:auto;width:100%;display:flex;gap:12px;align-items:center;background:#f8f5f1;border:1px solid var(--line);border-radius:14px;padding:10px}
+.cam{width:92px;height:68px;border-radius:10px;background:#3a3631;display:grid;place-items:center;flex:none}
+.sig{text-align:left;font-size:13px;color:var(--ink2);line-height:1.6}.sig b{color:var(--ink)}
+.chat{height:698px;padding:20px 24px;display:flex;flex-direction:column;gap:12px}
+.chat h3,.score h3{font-size:15px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between}
+.msg{max-width:78%;padding:11px 15px;border-radius:16px;font-size:16px;line-height:1.5}
+.c{align-self:flex-start;background:#f4eee7;border-bottom-left-radius:5px}
+.s{align-self:flex-end;background:var(--brew);color:#fff;border-bottom-right-radius:5px}
+.meta{font-size:12px;color:var(--muted);margin:-6px 4px 0}.meta.r{align-self:flex-end}
+.steps{align-self:flex-end;display:flex;gap:6px;margin-top:-4px}.steps span{font-size:12.5px;font-weight:600;background:var(--ok-bg);color:var(--ok);border-radius:999px;padding:2px 10px}
+.typing{align-self:flex-start;color:var(--muted);font-size:14px;margin-top:auto}
+.score{height:698px;padding:22px 24px;display:flex;flex-direction:column}
+.total{display:flex;align-items:baseline;gap:8px;margin:6px 0 4px}.total b{font-size:58px;line-height:1;color:var(--ink)}.total span{font-size:20px;color:var(--muted)}
+.pass{display:inline-block;font-size:13px;font-weight:700;color:var(--ok);background:var(--ok-bg);border-radius:999px;padding:3px 11px;margin-bottom:16px}
+.row{margin-bottom:13px}.row .t{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:5px}.row .t em{font-style:normal;color:var(--ink2)}
+.bar2{height:8px;border-radius:999px;background:#efe8df;overflow:hidden}.bar2 i{display:block;height:100%;border-radius:999px;background:var(--brew2)}
+.bar2 i.lo{background:#e08a4a}
+.miss{margin-top:6px;background:var(--warn-bg);border:1px solid #f6c9a6;border-radius:12px;padding:11px 13px;font-size:14px;color:#8a3a10;line-height:1.55}
+.tip{margin-top:10px;background:#f8f5f1;border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:14px;color:var(--ink2);line-height:1.55}
+.miss b,.tip b{color:var(--ink)}
+</style></head><body>
+<div class="bar">
+  <div class="logo">AI</div>
+  <div class="brand"><strong>AI Interview</strong><span>ฝึกรับมือลูกค้า · ร้านกาแฟ</span></div>
+  <div class="scn">⚠︎ สถานการณ์: ได้เครื่องดื่มผิด + ลูกค้ารีบ</div>
+  <div class="sp"></div>
+  <div class="rec"><i></i>กำลังฝึก</div>
+  <div class="timer mono">04:12</div>
+  <div class="end">จบการฝึก</div>
+</div>
+<div class="main">
+  <div class="card cust">
+    <div class="face">
+      <svg width="190" height="200" viewBox="0 0 190 200" aria-hidden="true">
+        <path d="M30 92c0-50 30-78 65-78s65 28 65 78c0 10-2 18-5 24-6-30-24-50-60-54-30 4-52 22-60 54-3-6-5-14-5-24z" fill="#3b2a22"/>
+        <ellipse cx="95" cy="112" rx="56" ry="66" fill="#f6d2b4"/>
+        <path d="M39 100c4-40 26-62 56-62s52 22 56 62c-12-26-30-38-56-40-26 2-44 14-56 40z" fill="#3b2a22"/>
+        <path d="M62 96l22 6M128 96l-22 6" stroke="#3b2a22" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="74" cy="113" rx="6" ry="7" fill="#2a1d17"/><ellipse cx="116" cy="113" rx="6" ry="7" fill="#2a1d17"/>
+        <path d="M95 118v18l-6 3" stroke="#d9a98a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M80 156c8-5 22-5 30 0" stroke="#a5523d" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="60" cy="138" rx="9" ry="5" fill="#f2a98e" opacity=".55"/><ellipse cx="130" cy="138" rx="9" ry="5" fill="#f2a98e" opacity=".55"/>
+      </svg>
+    </div>
+    <div class="speak"><i style="height:8px"></i><i style="height:18px"></i><i style="height:26px"></i><i style="height:14px"></i><i style="height:22px"></i><i style="height:10px"></i><i style="height:20px"></i><i style="height:7px"></i></div>
+    <div class="who">ลูกค้า AI<small>พนักงานออฟฟิศ · รีบเข้าประชุม</small></div>
+    <div class="tags"><span>วัย 30+</span><span>พูดเร็ว</span><span>ใจร้อน</span><span>เสียงผู้หญิง</span></div>
+    <div class="mood">
+      <div class="lbl"><span>อารมณ์ลูกค้า</span><b>หงุดหงิด → เริ่มใจเย็น</b></div>
+      <div class="meter"><div class="pin"></div></div>
+      <div class="lbl" style="margin-top:6px"><span>โกรธ</span><span>พอใจ</span></div>
+      <div class="trend">▲ ดีขึ้นหลังพนักงานเสนอทำแก้วใหม่</div>
+    </div>
+    <div class="self">
+      <div class="cam"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#9c948a" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+      <div class="sig">กล้องพนักงาน (วิเคราะห์ในเครื่อง)<br><b>ยิ้ม 41%</b> · <b>มองกล้อง 87%</b> · <b>พูดเร็ว</b> ช่วงแรก</div>
+    </div>
+  </div>
+
+  <div class="card chat">
+    <h3><span>บทสนทนา</span><span>ถอดเสียงอัตโนมัติ</span></h3>
+    <div class="msg c">สั่งลาเต้เย็นหวานน้อยนะคะ ทำไมได้อเมริกาโน่มา ฉันรีบมากเลย</div>
+    <div class="meta">ลูกค้า · 00:08</div>
+    <div class="msg s">ขออภัยจริง ๆ ค่ะ ขอทวนออเดอร์นะคะ ลาเต้เย็น หวานน้อย ใช่ไหมคะ</div>
+    <div class="steps"><span>✓ ขอโทษ</span><span>✓ ทวนออเดอร์</span></div>
+    <div class="msg c">ใช่ค่ะ แล้วต้องรออีกนานไหม อีกสิบนาทีต้องเข้าประชุมแล้ว</div>
+    <div class="meta">ลูกค้า · 00:31</div>
+    <div class="msg s">จะทำแก้วใหม่ให้ก่อนคิวอื่นเลยค่ะ ประมาณ 3 นาที ระหว่างนี้รับน้ำเปล่าไว้ก่อนไหมคะ</div>
+    <div class="steps"><span>✓ เสนอทางแก้</span><span>✓ แจ้งเวลารอ</span></div>
+    <div class="msg c">โอเค ได้ค่ะ ขอบคุณนะ</div>
+    <div class="meta">ลูกค้า · 01:02</div>
+    <div class="typing">ลูกค้า AI กำลังฟัง…</div>
+  </div>
+
+  <div class="card score">
+    <h3><span>คะแนนตามรูบริก</span><span>ตัวอย่าง</span></h3>
+    <div class="total"><b class="mono">86</b><span>/ 100</span></div>
+    <div><span class="pass">ผ่านเกณฑ์</span></div>
+    <div class="row"><div class="t"><span>ขอโทษและรับฟัง</span><em class="mono">20/20</em></div><div class="bar2"><i style="width:100%"></i></div></div>
+    <div class="row"><div class="t"><span>ทวนปัญหาให้ตรง</span><em class="mono">18/20</em></div><div class="bar2"><i style="width:90%"></i></div></div>
+    <div class="row"><div class="t"><span>ทำตามขั้นตอนของร้าน</span><em class="mono">25/30</em></div><div class="bar2"><i style="width:83%"></i></div></div>
+    <div class="row"><div class="t"><span>แจ้งเวลา / ทางเลือก</span><em class="mono">15/15</em></div><div class="bar2"><i style="width:100%"></i></div></div>
+    <div class="row"><div class="t"><span>ปิดการสนทนา</span><em class="mono">8/15</em></div><div class="bar2"><i class="lo" style="width:53%"></i></div></div>
+    <div class="miss"><b>จุดที่พลาด</b> — ยังไม่ได้แจ้งการชดเชยตามขั้นตอนข้อ 4 ก่อนจบการสนทนา</div>
+    <div class="tip"><b>คำแนะนำ</b> — ช่วงแรกพูดเร็ว ลองชะลอและสบตาลูกค้าตอนขอโทษ</div>
+  </div>
+</div>
+</body></html>
