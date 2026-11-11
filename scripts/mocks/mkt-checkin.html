@@ -1,0 +1,185 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>MKT Check-in mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e8edf4;--app:#f3f6fa;--card:#fff;--ink:#141a24;--ink2:#465062;--muted:#7b8494;--line:#e3e8ef;--brand:#0f4a86;--ok:#0b7a4b;--ok-bg:#e3f4ea;--warn:#a85a00;--warn-bg:#fdf0dc;--gray-bg:#eceff3;--shadow:0 1px 2px rgba(15,30,60,.05),0 18px 44px rgba(15,30,60,.13)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:800px;overflow:hidden;position:relative;color:var(--ink);font:16px/1.45 Anuphan,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(900px 600px at 88% 8%,#d9e6f6 0%,transparent 70%),radial-gradient(700px 500px at 0% 100%,#dfe9e4 0%,transparent 70%),var(--bg)}
+.mono{font-family:"IBM Plex Mono",monospace}
+.logo{width:30px;height:30px;border-radius:8px;background:#fff;display:grid;place-items:center;flex:none}
+/* admin window */
+.admin{position:absolute;left:30px;top:30px;width:892px;height:740px;border-radius:18px;background:var(--app);box-shadow:var(--shadow);overflow:hidden}
+.nav{height:54px;background:var(--brand);display:flex;align-items:center;gap:6px;padding:0 22px;color:#fff}
+.nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;margin-right:18px}
+.nav a{font-size:14.5px;padding:7px 12px;border-radius:8px;color:#dbe6f5}
+.nav a.on{background:rgba(255,255,255,.16);color:#fff;font-weight:600}
+.nav .who{margin-left:auto;font-size:13px;color:#cfe0f3;text-align:right;line-height:1.3}
+.body{padding:16px 26px 0}
+.crumb{font-size:13px;color:var(--muted)}
+.head{display:flex;align-items:flex-start;gap:12px;margin-top:2px}
+.head h1{font-size:23px;line-height:1.3}
+.head .sub{font-size:13.5px;color:var(--ink2);margin-top:2px;display:flex;align-items:center;gap:6px}
+.head .sub i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 14px;font-weight:600;font-size:14px;white-space:nowrap}
+.head .acts{margin-left:auto;display:flex;gap:8px;margin-top:6px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:12px}
+.tabs span{padding:8px 14px;font-size:14.5px;color:var(--ink2);font-weight:500}
+.tabs span.on{color:var(--brand);font-weight:700;border-bottom:2px solid var(--brand);margin-bottom:-1px}
+.tabs b{font-size:11.5px;background:var(--gray-bg);border-radius:999px;padding:1px 7px;margin-left:4px;color:var(--muted)}
+.days{display:flex;gap:6px;margin-top:12px}
+.days span{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 11px;font-size:13px;color:var(--ink2);white-space:nowrap}
+.days span.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 14px}
+.kpi small{font-size:12.5px;color:var(--muted);display:block}
+.kpi b{font-size:26px;line-height:1.15}
+.kpi b em{font-style:normal;font-size:15px;color:var(--muted);font-weight:500}
+.tbl{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12px;color:var(--muted);font-weight:600;text-align:left;padding:8px 14px;border-bottom:1px solid var(--line);background:#fafbfd}
+td{padding:6px 14px;border-bottom:1px solid #eef1f5;height:57px;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.nm b{display:block;font-size:14.5px}.nm span{font-size:12.5px;color:var(--muted)}
+.pics{display:flex;gap:6px}
+.av{width:40px;height:40px;border-radius:8px;background:var(--b);position:relative;overflow:hidden;flex:none}
+.av:before{content:"";position:absolute;left:50%;top:7px;width:17px;height:19px;border-radius:50% 50% 46% 46%;background:var(--sk,#f0c9a0);transform:translateX(-50%)}
+.av:after{content:"";position:absolute;left:50%;bottom:-8px;width:30px;height:18px;border-radius:12px 12px 0 0;background:var(--s);transform:translateX(-50%)}
+.av.sf{outline:2px solid #fff;box-shadow:0 0 0 3px var(--ok)}
+.ph{width:40px;height:40px;border-radius:8px;background:var(--gray-bg);display:grid;place-items:center;color:#a7afbb;font-size:15px}
+.tm b{font-size:16px;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600;margin-left:6px;vertical-align:1px}
+.badge.warn{background:var(--warn-bg);color:var(--warn)}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.badge.gray{background:var(--gray-bg);color:var(--ink2)}
+.dist{font-size:13px;color:var(--ink2)}
+.dash{color:#a7afbb}
+/* phone */
+.phone{position:absolute;left:1106px;top:26px;width:304px;height:640px;border-radius:44px;background:#11151c;padding:11px;box-shadow:0 30px 70px rgba(10,25,50,.32)}
+.scr{width:100%;height:100%;border-radius:34px;overflow:hidden;background:#edf1f6;position:relative}
+.sbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:6px 22px 0;font-size:13px;font-weight:600;background:#fff}
+.notch{position:absolute;left:50%;top:9px;width:88px;height:24px;border-radius:14px;background:#11151c;transform:translateX(-50%)}
+.liffbar{height:42px;background:#fff;border-bottom:1px solid #e4e8ee;display:flex;align-items:center;padding:0 14px;gap:10px}
+.liffbar .x{font-size:18px;color:#3b4250;width:20px}
+.liffbar .t{flex:1;text-align:center;line-height:1.15}
+.liffbar .t b{font-size:14px;display:block}.liffbar .t small{font-size:10.5px;color:var(--muted)}
+.liffbar .dots{width:20px;color:#3b4250;font-weight:700;letter-spacing:1px}
+.apph{display:flex;align-items:center;gap:9px;padding:14px 18px 10px;font-weight:700;font-size:17px;color:var(--brand)}
+.apph .logo{background:var(--brand);width:28px;height:28px}
+.ok-card{margin:2px 14px;background:#fff;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 1px 3px rgba(20,30,50,.06)}
+.ring{width:84px;height:84px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin:0 auto}
+.big{font-size:46px;font-weight:700;line-height:1.1;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.what{font-size:20px;font-weight:700;margin-top:2px}
+.ev{font-size:13.5px;color:var(--muted);margin-top:4px}
+.ok-card .badge{margin:10px 0 0;font-size:13px;padding:2px 12px}
+.done{margin-top:14px;background:var(--brand);color:#fff;border-radius:12px;padding:10px;font-weight:700;font-size:16px}
+.proof{display:flex;gap:8px;justify-content:center;margin-top:10px;font-size:12px;color:var(--ink2)}
+.proof span{background:#f3f5f8;border-radius:999px;padding:2px 9px}
+/* flow */
+.flow{position:absolute;left:934px;top:128px;width:162px;display:flex;flex-direction:column;gap:8px}
+.fl{background:rgba(255,255,255,.82);border:1px solid #dbe3ee;border-radius:14px;padding:10px 11px;font-size:13px;line-height:1.4;color:var(--ink2);box-shadow:0 4px 14px rgba(15,30,60,.06)}
+.fl b{display:flex;align-items:center;gap:6px;color:var(--ink);font-size:14px;white-space:nowrap;margin-bottom:2px}
+.fl b i{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--brand);color:#fff;font-size:11.5px;display:grid;place-items:center;flex:none}
+.fa{text-align:center;color:#8aa0bd;font-size:16px;line-height:1;margin:-2px 0}
+/* qr device */
+.dev{position:absolute;left:940px;top:522px;width:356px;height:244px;border-radius:16px;background:#1d222b;padding:12px 12px 22px;box-shadow:0 26px 60px rgba(10,25,50,.36),inset 0 0 0 1px rgba(255,255,255,.06)}
+.dev:after{content:"ESP32 · 3.5\"";position:absolute;right:16px;bottom:4px;font:600 9.5px "IBM Plex Mono",monospace;color:#6c7686;letter-spacing:.5px}
+.dsc{width:100%;height:100%;border-radius:4px;background:#f7f9fc;display:flex;gap:12px;padding:12px;position:relative}
+.qr{width:164px;height:164px;background:#fff;padding:8px;border-radius:4px;flex:none;box-shadow:0 0 0 1px #e1e6ee}
+.qr svg{width:100%;height:100%;display:block;shape-rendering:crispEdges}
+.dr{flex:1;display:flex;flex-direction:column;font-family:"IBM Plex Mono",monospace;min-width:0}
+.dr .ttl{font-size:10.5px;font-weight:600;color:#64748b;letter-spacing:.6px}
+.dr .clk{font-size:25px;font-weight:600;color:#0b1220;margin-top:4px;letter-spacing:-.5px}
+.dr .bar{height:6px;border-radius:3px;background:#e2e8f0;margin-top:6px;overflow:hidden}
+.dr .bar i{display:block;width:62%;height:100%;background:#0f4a86}
+.dr .nx{font-size:10px;color:#64748b;margin-top:3px}
+.dr .ban{margin-top:auto;background:#0b7a4b;color:#fff;border-radius:5px;padding:5px 7px;font-size:10.5px;line-height:1.35}
+.dr .ban b{display:block;font-size:12px}
+.dr .st{font-size:9.5px;color:#64748b;margin-top:5px;display:flex;align-items:center;gap:5px}
+.dr .st i{width:6px;height:6px;border-radius:50%;background:#16a34a}
+</style></head><body>
+
+<div class="admin">
+  <div class="nav">
+    <div class="brand"><div class="logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f4a86" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>MKT Check-in</div>
+    <a>ภาพรวม</a><a class="on">งาน</a><a>พนักงาน PT</a><a>ลิงก์ลงทะเบียน</a><a>จอ QR</a><a>ตั้งค่า</a>
+    <div class="who">หัวหน้างาน MKT<br>บัญชีพนักงาน</div>
+  </div>
+  <div class="body">
+    <div class="crumb">งาน › กำลังจัด</div>
+    <div class="head">
+      <div>
+        <h1>ไนท์มาร์เก็ตส่งท้ายปี · ลานกิจกรรมหน้าศูนย์</h1>
+        <div class="sub">9–22 พ.ย. · เวลา 17:30–22:30 · <i></i> จอ QR ออนไลน์</div>
+      </div>
+      <div class="acts"><span class="btn">ส่งออก Excel</span><span class="btn">⋯</span></div>
+    </div>
+    <div class="tabs"><span class="on">รายวัน</span><span>ตารางคน × วัน<b>6</b></span><span>บันทึกเวลาทั้งหมด</span></div>
+    <div class="days"><span>จ. 9/11</span><span>อ. 10/11</span><span class="on">วันนี้</span><span>พฤ. 12/11</span><span>ศ. 13/11</span><span>ส. 14/11</span><span>อา. 15/11</span><span>จ. 16/11</span><span>อ. 17/11</span></div>
+    <div class="kpis">
+      <div class="kpi"><small>มีชื่อเข้างาน</small><b>6</b></div>
+      <div class="kpi"><small>มาแล้ว</small><b style="color:var(--ok)">4</b></div>
+      <div class="kpi"><small>สาย</small><b style="color:var(--warn)">1</b></div>
+      <div class="kpi"><small>รอเข้างาน</small><b>2</b></div>
+      <div class="kpi"><small>ขาด / ลืมสแกนออก</small><b style="color:#b42318">0</b> <b><em>/ 0</em></b></div>
+    </div>
+    <div class="tbl"><table>
+      <tr><th style="width:178px">พนักงาน</th><th style="width:170px">รูปลงทะเบียน · เข้า · ออก</th><th style="width:180px">เข้า</th><th style="width:70px">ออก</th><th style="width:118px">ห่างจุดงาน</th><th>สถานะ</th></tr>
+      <tr><td class="nm"><b>แนน</b><span>ณัฐธิดา ทองดี</span></td>
+        <td><div class="pics"><div class="av" style="--b:#bfe3da;--s:#2f4f8f"></div><div class="av sf" style="--b:#e7d3b8;--s:#2f4f8f"></div><div class="ph">–</div></div></td>
+        <td class="tm"><b>17:05</b></td><td class="dash">—</td><td class="dist">15 ม.</td><td><span class="badge ok" style="margin:0">อยู่ในงาน</span></td></tr>
+      <tr><td class="nm"><b>เมย์</b><span>สุภาวดี ใจงาม</span></td>
+        <td><div class="pics"><div class="av" style="--b:#f1c9d6;--s:#7a5195;--sk:#f3d0ae"></div><div class="av sf" style="--b:#cfd8e6;--s:#7a5195;--sk:#f3d0ae"></div><div class="ph">–</div></div></td>
+        <td class="tm"><b>17:12</b></td><td class="dash">—</td><td class="dist">18 ม.</td><td><span class="badge ok" style="margin:0">อยู่ในงาน</span></td></tr>
+      <tr><td class="nm"><b>ต้น</b><span>ธนากร มีสุข</span></td>
+        <td><div class="pics"><div class="av" style="--b:#c9def5;--s:#3d5a40;--sk:#e2b48c"></div><div class="av sf" style="--b:#d9e8c8;--s:#3d5a40;--sk:#e2b48c"></div><div class="ph">–</div></div></td>
+        <td class="tm"><b>17:18</b></td><td class="dash">—</td><td class="dist">24 ม.</td><td><span class="badge ok" style="margin:0">อยู่ในงาน</span></td></tr>
+      <tr><td class="nm"><b>ฝน</b><span>พิมพ์ชนก แสงดาว</span></td>
+        <td><div class="pics"><div class="av" style="--b:#ead7f2;--s:#b5523b"></div><div class="av sf" style="--b:#f4e2c4;--s:#b5523b"></div><div class="ph">–</div></div></td>
+        <td class="tm"><b>17:42</b><span class="badge warn">สาย 12 น.</span></td><td class="dash">—</td><td class="dist">31 ม.</td><td><span class="badge ok" style="margin:0">อยู่ในงาน</span></td></tr>
+      <tr><td class="nm"><b>บิว</b><span>ภูมิพัฒน์ รุ่งเรือง</span></td>
+        <td><div class="pics"><div class="av" style="--b:#d2e7d6;--s:#44515f;--sk:#dcae86"></div><div class="ph">–</div><div class="ph">–</div></div></td>
+        <td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td><span class="badge gray" style="margin:0">รอเข้างาน</span></td></tr>
+      <tr><td class="nm"><b>โอ๊ต</b><span>กิตติพงษ์ ศรีงาม</span></td>
+        <td><div class="pics"><div class="av" style="--b:#f5dcc8;--s:#1f6f78"></div><div class="ph">–</div><div class="ph">–</div></div></td>
+        <td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td><span class="badge gray" style="margin:0">รอเข้างาน</span></td></tr>
+    </table></div>
+  </div>
+</div>
+
+<div class="phone"><div class="scr">
+  <div class="notch"></div>
+  <div class="sbar"><span>17:18</span><span style="letter-spacing:2px">▮▮▮</span></div>
+  <div class="liffbar"><span class="x">✕</span><div class="t"><b>MKT Check-in</b><small>LINE</small></div><span class="dots">⋯</span></div>
+  <div class="apph"><div class="logo"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>MKT Check-in</div>
+  <div class="ok-card">
+    <div class="ring"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div class="big">17:18</div>
+    <div class="what">เข้างานแล้ว</div>
+    <div class="ev">ไนท์มาร์เก็ตส่งท้ายปี</div>
+    <div><span class="badge ok">ตรงเวลา</span></div>
+    <div class="proof"><span>📷 ถ่ายรูปแล้ว</span><span>📍 ห่าง 24 ม.</span></div>
+    <div class="done">เสร็จ</div>
+  </div>
+</div></div>
+
+<div class="flow">
+  <div class="fl"><b><i>1</i>สแกน QR หน้างาน</b>รหัสบนจอเปลี่ยนทุก 10 วิ</div>
+  <div class="fa">↓</div>
+  <div class="fl"><b><i>2</i>เซลฟี่ + GPS</b>กล้องหน้าถ่ายให้เอง<br>หลังนับ 3-2-1</div>
+  <div class="fa">↓</div>
+  <div class="fl"><b><i>3</i>ขึ้นหลังบ้านทันที</b>เทียบรูปลงทะเบียน<br>และระยะห่างจุดงาน</div>
+</div>
+
+<div class="dev"><div class="dsc">
+  <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33"><path stroke="#0b1220" d="M0 0.5h7m1 0h2m1 0h4m1 0h2m1 0h1m3 0h1m2 0h7m-33 1h1m5 0h1m1 0h1m1 0h2m1 0h1m3 0h2m2 0h1m1 0h1m2 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m3 0h1m4 0h1m2 0h1m7 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m4 0h3m7 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m4 0h1m2 0h1m4 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m2 0h2m1 0h1m1 0h1m2 0h3m6 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h4m5 0h4m2 0h1m-24 1h1m1 0h2m1 0h3m1 0h4m3 0h4m1 0h1m1 0h2m1 0h1m2 0h1m1 0h2m-33 1h2m2 0h1m2 0h4m3 0h1m2 0h5m1 0h1m2 0h2m1 0h4m-33 1h3m1 0h5m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m1 0h2m1 0h4m2 0h1m-33 1h1m1 0h4m1 0h2m1 0h6m4 0h1m3 0h2m1 0h1m1 0h1m2 0h1m-33 1h5m1 0h7m4 0h1m1 0h2m1 0h2m4 0h2m1 0h1m-32 1h2m1 0h3m4 0h1m1 0h2m2 0h2m1 0h2m1 0h4m3 0h3m-32 1h1m2 0h1m1 0h5m1 0h1m3 0h2m1 0h2m4 0h1m1 0h3m-29 1h1m2 0h3m3 0h3m4 0h1m1 0h1m1 0h3m2 0h3m2 0h1m-30 1h1m1 0h1m2 0h1m1 0h3m1 0h2m1 0h1m4 0h2m3 0h2m1 0h1m1 0h1m-30 1h1m3 0h1m2 0h1m1 0h1m2 0h1m1 0h1m2 0h1m3 0h5m1 0h2m2 0h1m-33 1h1m1 0h1m1 0h6m3 0h4m1 0h1m1 0h2m3 0h1m1 0h2m1 0h1m-31 1h1m1 0h1m1 0h1m2 0h1m1 0h2m3 0h1m1 0h3m4 0h1m2 0h1m1 0h1m2 0h2m-32 1h3m1 0h6m1 0h1m2 0h1m4 0h1m3 0h2m1 0h1m1 0h3m-32 1h1m1 0h4m2 0h3m1 0h1m2 0h1m1 0h2m1 0h1m1 0h3m1 0h2m4 0h1m-31 1h1m2 0h5m1 0h2m1 0h1m1 0h3m1 0h9m2 0h2m-32 1h4m5 0h3m3 0h1m1 0h1m1 0h1m1 0h2m4 0h1m3 0h1m-33 1h1m5 0h3m2 0h5m1 0h1m4 0h1m1 0h6m1 0h1m-24 1h1m1 0h1m2 0h1m1 0h3m1 0h1m3 0h2m3 0h2m1 0h1m-32 1h7m1 0h1m2 0h1m1 0h2m4 0h2m1 0h3m1 0h1m1 0h1m2 0h1m-32 1h1m5 0h1m1 0h3m1 0h1m1 0h3m1 0h7m3 0h4m-32 1h1m1 0h3m1 0h1m2 0h1m7 0h1m1 0h1m1 0h1m1 0h6m1 0h2m-32 1h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m5 0h1m6 0h1m4 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m1 0h1m8 0h1m4 0h3m-28 1h1m5 0h1m2 0h1m1 0h1m1 0h5m2 0h1m1 0h1m1 0h6m2 0h1m-33 1h7m1 0h3m2 0h6m2 0h1m1 0h1m1 0h2m1 0h3"/></svg></div>
+  <div class="dr">
+    <div class="ttl">NIGHT MARKET</div>
+    <div class="clk">17:18:06</div>
+    <div class="bar"><i></i></div>
+    <div class="nx">new code in 4s</div>
+    <div class="ban"><b>Checked in</b>IN 17:18:04 #3</div>
+    <div class="st"><i></i>Server ok</div>
+  </div>
+</div></div>
+
+</body></html>
